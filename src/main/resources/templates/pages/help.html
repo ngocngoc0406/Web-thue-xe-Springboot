@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<title>Hướng dẫn thuê xe - Web thuê xe</title>
+<link rel="icon" th:href="@{/images/icon-logo.png}" type="images/x-icon">
+
+<head th:replace="~{pages/layout/header-css-js :: header-css-js}">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+		rel="stylesheet">
+</head>
+
+<body>
+	<nav th:replace="~{pages/layout/header :: header}"></nav>
+
+	<!-- Hero Section -->
+	<section class="help-hero">
+		<div class="hero-overlay"></div>
+		<div class="hero-content">
+			<span class="hero-badge"><i class="fa-solid fa-circle-question"></i> Trung tâm hỗ trợ</span>
+			<h1>Hướng dẫn thuê xe</h1>
+			<p>Quy trình đơn giản, nhanh chóng chỉ với 6 bước</p>
+		</div>
+	</section>
+
+	<!-- Tab Navigation -->
+	<div class="help-tabs-container">
+		<div class="help-tabs">
+			<a th:href="@{/help}" class="tab-btn active">
+				<i class="fa-solid fa-user"></i>
+				<span>Khách thuê xe</span>
+			</a>
+			<a th:href="@{/help-Ower-Car}" class="tab-btn">
+				<i class="fa-solid fa-car"></i>
+				<span>Chủ xe</span>
+			</a>
+		</div>
+	</div>
+
+	<!-- Steps Section -->
+	<section class="help-steps-section">
+		<div class="container">
+			<div class="steps-timeline">
+				<!-- Step 1 -->
+				<div class="step-card" data-aos="fade-up">
+					<div class="step-number">1</div>
+					<div class="step-icon">
+						<i class="fa-solid fa-right-to-bracket"></i>
+					</div>
+					<div class="step-content">
+						<h3>Đăng nhập</h3>
+						<p>Đăng nhập website bằng tài khoản của bạn đã đăng ký trên hệ thống. Nếu chưa có tài khoản, bạn
+							có thể đăng ký miễn phí chỉ trong 1 phút.</p>
+						<div class="step-tips">
+							<span><i class="fa-solid fa-lightbulb"></i> Mẹo: Liên kết email để khôi phục mật khẩu dễ
+								dàng</span>
+						</div>
+					</div>
+					<div class="step-image">
+						<img th:src="@{/uploads/step-login.png}" alt="Đăng nhập" onerror="this.style.display='none'">
+					</div>
+				</div>
+
+				<!-- Step 2 -->
+				<div class="step-card reverse" data-aos="fade-up">
+					<div class="step-number">2</div>
+					<div class="step-icon">
+						<i class="fa-solid fa-magnifying-glass"></i>
+					</div>
+					<div class="step-content">
+						<h3>Tìm xe</h3>
+						<p>Tìm xe ưng ý nhanh chóng với bộ lọc thông minh: địa điểm, thời gian, hãng xe, số chỗ ngồi và
+							nhiều tiêu chí khác.</p>
+						<div class="step-features">
+							<span class="feature-tag"><i class="fa-solid fa-location-dot"></i> Theo vị trí</span>
+							<span class="feature-tag"><i class="fa-solid fa-calendar"></i> Theo thời gian</span>
+							<span class="feature-tag"><i class="fa-solid fa-car-side"></i> Theo hãng xe</span>
+						</div>
+					</div>
+					<div class="step-image">
+						<img th:src="@{/uploads/step-findcar.png}" alt="Tìm xe" onerror="this.style.display='none'">
+					</div>
+				</div>
+
+				<!-- Step 3 -->
+				<div class="step-card" data-aos="fade-up">
+					<div class="step-number">3</div>
+					<div class="step-icon">
+						<i class="fa-solid fa-calendar-check"></i>
+					</div>
+					<div class="step-content">
+						<h3>Đặt xe</h3>
+						<p>Lựa chọn chiếc xe mà bạn ưng ý và gửi yêu cầu đến chủ xe. Chủ xe sẽ phản hồi nhanh chóng
+							trong thời gian ngắn nhất.</p>
+						<div class="step-tips">
+							<span><i class="fa-solid fa-clock"></i> Phản hồi trung bình: 15 phút</span>
+						</div>
+					</div>
+					<div class="step-image">
+						<img th:src="@{/uploads/step-booking.png}" alt="Đặt xe" onerror="this.style.display='none'">
+					</div>
+				</div>
+
+				<!-- Step 4 -->
+				<div class="step-card reverse" data-aos="fade-up">
+					<div class="step-number">4</div>
+					<div class="step-icon">
+						<i class="fa-solid fa-credit-card"></i>
+					</div>
+					<div class="step-content">
+						<h3>Đặt cọc</h3>
+						<p>Sau khi chủ xe đồng ý, thanh toán đặt cọc bằng nhiều phương thức linh hoạt.</p>
+						<div class="step-features">
+							<span class="feature-tag"><i class="fa-solid fa-building-columns"></i> Chuyển khoản</span>
+							<span class="feature-tag"><i class="fa-solid fa-wallet"></i> Ví điện tử</span>
+							<span class="feature-tag"><i class="fa-solid fa-money-bill"></i> Tiền mặt</span>
+						</div>
+					</div>
+					<div class="step-image">
+						<img th:src="@{/uploads/step-payment.png}" alt="Đặt cọc" onerror="this.style.display='none'">
+					</div>
+				</div>
+
+				<!-- Step 5 -->
+				<div class="step-card" data-aos="fade-up">
+					<div class="step-number">5</div>
+					<div class="step-icon">
+						<i class="fa-solid fa-key"></i>
+					</div>
+					<div class="step-content">
+						<h3>Nhận xe</h3>
+						<p>Gặp chủ xe để nhận xe. Nhiều chủ xe sẵn sàng giao xe tận nơi cho bạn!</p>
+						<ul class="step-checklist">
+							<li><i class="fa-solid fa-check"></i> Kiểm tra tình trạng xe</li>
+							<li><i class="fa-solid fa-check"></i> Xác nhận giấy tờ</li>
+							<li><i class="fa-solid fa-check"></i> Ký biên bản giao xe</li>
+							<li><i class="fa-solid fa-check"></i> Nhận chìa khóa & bắt đầu hành trình</li>
+						</ul>
+					</div>
+					<div class="step-image">
+						<img th:src="@{/uploads/step-get-car.png}" alt="Nhận xe" onerror="this.style.display='none'">
+					</div>
+				</div>
+
+				<!-- Step 6 -->
+				<div class="step-card reverse" data-aos="fade-up">
+					<div class="step-number">6</div>
+					<div class="step-icon">
+						<i class="fa-solid fa-star"></i>
+					</div>
+					<div class="step-content">
+						<h3>Trả xe & Đánh giá</h3>
+						<p>Hoàn trả xe đúng thời gian và tình trạng thỏa thuận. Đừng quên đánh giá để giúp cộng đồng!
+						</p>
+						<div class="step-rating-demo">
+							<i class="fa-solid fa-star"></i>
+							<i class="fa-solid fa-star"></i>
+							<i class="fa-solid fa-star"></i>
+							<i class="fa-solid fa-star"></i>
+							<i class="fa-solid fa-star"></i>
+							<span>Đánh giá 5 sao!</span>
+						</div>
+					</div>
+					<div class="step-image">
+						<img th:src="@{/uploads/step-rate.png}" alt="Trả xe" onerror="this.style.display='none'">
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA Section -->
+	<section class="help-cta-section">
+		<div class="cta-content">
+			<h2>Sẵn sàng thuê xe?</h2>
+			<p>Bắt đầu hành trình tuyệt vời của bạn ngay hôm nay</p>
+			<div class="cta-buttons">
+				<a th:href="@{/}" class="btn-primary-cta">
+					<i class="fa-solid fa-rocket"></i> Tìm xe ngay
+				</a>
+				<a th:href="@{/sign-up}" class="btn-secondary-cta">
+					<i class="fa-solid fa-user-plus"></i> Đăng ký miễn phí
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- FAQ Section -->
+	<section class="help-faq-section">
+		<div class="container">
+			<h2 class="section-title"><i class="fa-solid fa-circle-question"></i> Câu hỏi thường gặp</h2>
+			<div class="faq-grid">
+				<div class="faq-item">
+					<div class="faq-icon"><i class="fa-solid fa-id-card"></i></div>
+					<h4>Cần giấy tờ gì để thuê xe?</h4>
+					<p>Bạn cần CMND/CCCD và bằng lái xe hợp lệ. Một số xe có thể yêu cầu thêm hộ chiếu.</p>
+				</div>
+				<div class="faq-item">
+					<div class="faq-icon"><i class="fa-solid fa-shield-halved"></i></div>
+					<h4>Xe có bảo hiểm không?</h4>
+					<p>Tất cả xe đều có bảo hiểm cơ bản. Bạn có thể mua thêm gói bảo hiểm nâng cao nếu cần.</p>
+				</div>
+				<div class="faq-item">
+					<div class="faq-icon"><i class="fa-solid fa-clock"></i></div>
+					<h4>Thời gian thuê tối thiểu?</h4>
+					<p>Thời gian thuê tối thiểu là 1 ngày (24 giờ). Một số chủ xe có thể cho thuê theo giờ.</p>
+				</div>
+				<div class="faq-item">
+					<div class="faq-icon"><i class="fa-solid fa-ban"></i></div>
+					<h4>Có thể hủy đặt xe không?</h4>
+					<p>Bạn có thể hủy miễn phí trước 24 giờ. Sau thời gian đó có thể mất phí hủy.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<footer th:replace="~{pages/layout/footer :: footer}"></footer>
+</body>
+
+<style>
+	/* Hero Section */
+	.help-hero {
+		position: relative;
+		background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+		padding: 100px 20px 80px;
+		text-align: center;
+		overflow: hidden;
+	}
+
+	.help-hero::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2310b981' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+		opacity: 0.5;
+	}
+
+	.hero-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: radial-gradient(circle at 30% 70%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+			radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+	}
+
+	.hero-content {
+		position: relative;
+		z-index: 1;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	.hero-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		background: rgba(16, 185, 129, 0.2);
+		color: #10b981;
+		padding: 8px 20px;
+		border-radius: 50px;
+		font-size: 0.85rem;
+		font-weight: 600;
+		margin-bottom: 20px;
+		border: 1px solid rgba(16, 185, 129, 0.3);
+	}
+
+	.help-hero h1 {
+		color: white;
+		font-size: 3rem;
+		font-weight: 800;
+		margin: 0 0 15px;
+		letter-spacing: -1px;
+	}
+
+	.help-hero p {
+		color: rgba(255, 255, 255, 0.7);
+		font-size: 1.2rem;
+		margin: 0;
+	}
+
+	/* Tab Navigation */
+	.help-tabs-container {
+		background: white;
+		padding: 20px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+		position: sticky;
+		top: 0;
+		z-index: 100;
+	}
+
+	.help-tabs {
+		display: flex;
+		justify-content: center;
+		gap: 15px;
+		max-width: 500px;
+		margin: 0 auto;
+	}
+
+	.tab-btn {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 15px 30px;
+		border-radius: 12px;
+		text-decoration: none;
+		font-weight: 700;
+		transition: all 0.3s ease;
+		border: 2px solid #e2e8f0;
+		color: #64748b;
+		background: white;
+	}
+
+	.tab-btn:hover {
+		border-color: #10b981;
+		color: #10b981;
+		transform: translateY(-2px);
+	}
+
+	.tab-btn.active {
+		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+		color: white;
+		border-color: transparent;
+		box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+	}
+
+	.tab-btn i {
+		font-size: 1.2rem;
+	}
+
+	/* Steps Section */
+	.help-steps-section {
+		padding: 80px 20px;
+		background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+	}
+
+	.container {
+		max-width: 1100px;
+		margin: 0 auto;
+	}
+
+	.steps-timeline {
+		position: relative;
+	}
+
+	.steps-timeline::before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		top: 0;
+		bottom: 0;
+		width: 4px;
+		background: linear-gradient(180deg, #10b981, #3b82f6, #8b5cf6, #f59e0b, #ef4444, #10b981);
+		border-radius: 2px;
+		transform: translateX(-50%);
+	}
+
+	@media (max-width: 768px) {
+		.steps-timeline::before {
+			left: 30px;
+		}
+	}
+
+	.step-card {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 50px;
+		align-items: center;
+		margin-bottom: 60px;
+		position: relative;
+	}
+
+	@media (max-width: 768px) {
+		.step-card {
+			grid-template-columns: 1fr;
+			gap: 20px;
+			padding-left: 70px;
+		}
+	}
+
+	.step-card.reverse {
+		direction: rtl;
+	}
+
+	.step-card.reverse>* {
+		direction: ltr;
+	}
+
+	.step-number {
+		position: absolute;
+		left: 50%;
+		top: 0;
+		transform: translateX(-50%);
+		width: 60px;
+		height: 60px;
+		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.5rem;
+		font-weight: 800;
+		color: white;
+		box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+		z-index: 10;
+		border: 4px solid white;
+	}
+
+	@media (max-width: 768px) {
+		.step-number {
+			left: 30px;
+			width: 50px;
+			height: 50px;
+			font-size: 1.2rem;
+		}
+	}
+
+	.step-content {
+		background: white;
+		padding: 40px;
+		border-radius: 24px;
+		box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+		border: 1px solid #e2e8f0;
+		transition: all 0.3s ease;
+	}
+
+	.step-card:hover .step-content {
+		transform: translateY(-5px);
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+	}
+
+	.step-icon {
+		position: absolute;
+		top: 0;
+		left: calc(50% + 50px);
+		background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+		width: 50px;
+		height: 50px;
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #10b981;
+		font-size: 1.3rem;
+	}
+
+	@media (max-width: 768px) {
+		.step-icon {
+			display: none;
+		}
+	}
+
+	.step-content h3 {
+		font-size: 1.6rem;
+		font-weight: 800;
+		color: #1f2937;
+		margin: 0 0 15px;
+	}
+
+	.step-content p {
+		color: #64748b;
+		font-size: 1rem;
+		line-height: 1.7;
+		margin: 0 0 20px;
+	}
+
+	.step-tips {
+		background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+		padding: 12px 18px;
+		border-radius: 12px;
+		border-left: 4px solid #f59e0b;
+	}
+
+	.step-tips span {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		color: #92400e;
+		font-size: 0.9rem;
+		font-weight: 600;
+	}
+
+	.step-features {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.feature-tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		background: #ecfdf5;
+		color: #059669;
+		padding: 8px 14px;
+		border-radius: 8px;
+		font-size: 0.85rem;
+		font-weight: 600;
+	}
+
+	.step-checklist {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.step-checklist li {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 10px 0;
+		color: #374151;
+		font-size: 0.95rem;
+		border-bottom: 1px solid #f1f5f9;
+	}
+
+	.step-checklist li:last-child {
+		border-bottom: none;
+	}
+
+	.step-checklist i {
+		color: #10b981;
+		font-size: 0.85rem;
+	}
+
+	.step-rating-demo {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		color: #f59e0b;
+		font-size: 1.2rem;
+	}
+
+	.step-rating-demo span {
+		margin-left: 10px;
+		color: #92400e;
+		font-weight: 700;
+		font-size: 0.95rem;
+	}
+
+	.step-image {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.step-image img {
+		max-width: 100%;
+		max-height: 250px;
+		border-radius: 20px;
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+		object-fit: cover;
+	}
+
+	/* CTA Section */
+	.help-cta-section {
+		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+		padding: 80px 20px;
+		text-align: center;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.help-cta-section::before {
+		content: '';
+		position: absolute;
+		top: -50%;
+		right: -20%;
+		width: 60%;
+		height: 200%;
+		background: rgba(255, 255, 255, 0.1);
+		transform: rotate(30deg);
+	}
+
+	.cta-content {
+		position: relative;
+		z-index: 1;
+	}
+
+	.cta-content h2 {
+		color: white;
+		font-size: 2.5rem;
+		font-weight: 800;
+		margin: 0 0 10px;
+	}
+
+	.cta-content p {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 1.1rem;
+		margin: 0 0 30px;
+	}
+
+	.cta-buttons {
+		display: flex;
+		justify-content: center;
+		gap: 15px;
+		flex-wrap: wrap;
+	}
+
+	.btn-primary-cta,
+	.btn-secondary-cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		padding: 16px 32px;
+		border-radius: 12px;
+		font-weight: 700;
+		font-size: 1rem;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+	.btn-primary-cta {
+		background: white;
+		color: #059669;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+	}
+
+	.btn-primary-cta:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+		color: #047857;
+	}
+
+	.btn-secondary-cta {
+		background: rgba(255, 255, 255, 0.15);
+		color: white;
+		border: 2px solid rgba(255, 255, 255, 0.3);
+	}
+
+	.btn-secondary-cta:hover {
+		background: rgba(255, 255, 255, 0.25);
+		color: white;
+	}
+
+	/* FAQ Section */
+	.help-faq-section {
+		padding: 80px 20px;
+		background: #f8fafc;
+	}
+
+	.section-title {
+		text-align: center;
+		font-size: 2rem;
+		font-weight: 800;
+		color: #1f2937;
+		margin: 0 0 50px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 15px;
+	}
+
+	.section-title i {
+		color: #10b981;
+	}
+
+	.faq-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 25px;
+	}
+
+	@media (max-width: 768px) {
+		.faq-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.faq-item {
+		background: white;
+		padding: 30px;
+		border-radius: 20px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+		border: 1px solid #e2e8f0;
+		transition: all 0.3s ease;
+	}
+
+	.faq-item:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+		border-color: #10b981;
+	}
+
+	.faq-icon {
+		width: 50px;
+		height: 50px;
+		background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #10b981;
+		font-size: 1.3rem;
+		margin-bottom: 20px;
+	}
+
+	.faq-item h4 {
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: #1f2937;
+		margin: 0 0 12px;
+	}
+
+	.faq-item p {
+		color: #64748b;
+		font-size: 0.95rem;
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	@media (max-width: 768px) {
+		.help-hero h1 {
+			font-size: 2rem;
+		}
+
+		.cta-content h2 {
+			font-size: 1.8rem;
+		}
+
+		.step-content {
+			padding: 25px;
+		}
+	}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/main.js}"></script>
+
+</html>

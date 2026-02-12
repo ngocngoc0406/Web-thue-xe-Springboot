@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<footer th:fragment="footer" class="site-footer">
+    <div class="footer-main">
+        <div class="container">
+            <div class="row">
+                <!-- Logo & Social Section -->
+                <div class="col-lg-4 col-md-6 footer-section footer-brand">
+                    <div class="footer-logo">
+                        <img th:src="@{/uploads/logo1.png}" alt="MIOTO Logo">
+                    </div>
+                    <p class="footer-desc">
+                        Nền tảng thuê xe tự lái hàng đầu Việt Nam. Kết nối chủ xe và khách hàng một cách an toàn, tiện
+                        lợi.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-link twitter"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="social-link youtube"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="social-link tiktok"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="#" class="social-link linkedin"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6 footer-section">
+                    <h5 class="footer-title">Chính sách</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Chính sách và Quy định</a></li>
+                        <li><a href="#">Giải quyết tranh chấp</a></li>
+                        <li><a href="#">Bảo mật thông tin</a></li>
+                    </ul>
+                </div>
+
+                <!-- Learn More -->
+                <div class="col-lg-2 col-md-6 footer-section">
+                    <h5 class="footer-title">Tìm hiểu thêm</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Hướng dẫn chung</a></li>
+                        <li><a th:href="@{/help}">Hướng dẫn đặt xe</a></li>
+                        <li><a href="#">Hỏi và trả lời</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Partners -->
+                <div class="col-lg-2 col-md-6 footer-section">
+                    <h5 class="footer-title">Đối tác</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Đăng kí chủ xe</a></li>
+                        <li><a href="#">Đối tác bảo hiểm</a></li>
+                        <li><a href="#">Đối tác doanh nghiệp</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-2 col-md-6 footer-section">
+                    <h5 class="footer-title">Liên hệ</h5>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Quận Ngũ Hành Sơn, Đà Nẵng</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>ngocnt.22itb@vku.udn.vn</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-phone"></i>
+                            <span>0368 505 043</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="copyright">© 2026 <strong>MIOTO</strong>. Hân hạnh đồng hành cùng bạn.</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="footer-bottom-links">
+                        <a href="#">Điều khoản</a>
+                        <a href="#">Quyền riêng tư</a>
+                        <a href="#">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .site-footer {
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1e7a39 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-top: 60px;
+        }
+
+        .footer-main {
+            padding: 60px 0 40px;
+        }
+
+        .footer-section {
+            padding: 15px;
+        }
+
+        /* Brand Section */
+        .footer-brand {
+            padding-right: 40px;
+        }
+
+        .footer-logo img {
+            max-width: 140px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-link {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .social-link:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .social-link.facebook:hover {
+            background: #1877f2;
+            border-color: #1877f2;
+        }
+
+        .social-link.twitter:hover {
+            background: #1da1f2;
+            border-color: #1da1f2;
+        }
+
+        .social-link.youtube:hover {
+            background: #ff0000;
+            border-color: #ff0000;
+        }
+
+        .social-link.tiktok:hover {
+            background: #000000;
+            border-color: #69c9d0;
+        }
+
+        .social-link.linkedin:hover {
+            background: #0077b5;
+            border-color: #0077b5;
+        }
+
+        /* Footer Titles */
+        .footer-title {
+            color: #90EE90;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #90EE90, #32CD32);
+            border-radius: 2px;
+        }
+
+        /* Footer Links */
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            position: relative;
+            padding-left: 0;
+        }
+
+        .footer-links a::before {
+            content: '→';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            color: #90EE90;
+        }
+
+        .footer-links a:hover {
+            color: #90EE90;
+            padding-left: 20px;
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+
+        /* Contact Info */
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-contact li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-contact i {
+            color: #90EE90;
+            font-size: 16px;
+            margin-top: 2px;
+            width: 18px;
+        }
+
+        .footer-contact span {
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .copyright {
+            margin: 0;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .copyright strong {
+            color: #90EE90;
+            font-weight: 700;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            justify-content: flex-end;
+            gap: 30px;
+        }
+
+        .footer-bottom-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-bottom-links a:hover {
+            color: #90EE90;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .footer-brand {
+                padding-right: 15px;
+                text-align: center;
+            }
+
+            .footer-logo img {
+                margin: 0 auto 20px;
+                display: block;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .footer-title::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .footer-section {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .footer-links a::before {
+                display: none;
+            }
+
+            .footer-links a:hover {
+                padding-left: 0;
+            }
+
+            .footer-contact li {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .footer-main {
+                padding: 40px 0 20px;
+            }
+
+            .footer-bottom-links {
+                justify-content: center;
+                margin-top: 15px;
+            }
+
+            .copyright {
+                text-align: center;
+            }
+        }
+    </style>
+</footer>
+
+</html>

@@ -1,0 +1,839 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<title>Web thuê xe - Trang chủ</title>
+<link rel="icon" href="/images/icon-logo.png;jsessionid=E2BC0F583ABBF454154E34E4741A8873" type="images/x-icon">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/styles.css;jsessionid=E2BC0F583ABBF454154E34E4741A8873">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
+        integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+</head>
+<script>
+	function closepPoupupInsurances() {
+		document.getElementById("contentInsurances").classList
+				.remove("open-contentInsurances");
+	}
+
+	function openInsurances() {
+		document.getElementById("contentInsurances").classList
+				.add("open-contentInsurances");
+	}
+</script>
+<body>
+
+	<nav class="navbar navbar-expand-lg  header"
+		style="border-bottom: 1px solid green; height: 64px; background: #d0d0d0">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/" style="margin-left: 30px"><img src="./uploads/logo1.png;jsessionid=E2BC0F583ABBF454154E34E4741A8873"
+					style="width: 100px;" alt="" srcset=""></a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon "></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent" style="background: #d0d0d0">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link" href="/;jsessionid=E2BC0F583ABBF454154E34E4741A8873">Trang
+							chủ</a></li>
+					<li class="nav-item"><a class="nav-link" href="/register-car;jsessionid=E2BC0F583ABBF454154E34E4741A8873">Trở thành chủ xe</a></li>
+					<li class="nav-item"><a class="nav-link" href="/blog;jsessionid=E2BC0F583ABBF454154E34E4741A8873">Blogs</a></li>
+					<li class="nav-item"><a class="nav-link" href="/lien-he;jsessionid=E2BC0F583ABBF454154E34E4741A8873">Liên
+							hệ</a></li>
+					
+						<li class="nav-item"><a class="nav-link" href="/login;jsessionid=E2BC0F583ABBF454154E34E4741A8873">Đăng
+								nhập</a></li>
+						<li class="nav-item"><a class="nav-link" href="/sign-up;jsessionid=E2BC0F583ABBF454154E34E4741A8873">Đăng kí</a>
+					
+					
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="col-md-12" style="padding: 0px;">
+		<div class="search-car" style="background-image: url(/images/bg-main.1e128ccf.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873);
+	background-repeat: no-repeat, repeat; height: 550px;
+	background-size: cover;" >
+        <h2 style="text-transform: uppercase; margin-bottom: 25px">Mioto - đồng hành cùng chuyến đi </h2>
+        <form action="/filter" method="get" id="form-search-car" class="col-md-6">
+            <h4 style="text-align: center;"> Tìm kiếm xe</h4>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="inputAddress">Nhập nơi muốn thuê xe</label>
+                    <input type="text" class="form-control" id="inputEmail4" name="address" placeholder="Nhập tỉnh hoặc quận  .....">
+                </div>
+                <div class="form-group col-md-12 d-flex">
+                    <div>
+                        <label for="inputDateStart">Ngày nhận xe</label>
+                        <input type="datetime-local" class="form-control" id="inputDateStart" name="dateStart" value="2023-03-13T18:22">
+                    </div>
+                    <div style="margin-left: 60px;">
+                        <label for="inputDateEnd">Ngày trả xe</label>
+                        <input type="datetime-local" class="form-control" id="inputDateEnd" name="dateEnd" value="2023-03-14T18:22">
+                    </div>
+
+                </div>
+                <div class="form-group col-md-12 d-flex">
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="nodriver" value="false" checked="checked" name="driver"><label for="nodriver"> Tự lái</label>
+                    </div>
+                    <div class="form-check" style="margin-left: 20px;">
+                        <input class="form-check-input" type="radio" id="driver" value="true" name="driver"><label for="driver">  Có Tài xế</label>
+                    </div>
+                </div>                
+            </div>
+            <input type="submit" class="btn btn-primary btn-search-car" value="Tìm kiếm xe ngay"></input>
+        </form>
+    </div>
+	</div>
+	<div class="container" style="padding: 0px;">
+		<div class="row">
+
+			<div style="position: relative;">
+				<div class="insurance-partner">
+					<p style="text-decoration: underline;">Đối tác bảo hiểm</p>
+					<div class="partner-logo hasCursor">
+						<div class="partner-logo__image">
+							<img class="img-fluid" src="/uploads/20230429020358vdfqjm1.jpg"
+								onclick="openInsurances()" alt="" srcset="">
+						</div>
+						<div class="partner-logo__image">
+							<img class="img-fluid" src="/uploads/20230429022532dc0m6bb.jpg"
+								onclick="openInsurances()" alt="" srcset="">
+						</div>
+						<div class="partner-logo__image">
+							<img class="img-fluid" src="/uploads/202304290228033tv7mhm.jpg"
+								onclick="openInsurances()" alt="" srcset="">
+						</div>
+						<div id="contentInsurances" class="contentInsurances">
+							<i class="icon-remove fa-solid fa-xmark"
+								onclick="closepPoupupInsurances()"></i>
+							<div style="margin-top: 50px; padding: 10px 20px; text-align: justify;"><h3 style="text-align: center;">BẢO HIỂM CHUYẾN ĐI</h3>
+<p style="text-align: center;">(Bảo hiểm thu&ecirc; xe &ocirc; t&ocirc;)</p>
+<p>Nhằm n&acirc;ng cao trải nghiệm an to&agrave;n v&agrave; giảm thiểu tổn thất c&oacute; thể xảy ra do rủi ro trong qu&aacute; tr&igrave;nh thu&ecirc; xe, Mioto kết hợp với&nbsp;<strong>Bảo hiểm MIC&nbsp;</strong>v&agrave;&nbsp;<strong>Bảo hiểm PJICO&nbsp;</strong>triển khai sản phẩm&nbsp;<strong>BẢO HIỂM CHUYẾN ĐI</strong>, d&agrave;nh ri&ecirc;ng cho c&aacute;c giao dịch thu&ecirc; xe tự l&aacute;i tr&ecirc;n Mioto.</p>
+<p>&nbsp;</p>
+<hr />
+<p><strong>I. Nội dung sản phẩm Bảo hiểm chuyến đi</strong></p>
+<p>Trong thời gian thu&ecirc; xe, nếu xảy ra c&aacute;c sự cố va chạm ngo&agrave;i &yacute; muốn dẫn đến tổn thất về xe, kh&aacute;ch thu&ecirc; sẽ chỉ bồi thường số tiền tối đa&nbsp;<strong>2,000,000đ&nbsp;</strong>để sửa chữa xe (mức khấu trừ), nh&agrave; bảo hiểm sẽ hỗ trợ cho c&aacute;c chi ph&iacute; ph&aacute;t sinh vượt mức khấu trừ.</p>
+<table width="593">
+<tbody>
+<tr>
+<th>Thiệt hại xe</th>
+<th>Kh&aacute;ch thanh to&aacute;n</th>
+<th>BH thanh to&aacute;n</th>
+</tr>
+<tr>
+<td>&lt;= 2 triệu</td>
+<td>&lt;= 2 triệu</td>
+<td>0 triệu</td>
+</tr>
+<tr>
+<td>&gt; 2 triệu</td>
+<td>2 triệu</td>
+<td>Gi&aacute; trị c&ograve;n lại</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr />
+<p><strong>II. Điều khoản Bảo hiểm</strong></p>
+<p>- Bảo hiểm vật chất xe: đ&acirc;m va , hỏa hoạn, ch&aacute;y nổ</p>
+<p>- Bảo hiểm mất cắp, mất nguy&ecirc;n chiếc</p>
+<p>- Miễn ph&iacute; cứu hộ tối đa 70km/vụ</p>
+<p>- Bảo hiểm thủy k&iacute;ch (khấu trừ 20% số tiền bảo hiểm, tối thiểu 3 triệu đồng)</p>
+<p>- Mức khấu trừ: 2,000,000đ/vụ</p>
+<p class="note">* Mức khấu trừ: mọi sự cố ngo&agrave;i &yacute; muốn trong phạm vi bảo hiểm, số tiền tối đa kh&aacute;ch thu&ecirc; thanh to&aacute;n l&agrave; 2 triệu đồng (kh&ocirc;ng bao gồm thiệt hại do xe kh&ocirc;ng cho thu&ecirc; được trong thời gian sửa chữa nếu c&oacute; v&agrave; c&aacute;c l&iacute; do chủ quan kh&aacute;c ngo&agrave;i phạm vi bảo hiểm).</p>
+<p class="note">&nbsp;</p>
+<hr />
+<p><strong>III. Quy tr&igrave;nh xử l&iacute; nếu xảy ra sự cố</strong></p>
+<p>1. Kh&aacute;ch thu&ecirc; chụp ảnh hiện trường.</p>
+<p>2. Kh&aacute;ch thu&ecirc; gọi đến trung t&acirc;m bồi thường của nh&agrave; bảo hiểm (MIC - 1900 55 88 91) (PJICO - 1900 54 54 55), đọc số hợp đồng bảo hiểm v&agrave; l&agrave;m theo hướng dẫn tổng đ&agrave;i.</p>
+<p>3. Gi&aacute;m định vi&ecirc;n bảo hiểm li&ecirc;n hệ kh&aacute;ch thu&ecirc; để hướng dẫn xử l&iacute;, x&aacute;c minh th&ocirc;ng tin v&agrave; x&aacute;c minh hiện trường (nếu c&oacute;).</p>
+<p>4. Gi&aacute;m định vi&ecirc;n v&agrave; chủ xe/kh&aacute;ch thu&ecirc; c&ugrave;ng mang xe ra Garage để gi&aacute;m định thiệt hại v&agrave; ra&nbsp;<strong>B&aacute;o gi&aacute; sửa chữa.</strong></p>
+<p>5. Trung t&acirc;m bồi thường của nh&agrave; bảo hiểm ra&nbsp;<strong>Bi&ecirc;n bản gi&aacute;m định&nbsp;</strong>thiệt hại.</p>
+<p>6. Garage tiến h&agrave;nh sửa chữa theo b&aacute;o gi&aacute;.</p>
+<p>&nbsp;</p>
+<hr />
+<p><strong>IV. Hướng dẫn chọn xe c&oacute; Bảo hiểm chuyến đi</strong></p>
+<p>1. C&aacute;c xe c&oacute; hỗ trợ dịch vụ bảo hiểm sẽ c&oacute; logo&nbsp;<strong>Bảo hiểm chuyến đi&nbsp;</strong>tại ảnh đại diện của xe.</p>
+<p>2. Qu&yacute; kh&aacute;ch h&agrave;ng c&oacute; thể thay đổi lựa chọn dịch vụ của 1 trong 2 nh&agrave; bảo hiểm MIC/PJICO t&ugrave;y theo nhu cầu tại mục&nbsp;<strong>Bảo hiểm&nbsp;</strong>ở bước đặt xe.</p></div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<style>
+.img-fluid:hover {
+	cursor: pointer;
+}
+
+.contentInsurances {
+	position: absolute;
+	width: 800px;
+	top: -250px;
+	background: #d1d1d1;
+	border-radius: 15px;
+	visibility: hidden;
+}
+
+.open-contentInsurances {
+	visibility: visible;
+}
+
+.icon-remove {
+	position: absolute;
+	font-size: 25px;
+	font-weight: 800;
+	top: 5px;
+	right: 5px;
+}
+
+.icon-remove:hover {
+	cursor: pointer;
+	color: red;
+}
+</style>
+			<div class="features__sect">
+				<h4 class="title-content">Tính năng nổi bật</h4>
+
+				<div id="carouselTinhNang" class="carousel " data-bs-ride="carousel">
+					<div class="carousel-inner carousel-inner-tt">
+						<div class="carousel-item carousel-item-tt active">
+							<div class="card">
+								<img src="/images/features_1.d60ace8e.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873"
+									class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img src="/images/features_2.63b45674.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873"
+									class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img src="/images/features_3.d9b52125.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873"
+									class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img src="/images/features_4.173d9abf.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873"
+									class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img src="/images/features_5.c524494b.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873"
+									class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img src="/images/features_6.2eb8bccb.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873"
+									class="card-img-top" alt="...">
+							</div>
+						</div>
+					</div>
+					<button class="carousel-control-prev" id="carousel-control-prev-tt"
+						type="button" data-bs-target="#carouselTinhNang"
+						data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" id="carousel-control-next-tt"
+						type="button" data-bs-target="#carouselTinhNang"
+						data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
+			</div>
+			<div class="col-md-12 help-use"
+				style="position: static; margin-top: 150px; padding-bottom: 20px;">
+
+				<h3>Hướng dẫn thuê xe</h3>
+				<a href="/help;jsessionid=E2BC0F583ABBF454154E34E4741A8873" class="d-md-flex a-help">
+					<div class="fix-img">
+						<div>
+							<img src="/images/step-1.c204d3e1.svg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="" srcset="">
+							<p>Đặt xe</p>
+						</div>
+
+					</div>
+					<div class="fix-img">
+						<div>
+							<img src="/images/step-2.0bcadc00.svg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="" srcset="">
+							<p>Nhận xe</p>
+						</div>
+
+					</div>
+					<div class="fix-img">
+						<div>
+							<img src="/images/step-3.5ee48572.svg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="" srcset="">
+							<p>Trải nghiệm chuyến đi</p>
+						</div>
+
+					</div>
+					<div class="fix-img">
+						<div>
+							<img src="/images/step-4.518ab6a3.svg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="" srcset="">
+							<p>Kết thúc giao dịch</p>
+						</div>
+
+					</div>
+				</a>
+			</div>
+
+			<h4 class="title-content">ĐỊA ĐIỂM NỔI BẬT - XE CÓ TÀI XẾ</h4>
+			<div id="carouselAddressDriver" class="carousel"
+				data-bs-ride="carousel">
+				<div class="carousel-inner carousel-inner-address-driver">
+					<div class="carousel-item-address-driver">
+						<div class="card">
+							<div class="card-body">
+
+								<a
+									href="/2/Đà Nẵng/has-driver">
+									<img src="/uploads/20230406092739ap1gmn1.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+									<div class="text">
+										<h4 class="name-car">Đà Nẵng</h4>
+										<p class="sum-car"></p>
+									</div>
+								</a>
+
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item-address-driver">
+						<div class="card">
+							<div class="card-body">
+
+								<a
+									href="/3/Hà Nội/has-driver">
+									<img src="/uploads/202304061115559slmnh8.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+									<div class="text">
+										<h4 class="name-car">Hà Nội</h4>
+										<p class="sum-car"></p>
+									</div>
+								</a>
+
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item-address-driver">
+						<div class="card">
+							<div class="card-body">
+
+								<a
+									href="/4/Hà Tĩnh/has-driver">
+									<img src="/uploads/20230406014944nt15kpa.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+									<div class="text">
+										<h4 class="name-car">Hà Tĩnh</h4>
+										<p class="sum-car"></p>
+									</div>
+								</a>
+
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item-address-driver">
+						<div class="card">
+							<div class="card-body">
+
+								<a
+									href="/6/Hồ Chí Minh/has-driver">
+									<img src="/uploads/2023040704520267j4ij0.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+									<div class="text">
+										<h4 class="name-car">Hồ Chí Minh</h4>
+										<p class="sum-car"></p>
+									</div>
+								</a>
+
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item-address-driver">
+						<div class="card">
+							<div class="card-body">
+
+								<a
+									href="/1/Nghệ An/has-driver">
+									<img src="/uploads/202304060210236cer090.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+									<div class="text">
+										<h4 class="name-car">Nghệ An</h4>
+										<p class="sum-car"></p>
+									</div>
+								</a>
+
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item-address-driver">
+						<div class="card">
+							<div class="card-body">
+
+								<a
+									href="/5/Thanh Hóa/has-driver">
+									<img src="/uploads/20230406021435nn1bhmu.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+									<div class="text">
+										<h4 class="name-car">Thanh Hóa</h4>
+										<p class="sum-car"></p>
+									</div>
+								</a>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<button class="carousel-control-prev"
+					id="carousel-control-prev-address-driver" type="button"
+					data-bs-target="#carouselAddressDriver" data-bs-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Previous</span>
+				</button>
+				<button class="carousel-control-next"
+					id="carousel-control-next-address-driver" type="button"
+					data-bs-target="#carouselAddressDriver" data-bs-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Next</span>
+				</button>
+			</div>
+		</div>
+
+		<h4 class="title-content">ĐỊA ĐIỂM NỔI BẬT - XE TỰ LÁI</h4>
+		<div id="carouselAddressNotCarDriver" class="carousel"
+			data-bs-ride="carousel">
+			<div class="carousel-inner carousel-inner-address-no-driver">
+				<div class="carousel-item-address-no-driver">
+					<div class="card">
+						<div class="card-body">
+
+							<a
+								href="/2/Đà Nẵng/no-driver">
+								<img src="/uploads/20230406092739ap1gmn1.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="text">
+									<h4 class="name-car-no-driver">Đà Nẵng</h4>
+									<p class="sum-car-no-driver"></p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-address-no-driver">
+					<div class="card">
+						<div class="card-body">
+
+							<a
+								href="/3/Hà Nội/no-driver">
+								<img src="/uploads/202304061115559slmnh8.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="text">
+									<h4 class="name-car-no-driver">Hà Nội</h4>
+									<p class="sum-car-no-driver"></p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-address-no-driver">
+					<div class="card">
+						<div class="card-body">
+
+							<a
+								href="/4/Hà Tĩnh/no-driver">
+								<img src="/uploads/20230406014944nt15kpa.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="text">
+									<h4 class="name-car-no-driver">Hà Tĩnh</h4>
+									<p class="sum-car-no-driver"></p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-address-no-driver">
+					<div class="card">
+						<div class="card-body">
+
+							<a
+								href="/6/Hồ Chí Minh/no-driver">
+								<img src="/uploads/2023040704520267j4ij0.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="text">
+									<h4 class="name-car-no-driver">Hồ Chí Minh</h4>
+									<p class="sum-car-no-driver"></p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-address-no-driver">
+					<div class="card">
+						<div class="card-body">
+
+							<a
+								href="/1/Nghệ An/no-driver">
+								<img src="/uploads/202304060210236cer090.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="text">
+									<h4 class="name-car-no-driver">Nghệ An</h4>
+									<p class="sum-car-no-driver"></p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-address-no-driver">
+					<div class="card">
+						<div class="card-body">
+
+							<a
+								href="/5/Thanh Hóa/no-driver">
+								<img src="/uploads/20230406021435nn1bhmu.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="text">
+									<h4 class="name-car-no-driver">Thanh Hóa</h4>
+									<p class="sum-car-no-driver"></p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="carousel-control-prev"
+				id="carousel-control-prev-address-no-driver" type="button"
+				data-bs-target="#carouselAddressNotCarDriver" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next"
+				id="carousel-control-next-address-no-driver" type="button"
+				data-bs-target="#carouselAddressNotCarDriver" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+
+		<h4 class="title-content">XE NỔI BẬT - XE TỰ LÁI</h4>
+		<div id="carouselCarNotDriver" class="carousel"
+			data-bs-ride="carousel">
+			<div class="carousel-inner carousel-inner-no-driver">
+				<div class="carousel-item-no-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/6/Audi A4 2022"> <img
+								src="/uploads/202305121145324hv7kqa.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>1330 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>Audi A4 2022</h6>
+									<input type="hidden" value="6" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Quận Ba Đình,Hà Nội</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-no-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/8/Audi RS5"> <img
+								src="/uploads/20230513122342mnf3n7l.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>1615 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>Audi RS5</h6>
+									<input type="hidden" value="8" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Quận Hoàn Kiếm,Hà Nội</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-no-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/12/Bentley Flying Spur 2023"> <img
+								src="/uploads/2023051301161944gu0t3.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>2090 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>Bentley Flying Spur 2023</h6>
+									<input type="hidden" value="12" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Ngũ Hành Sơn,Đà Nẵng</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-no-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/9/BMW X1"> <img
+								src="/uploads/20230513122950vvm1fen.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>1710 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>BMW X1</h6>
+									<input type="hidden" value="9" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Quận Hoàn Kiếm,Hà Nội</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-no-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/14/Ford Ranger 2023"> <img
+								src="/uploads/202305130125366g66i78.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>1805 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>Ford Ranger 2023</h6>
+									<input type="hidden" value="14" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Ngũ Hành Sơn,Đà Nẵng</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="carousel-control-prev"
+				id="carousel-control-prev-no-driver" type="button"
+				data-bs-target="#carouselCarNotDriver" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next"
+				id="carousel-control-next-no-driver" type="button"
+				data-bs-target="#carouselCarNotDriver" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+
+		<h4 class="title-content">XE NỔI BẬT - XE CÓ TÀI XẾ</h4>
+		<div id="carouselCarDriver" class="carousel" data-bs-ride="carousel">
+			<div class="carousel-inner carousel-inner-driver">
+				<div class="carousel-item-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/7/Audi Q2 2023"> <img
+								src="/uploads/20230513121826ksobgqr.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>1376.55 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>Audi Q2 2023</h6>
+									<input type="hidden" value="7" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Quận Hoàn Kiếm,Hà Nội</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/13/Bentley Continental GT 2023"> <img
+								src="/uploads/202305130120317kdit62.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>2375 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>Bentley Continental GT 2023</h6>
+									<input type="hidden" value="13" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Quận Liên Chiểu,Đà Nẵng</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/10/BMW 118i 2023"> <img
+								src="/uploads/202305131235260g3q6ka.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>1805 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>BMW 118i 2023</h6>
+									<input type="hidden" value="10" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Quận Tây Hồ,Hà Nội</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/11/BMW 420i Convertible 2023"> <img
+								src="/uploads/202305131255329opvre9.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>1900 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>BMW 420i Convertible 2023</h6>
+									<input type="hidden" value="11" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Quận Long Biên,Hà Nội</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item-driver">
+					<div class="card">
+						<div class="card-body-car">
+							<a href="/car-detail/15/Ford Focus 2023"> <img
+								src="/uploads/20230513013248ocqrqp1.jpg;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="...">
+								<div class="price">
+									<h6>1710 K</h6>
+								</div>
+								<div class="info-car">
+									<h6>Ford Focus 2023</h6>
+									<input type="hidden" value="15" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p>Quận Liên Chiểu,Đà Nẵng</p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="carousel-control-prev"
+				id="carousel-control-prev-driver" type="button"
+				data-bs-target="#carouselCarDriver" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next"
+				id="carousel-control-next-driver" type="button"
+				data-bs-target="#carouselCarDriver" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+	</div>
+
+</body>
+<footer>
+    <div class="contenter-fuild">
+        <div class="row">
+            <div class="col-md-12 d-md-flex"
+                style="background:white; color:black; overflow: hidden; border-top: 1px solid green;
+    border-top-left-radius:10px;border-top-right-radius:10px;">
+                <div class="col-md-3 footer">
+                    <div> <img src="/uploads/logo1.png;jsessionid=E2BC0F583ABBF454154E34E4741A8873" alt="" srcset=""></div>
+                    <div class="d-sm-flex icon">
+                        <a href=""> <i class="fa-brands fa-facebook"></i></a>
+                        <a href=""><i class="fa-brands fa-twitter"></i></a>
+                        <a href=""><i class="fa-brands fa-youtube"></i></a>
+                        <a href=""><i class="fa-brands fa-tiktok"></i></a>
+                        <a href=""><i class="fa-brands fa-linkedin"></i></a>
+                       
+                       
+                    </div>
+                </div>
+                <div class="col-md-3 footers">
+                    <h6>Chính sách</h6>
+                    <a href="">Giới thiệu</a>
+                    <a href="">Chính sách và Quy định</a>
+                    <a href="">Giải quyết tranh chấp</a>
+                </div>
+                <div class="col-md-3 footers">
+                    <h6> Tìm hiểu thêm</h6>
+                    <a href="">Hướng dẫn chung</a>
+                    <a href="/help;jsessionid=E2BC0F583ABBF454154E34E4741A8873">Hướng dẫn đặt xe</a>
+                    <a href="">Hỏi và trả lời</a>
+                </div>
+                <div class="col-md-3 footers">
+                    <h6> Đối tác</h6>
+                    <a href="">Đăng kí chủ xe</a>
+                    <a href="">Đối tác bảo hiểm</a>
+
+
+                </div>
+            </div>
+            <div class="col-md-12 d-md-flex" 
+             style="background:white; color: black; overflow: hidden;">
+                <div class="col-md-3 contact">
+                    <h6> MIOTO HÂN HẠNH CÙNG ĐỒNG HÀNG</h6>
+                </div>
+                <div class="col-md-9 contact contact-info">
+                    <h6> Địa Chỉ: Quận Ngũ Hánh Sơn-Đà Nẵng</h6>
+                    <h6> Email: ngocnt.22itb@vku.udn.vn</h6>
+                    <h6> Điện thoại; 0368505043</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .contact{
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
+        .contact-info{
+             text-align: center;
+        }
+        .footers a {
+            text-decoration: none;
+            font-size: 14px;
+            color: black;
+            display: block;
+            margin: 5px 0px;
+        }
+
+        .footer,
+        .footers {
+            margin-top: 20px;
+            padding-bottom: 20px;
+            margin-left: 20px;
+        }
+
+        .footer a {
+            margin: 0px 10px 0px 0px;
+        }
+
+        .footer img {
+            width: 50%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .icon {
+            font-size: 24px;
+        }
+    </style>
+</footer>
+
+<script src="/js/main.js;jsessionid=E2BC0F583ABBF454154E34E4741A8873"></script>
+<script
+	src="/lib/bower_components/sweetalert2/dist/sweetalert2.js;jsessionid=E2BC0F583ABBF454154E34E4741A8873"></script>
+</html>

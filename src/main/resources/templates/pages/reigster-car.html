@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<title>Web thuê xe - Đăng ký xe</title>
+<link rel="icon" th:href="@{/images/icon-logo.png}" type="images/x-icon">
+
+<head th:replace="~{pages/layout/header-css-js :: header-css-js}">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body style="background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); min-height: 100vh;">
+	<nav th:replace="~{pages/layout/header :: header}"></nav>
+
+	<!-- Hero Section -->
+	<div class="hero-section">
+		<div class="container">
+			<div class="hero-content">
+				<h1><i class="fa-solid fa-car-side"></i> Đăng Ký Xe Của Bạn</h1>
+				<p>Tham gia cùng MIOTO và biến chiếc xe của bạn thành nguồn thu nhập</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="register-car-wrapper">
+			<form action="/register-car" method="post" id="form-register-car" enctype="multipart/form-data"
+				class="form-register-car" th:object="${car}">
+
+				<!-- Message Display -->
+				<div th:if="${mes_faill}" class="alert alert-danger" role="alert"
+					style="margin-bottom: 20px; padding: 15px; border-radius: 8px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
+					<i class="fa-solid fa-circle-exclamation"></i> <span th:text="${mes_faill}"></span>
+				</div>
+				<div th:if="${mes_registerCar}" class="alert alert-success" role="alert"
+					style="margin-bottom: 20px; padding: 15px; border-radius: 8px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
+					<i class="fa-solid fa-circle-check"></i> <span th:text="${mes_registerCar}"></span>
+				</div>
+
+				<!-- Section 1: Biển số xe -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-id-card"></i></div>
+						<div>
+							<h3>Biển số xe</h3>
+							<p class="section-desc">Lưu ý: Biển số xe không thể thay đổi sau khi đăng ký</p>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group full-width">
+							<label for="licensePlates"><i class="fa-solid fa-hashtag"></i> Biển số xe</label>
+							<input type="text" th:field="*{licensePlates}" id="licensePlates"
+								placeholder="VD: 37A-67896" class="form-control-modern">
+						</div>
+					</div>
+				</div>
+
+				<!-- Section 2: Thông tin cơ bản -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-car"></i></div>
+						<div>
+							<h3>Thông tin cơ bản</h3>
+							<p class="section-desc">Mô tả chi tiết về xe của bạn</p>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label for="brandcar"><i class="fa-solid fa-industry"></i> Hãng xe</label>
+							<select name="brandcar" id="brandcar" class="form-control-modern">
+								<option value="0">Chọn hãng xe</option>
+								<option th:each="item :${brandcar}" th:value="${item.idBrand}"
+									th:text="${item.nameBrand}"></option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="nameCar"><i class="fa-solid fa-car-side"></i> Mẫu xe</label>
+							<input placeholder="VD: Toyota Vios 2022" type="text" th:field="*{nameCar}"
+								class="form-control-modern">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label><i class="fa-solid fa-chair"></i> Số ghế</label>
+							<input type="number" th:field="*{numberOfSeats}" placeholder="4"
+								class="form-control-modern">
+						</div>
+						<div class="form-group">
+							<label><i class="fa-solid fa-gears"></i> Truyền động</label>
+							<select th:field="*{manualTransmissionCar}" class="form-control-modern">
+								<option value="0">Số sàn</option>
+								<option value="1">Số tự động</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label><i class="fa-solid fa-calendar"></i> Năm sản xuất</label>
+							<input type="number" th:field="*{modelYear}" id="modelYear" placeholder="2022"
+								class="form-control-modern">
+						</div>
+						<div class="form-group">
+							<label><i class="fa-solid fa-gas-pump"></i> Loại nhiên liệu</label>
+							<select th:field="*{fuel}" class="form-control-modern">
+								<option value="0">Xăng</option>
+								<option value="1">Dầu diesel</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label><i class="fa-solid fa-gauge-high"></i> Mức tiêu thụ (L/100km)</label>
+							<input type="number" th:field="*{fuelFor100km}" placeholder="10"
+								class="form-control-modern">
+						</div>
+						<div class="form-group">
+							<label><i class="fa-solid fa-user-tie"></i> Loại cho thuê</label>
+							<select th:field="*{driver}" class="form-control-modern">
+								<option value="0">Xe tự lái</option>
+								<option value="1">Xe có tài xế</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<!-- Section 3: Mô tả -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-file-lines"></i></div>
+						<div>
+							<h3>Mô tả xe</h3>
+							<p class="section-desc">Giới thiệu chi tiết về xe để thu hút khách hàng</p>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group full-width">
+							<textarea th:field="*{overviewCar}" rows="5" placeholder="Mô tả chi tiết về xe của bạn..."
+								class="form-control-modern"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<!-- Section 4: Tính năng -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-list-check"></i></div>
+						<div>
+							<h3>Tính năng xe</h3>
+							<p class="section-desc">Chọn các tính năng có sẵn trên xe của bạn</p>
+						</div>
+					</div>
+					<div class="features-grid">
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{maps}">
+							<div class="feature-icon"><img th:src="@{/images/map.png}" alt=""></div>
+							<span>Bản đồ</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{bluetooth}">
+							<div class="feature-icon"><img th:src="@{/images/bluetooth.png}" alt=""></div>
+							<span>Bluetooth</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{camera360}">
+							<div class="feature-icon"><img th:src="@{/images/360_camera.png}" alt=""></div>
+							<span>Camera 360</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{parkingCamera}">
+							<div class="feature-icon"><img th:src="@{/images/parking_camera.png}" alt=""></div>
+							<span>Camera cập lề</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{dashCamera}">
+							<div class="feature-icon"><img th:src="@{/images/dash_camera.png}" alt=""></div>
+							<span>Camera hành trình</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{reverseCamera}">
+							<div class="feature-icon"><img th:src="@{/images/reverse_camera.png}" alt=""></div>
+							<span>Camera lùi</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{tpms}">
+							<div class="feature-icon"><img th:src="@{/images/tpms.png}" alt=""></div>
+							<span>Cảm biến lốp</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{impactSensor}">
+							<div class="feature-icon"><img th:src="@{/images/impact_sensor.png}" alt=""></div>
+							<span>Cảm biến va chạm</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{speedWarning}">
+							<div class="feature-icon"><img th:src="@{/images/head_up.png}" alt=""></div>
+							<span>Cảnh báo tốc độ</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{sunroof}">
+							<div class="feature-icon"><img th:src="@{/images/sunroof.png}" alt=""></div>
+							<span>Cửa sổ trời</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{gpsLocator}">
+							<div class="feature-icon"><img th:src="@{/images/gps.png}" alt=""></div>
+							<span>Định vị GPS</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{babyseat}">
+							<div class="feature-icon"><img th:src="@{/images/babyseat.png}" alt=""></div>
+							<span>Ghế trẻ em</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{usb}">
+							<div class="feature-icon"><img th:src="@{/images/usb.png}" alt=""></div>
+							<span>USB</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{spareTire}">
+							<div class="feature-icon"><img th:src="@{/images/spare_tire.png}" alt=""></div>
+							<span>Lốp dự phòng</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{dvdScreen}">
+							<div class="feature-icon"><img th:src="@{/images/dvd.png}" alt=""></div>
+							<span>Màn hình DVD</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{bonnet}">
+							<div class="feature-icon"><img th:src="@{/images/bonnet.png}" alt=""></div>
+							<span>Nắp thùng xe</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{etc}">
+							<div class="feature-icon"><img th:src="@{/images/etc.png}" alt=""></div>
+							<span>Thu phí tự động</span>
+						</label>
+						<label class="feature-item">
+							<input type="checkbox" th:field="*{airbags}">
+							<div class="feature-icon"><img th:src="@{/images/airbags.png}" alt=""></div>
+							<span>Túi khí an toàn</span>
+						</label>
+					</div>
+				</div>
+
+				<!-- Section 5: Giá cả -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-tag"></i></div>
+						<div>
+							<h3>Giá cho thuê</h3>
+							<p class="section-desc">Thiết lập giá thuê xe của bạn</p>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label><i class="fa-solid fa-money-bill-wave"></i> Đơn giá (K/ngày)</label>
+							<div class="input-with-unit">
+								<input type="number" th:field="*{price}" id="input-price" placeholder="500"
+									class="form-control-modern">
+								<span class="unit">K</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label><i class="fa-solid fa-percent"></i> Giảm giá: <span id="promotion-price"
+									class="highlight-value">0%</span></label>
+							<input type="range" th:field="*{promotionalPrice}" id="input-promotion-price" min="0"
+								max="50" step="1" class="range-slider">
+						</div>
+					</div>
+				</div>
+
+				<!-- Section 6: Địa chỉ -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-location-dot"></i></div>
+						<div>
+							<h3>Địa chỉ xe</h3>
+							<p class="section-desc">Nơi đặt xe của bạn</p>
+						</div>
+					</div>
+					<div class="form-row three-cols">
+						<div class="form-group">
+							<label><i class="fa-solid fa-city"></i> Tỉnh/Thành phố</label>
+							<select name="province" th:onchange="GetDistrict(this.value)" class="form-control-modern">
+								<option value="0">Chọn tỉnh - thành phố</option>
+								<th:block th:each="item : ${province}">
+									<option th:value="${item.idProvince}" th:text="${item.nameProvince}"></option>
+								</th:block>
+							</select>
+						</div>
+						<div class="form-group">
+							<label><i class="fa-solid fa-map"></i> Quận/Huyện</label>
+							<select id="district" name="district" th:onchange="getWard(this.value)"
+								class="form-control-modern">
+								<option value="0">Chọn quận - huyện</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label><i class="fa-solid fa-map-pin"></i> Phường/Xã</label>
+							<select name="ward" id="ward" class="form-control-modern">
+								<option value="0">Chọn phường/xã</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group full-width">
+							<label><i class="fa-solid fa-house"></i> Địa chỉ cụ thể</label>
+							<input type="text" th:field="*{addressCar}" placeholder="Số nhà 12, ngõ 7, đường..."
+								class="form-control-modern">
+						</div>
+					</div>
+				</div>
+
+				<!-- Section 7: Giao xe -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-truck"></i></div>
+						<div>
+							<h3>Giao xe tận nơi</h3>
+							<p class="section-desc">Cài đặt phí giao xe</p>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label><i class="fa-solid fa-road"></i> Quãng đường giao xe tối đa: <span id="distance"
+									class="highlight-value">0Km</span></label>
+							<input type="range" id="input-distance" min="0" max="50"
+								th:field="*{maximumDeliveryDistance}" step="1" class="range-slider">
+						</div>
+						<div class="form-group">
+							<label><i class="fa-solid fa-coins"></i> Phí giao xe/1Km: <span id="distance-price"
+									class="highlight-value">0K</span></label>
+							<input type="range" th:field="*{deliveryFeeFor1Km}" id="input-feet-distance" min="0"
+								max="20" step="1" class="range-slider">
+						</div>
+					</div>
+				</div>
+
+				<!-- Section 8: Giới hạn KM -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-gauge"></i></div>
+						<div>
+							<h3>Giới hạn số KM</h3>
+							<p class="section-desc">Thiết lập giới hạn kilometr</p>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label><i class="fa-solid fa-road"></i> Số KM tối đa/ngày: <span id="limit-km"
+									class="highlight-value">200Km</span></label>
+							<input type="range" th:field="*{maximumKilometersperDay}" id="input-limit-km" min="200"
+								max="600" step="5" class="range-slider">
+						</div>
+						<div class="form-group">
+							<label><i class="fa-solid fa-coins"></i> Phí vượt giới hạn/1Km: <span id="limit-km-price"
+									class="highlight-value">0K</span></label>
+							<input type="range" id="input-feet-limit-km" min="0" th:field="*{limitCrossingfee1Km}"
+								max="10" step="1" class="range-slider">
+						</div>
+					</div>
+				</div>
+
+				<!-- Section 9: Điều khoản -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-file-contract"></i></div>
+						<div>
+							<h3>Điều khoản thuê xe</h3>
+							<p class="section-desc">Ghi rõ các điều kiện khi cho thuê xe</p>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group full-width">
+							<textarea th:field="*{polyUseCar}" rows="5"
+								placeholder="Nhập các điều khoản và quy định khi thuê xe..."
+								class="form-control-modern"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<!-- Section 10: Ảnh xe -->
+				<div class="form-section">
+					<div class="section-header">
+						<div class="section-icon"><i class="fa-solid fa-images"></i></div>
+						<div>
+							<h3>Hình ảnh xe</h3>
+							<p class="section-desc">Tải lên hình ảnh xe để thu hút khách hàng</p>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label><i class="fa-solid fa-image"></i> Ảnh đại diện</label>
+							<div class="file-upload-wrapper">
+								<input type="file" name="img-main" accept="image/png, image/gif, image/jpeg"
+									id="main-image">
+								<label for="main-image" class="file-upload-label">
+									<i class="fa-solid fa-cloud-arrow-up"></i>
+									<span>Chọn ảnh đại diện</span>
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label><i class="fa-solid fa-images"></i> Các ảnh khác</label>
+							<div class="file-upload-wrapper">
+								<input type="file" name="img-sub" multiple accept="image/png, image/gif, image/jpeg"
+									id="sub-images">
+								<label for="sub-images" class="file-upload-label">
+									<i class="fa-solid fa-cloud-arrow-up"></i>
+									<span>Chọn nhiều ảnh</span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Submit Button -->
+				<div class="submit-section">
+					<button type="submit" id="btn-submit-car" class="btn-submit"
+						onclick="console.log('Button clicked via onclick'); return true;">
+						<i class="fa-solid fa-paper-plane"></i> Đăng Ký Xe Ngay
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</body>
+
+<style>
+	/* Hero Section */
+	.hero-section {
+		background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1e7a39 100%);
+		padding: 60px 0;
+		margin-bottom: 40px;
+	}
+
+	.hero-content {
+		text-align: center;
+		color: white;
+	}
+
+	.hero-content h1 {
+		font-size: 2.5rem;
+		font-weight: 700;
+		margin-bottom: 15px;
+	}
+
+	.hero-content h1 i {
+		margin-right: 15px;
+		color: #90EE90;
+	}
+
+	.hero-content p {
+		font-size: 1.1rem;
+		opacity: 0.9;
+	}
+
+	/* Wrapper */
+	.register-car-wrapper {
+		max-width: 900px;
+		margin: 0 auto 60px;
+		padding: 0 20px;
+	}
+
+	/* Form Sections */
+	.form-section {
+		background: white;
+		border-radius: 16px;
+		padding: 30px;
+		margin-bottom: 25px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+		transition: all 0.3s ease;
+	}
+
+	.form-section:hover {
+		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+		margin-bottom: 25px;
+		padding-bottom: 20px;
+		border-bottom: 2px solid #f0f0f0;
+	}
+
+	.section-icon {
+		width: 55px;
+		height: 55px;
+		border-radius: 12px;
+		background: linear-gradient(135deg, #1a472a, #2d5a3d);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 24px;
+		color: #90EE90;
+		flex-shrink: 0;
+	}
+
+	.section-header h3 {
+		margin: 0;
+		font-size: 1.3rem;
+		font-weight: 700;
+		color: #1a472a;
+	}
+
+	.section-desc {
+		margin: 5px 0 0;
+		font-size: 14px;
+		color: #666;
+	}
+
+	/* Form Rows & Groups */
+	.form-row {
+		display: flex;
+		gap: 20px;
+		margin-bottom: 20px;
+		flex-wrap: wrap;
+	}
+
+	.form-row:last-child {
+		margin-bottom: 0;
+	}
+
+	.form-row.three-cols .form-group {
+		flex: 1;
+		min-width: 200px;
+	}
+
+	.form-group {
+		flex: 1;
+		min-width: 250px;
+	}
+
+	.form-group.full-width {
+		flex: 100%;
+		min-width: 100%;
+	}
+
+	.form-group label {
+		display: block;
+		margin-bottom: 10px;
+		font-weight: 600;
+		color: #333;
+		font-size: 14px;
+	}
+
+	.form-group label i {
+		color: #2d5a3d;
+		margin-right: 8px;
+	}
+
+	/* Modern Form Controls */
+	.form-control-modern {
+		width: 100%;
+		padding: 14px 18px;
+		border: 2px solid #e8e8e8;
+		border-radius: 10px;
+		font-size: 15px;
+		transition: all 0.3s ease;
+		background: #fafafa;
+	}
+
+	.form-control-modern:focus {
+		outline: none;
+		border-color: #2d5a3d;
+		background: white;
+		box-shadow: 0 0 0 4px rgba(45, 90, 61, 0.1);
+	}
+
+	textarea.form-control-modern {
+		resize: vertical;
+		min-height: 120px;
+	}
+
+	/* Input with Unit */
+	.input-with-unit {
+		position: relative;
+	}
+
+	.input-with-unit input {
+		padding-right: 50px;
+	}
+
+	.input-with-unit .unit {
+		position: absolute;
+		right: 18px;
+		top: 50%;
+		transform: translateY(-50%);
+		font-weight: 700;
+		color: #2d5a3d;
+	}
+
+	/* Range Slider */
+	.range-slider {
+		width: 100%;
+		height: 8px;
+		border-radius: 4px;
+		background: linear-gradient(90deg, #e8e8e8, #d0d0d0);
+		outline: none;
+		-webkit-appearance: none;
+		appearance: none;
+		margin-top: 10px;
+	}
+
+	.range-slider::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #1a472a, #2d5a3d);
+		cursor: pointer;
+		box-shadow: 0 4px 15px rgba(26, 71, 42, 0.4);
+		transition: all 0.3s ease;
+	}
+
+	.range-slider::-webkit-slider-thumb:hover {
+		transform: scale(1.1);
+	}
+
+	.highlight-value {
+		color: #1a472a;
+		font-weight: 700;
+		background: linear-gradient(135deg, rgba(144, 238, 144, 0.3), rgba(50, 205, 50, 0.2));
+		padding: 3px 10px;
+		border-radius: 5px;
+	}
+
+	/* Features Grid */
+	.features-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+		gap: 15px;
+	}
+
+	.feature-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 20px 15px;
+		border: 2px solid #e8e8e8;
+		border-radius: 12px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		background: #fafafa;
+		position: relative;
+	}
+
+	.feature-item:hover {
+		border-color: #2d5a3d;
+		background: white;
+	}
+
+	.feature-item.selected,
+	.feature-item:has(input:checked) {
+		border-color: #2d5a3d;
+		background: linear-gradient(135deg, rgba(144, 238, 144, 0.2), rgba(50, 205, 50, 0.1));
+		box-shadow: 0 4px 15px rgba(45, 90, 61, 0.15);
+	}
+
+	.feature-item input[type="checkbox"] {
+		position: absolute;
+		opacity: 0;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		cursor: pointer;
+		z-index: 10;
+	}
+
+	.feature-icon {
+		width: 40px;
+		height: 40px;
+		margin-bottom: 10px;
+	}
+
+	.feature-icon img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.feature-item span {
+		font-size: 12px;
+		font-weight: 600;
+		color: #333;
+		text-align: center;
+	}
+
+	/* File Upload */
+	.file-upload-wrapper {
+		position: relative;
+	}
+
+	.file-upload-wrapper input[type="file"] {
+		position: absolute;
+		opacity: 0;
+		width: 100%;
+		height: 100%;
+		cursor: pointer;
+		z-index: 2;
+	}
+
+	.file-upload-label {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 40px 20px;
+		border: 3px dashed #d0d0d0;
+		border-radius: 12px;
+		background: #fafafa;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.file-upload-label:hover {
+		border-color: #2d5a3d;
+		background: white;
+	}
+
+	.file-upload-label i {
+		font-size: 40px;
+		color: #2d5a3d;
+		margin-bottom: 15px;
+	}
+
+	.file-upload-label span {
+		font-size: 14px;
+		font-weight: 600;
+		color: #666;
+	}
+
+	/* Submit Section */
+	.submit-section {
+		text-align: center;
+		padding: 30px 0;
+	}
+
+	.btn-submit {
+		display: inline-flex;
+		align-items: center;
+		gap: 12px;
+		padding: 18px 60px;
+		font-size: 18px;
+		font-weight: 700;
+		color: white;
+		background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1e7a39 100%);
+		border: none;
+		border-radius: 50px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		box-shadow: 0 8px 30px rgba(26, 71, 42, 0.3);
+	}
+
+	.btn-submit:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 12px 40px rgba(26, 71, 42, 0.4);
+	}
+
+	.btn-submit i {
+		font-size: 20px;
+	}
+
+	/* Error Labels */
+	label.error {
+		display: block;
+		color: #ff4444;
+		font-size: 12px;
+		margin-top: 8px;
+		font-weight: 500;
+	}
+
+	/* Responsive */
+	@media (max-width: 768px) {
+		.hero-content h1 {
+			font-size: 1.8rem;
+		}
+
+		.form-section {
+			padding: 20px;
+		}
+
+		.section-header {
+			flex-direction: column;
+			text-align: center;
+		}
+
+		.form-group {
+			min-width: 100%;
+		}
+
+		.features-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.btn-submit {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+</style>
+
+<script>
+	$(document).ready(function () {
+		promotionPrice();
+		distance();
+		fee_distance();
+		limitKM();
+		feeLimitKM();
+	});
+
+	function promotionPrice() {
+		var input_promotion_price = document.getElementById("input-promotion-price");
+		var span_pirce_promotion = document.getElementById("promotion-price");
+		span_pirce_promotion.innerText = input_promotion_price.value + "%";
+		input_promotion_price.oninput = function () {
+			span_pirce_promotion.innerText = this.value + "%";
+		}
+	}
+
+	function distance() {
+		var input_distance = document.getElementById("input-distance");
+		var distance = document.getElementById("distance");
+		distance.innerText = input_distance.value + "Km";
+		input_distance.oninput = function () {
+			distance.innerText = this.value + "Km";
+		}
+	}
+
+	function fee_distance() {
+		var input_feet = document.getElementById("input-feet-distance");
+		var distance_price = document.getElementById("distance-price");
+		distance_price.innerText = input_feet.value + "K";
+		input_feet.oninput = function () {
+			distance_price.innerText = this.value + "K";
+		}
+	}
+
+	function limitKM() {
+		var input_limit_km = document.getElementById("input-limit-km");
+		var limit_km = document.getElementById("limit-km");
+		limit_km.innerText = input_limit_km.value + "Km";
+		input_limit_km.oninput = function () {
+			limit_km.innerText = this.value + "Km";
+		}
+	}
+
+	function feeLimitKM() {
+		var input_feet_limit_km = document.getElementById("input-feet-limit-km");
+		var limit_km_price = document.getElementById("limit-km-price");
+		limit_km_price.innerText = input_feet_limit_km.value + "K";
+		input_feet_limit_km.oninput = function () {
+			limit_km_price.innerText = this.value + "K";
+		}
+	}
+</script>
+
+<footer th:replace="~{pages/layout/footer :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+	crossorigin="anonymous"></script>
+
+<script>
+	function GetDistrict(id) {
+		var districts = document.getElementById('district');
+		$.ajax({
+			url: "/getDistrict",
+			data: {
+				"id": id
+			},
+			type: "GET",
+			responseType: "application/json"
+		}).done(function (ketqua) {
+			district.length = 1;
+			for (let d of ketqua) {
+				districts.options[districts.options.length] = new Option(d.nameDistrict, d.idDistrict);
+			}
+		})
+	}
+
+	function getWard(id) {
+		var wards = document.getElementById('ward');
+		$.ajax({
+			url: "/getWard",
+			data: {
+				"id": id
+			},
+			type: "GET",
+			responseType: "application/json"
+		}).done(function (ketqua) {
+			wards.length = 1;
+			for (let d of ketqua) {
+				wards.options[wards.options.length] = new Option(d.nameWard, d.idWard);
+			}
+		})
+	}
+</script>
+
+</html>

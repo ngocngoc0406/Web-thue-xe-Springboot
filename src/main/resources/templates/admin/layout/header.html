@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header id="header" class="header premium-glass-header" th:fragment="header">
+    <div class="top-left">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img th:src="@{/uploads/logo1.png}" alt="Logo" class="main-logo-img">
+            </a>
+            <a id="menuToggle" class="menutoggle">
+                <i class="fa fa-outdent"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="top-right">
+        <div class="header-menu">
+            <div class="header-left">
+                <div class="search-area d-none d-lg-block">
+                    <form class="search-form">
+                        <i class="fa fa-search search-icon"></i>
+                        <input type="text" placeholder="Tìm kiếm nhanh..." class="search-input">
+                    </form>
+                </div>
+            </div>
+
+            <div class="user-area dropdown float-right">
+                <a href="#" class="dropdown-toggle d-flex align-items-center" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" style="text-decoration: none;">
+                    <div class="user-info-box text-right mr-3 d-none d-md-block">
+                        <span class="user-name-premium"
+                            th:text="${session.sesionUser?.nameDisplay}">Administrator</span>
+                        <span class="user-status-online"><i class="fa fa-circle"></i> Đang hoạt động</span>
+                    </div>
+                    <div class="avatar-container">
+                        <img class="user-avatar-premium shadow-sm"
+                            th:src="@{${'/uploads/'+ (session.sesionUser?.image ?: 'default.png')}}"
+                            onerror="this.src='https://placehold.it/100x100'">
+                    </div>
+                    <i class="fa fa-angle-down ml-2 text-muted"></i>
+                </a>
+                <div class="user-menu dropdown-menu shadow-lg border-0"
+                    style="border-radius: 16px; min-width: 220px; padding: 12px; margin-top: 15px;">
+                    <div class="dropdown-header text-muted small text-uppercase font-weight-bold mb-2">Tài khoản</div>
+                    <a class="nav-link premium-link" th:href="@{/edit-profile}"><i class="fa fa-user-o"></i> Hồ sơ cá
+                        nhân</a>
+                    <a class="nav-link premium-link" href="#"><i class="fa fa-cog"></i> Cài đặt hệ thống</a>
+                    <div class="dropdown-divider my-2"></div>
+                    <a class="nav-link premium-link logout-text" th:href="@{/logout}"><i class="fa fa-power-off"></i>
+                        Đăng xuất</a>
+                </div>
+            </div>
+
+            <div class="header-actions-premium d-flex align-items-center ml-4">
+                <div class="action-item">
+                    <i class="fa fa-bell-o"></i>
+                    <span class="pulse-dot"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .premium-glass-header {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+            height: 75px !important;
+            padding: 0 !important;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.02) !important;
+            position: sticky !important;
+            top: 0;
+            z-index: 999;
+        }
+
+        .top-left {
+            background: transparent !important;
+            width: 280px !important;
+            height: 100% !important;
+            border-bottom: none !important;
+        }
+
+        .navbar-header {
+            background: transparent !important;
+            width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0 25px !important;
+        }
+
+        .main-logo-img {
+            height: 38px !important;
+            width: auto !important;
+        }
+
+        .menutoggle {
+            background: #f8fafc !important;
+            color: #64748b !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            border: 1px solid #f1f5f9 !important;
+        }
+
+        .menutoggle:hover {
+            background: #ffffff !important;
+            color: #10b981 !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15) !important;
+            transform: translateY(-1px);
+        }
+
+        .top-right {
+            width: calc(100% - 280px) !important;
+            height: 100% !important;
+            background: transparent !important;
+        }
+
+        .header-menu {
+            height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0 35px !important;
+        }
+
+        /* Search Area */
+        .search-form {
+            position: relative;
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            width: 300px;
+            transition: all 0.3s;
+        }
+
+        .search-form:focus-within {
+            background: #fff;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .search-icon {
+            color: #94a3b8;
+            margin-right: 12px;
+        }
+
+        .search-input {
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            color: #1e293b;
+            outline: none;
+            width: 100%;
+        }
+
+        /* User Area */
+        .user-name-premium {
+            display: block;
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
+        .user-status-online {
+            font-size: 0.7rem;
+            color: #10b981;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .user-status-online i {
+            font-size: 6px;
+        }
+
+        .avatar-container {
+            position: relative;
+        }
+
+        .user-avatar-premium {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 2px solid #fff;
+        }
+
+        .premium-link {
+            padding: 10px 14px !important;
+            font-size: 0.85rem !important;
+            font-weight: 600 !important;
+            color: #475569 !important;
+            border-radius: 10px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            transition: all 0.2s !important;
+        }
+
+        .premium-link:hover {
+            background: #f8fafc !important;
+            color: #0f172a !important;
+            transform: translateX(3px);
+        }
+
+        .premium-link i {
+            font-size: 1.05rem;
+            color: #94a3b8;
+        }
+
+        .logout-text {
+            color: #ef4444 !important;
+        }
+
+        .logout-text i {
+            color: #ef4444 !important;
+        }
+
+        /* Actions */
+        .action-item {
+            font-size: 1.2rem;
+            color: #64748b;
+            cursor: pointer;
+            position: relative;
+            padding: 8px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .action-item:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .pulse-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        @media (max-width: 991px) {
+            .top-left {
+                width: 100% !important;
+            }
+
+            .top-right {
+                width: 100% !important;
+            }
+        }
+    </style>
+</header>
+
+</html>

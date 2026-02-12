@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<title>Web thuê xe - Chuyến đi</title>
+<link rel="icon" th:href="@{/images/icon-logo.png}" type="images/x-icon">
+
+<head th:replace="~{pages/layout/header-css-js :: header-css-js}">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+		rel="stylesheet">
+</head>
+
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+	<nav th:replace="~{pages/layout/header :: header}"></nav>
+
+	<div class="trip-page-premium">
+		<div class="container container-custom">
+			<div class="premium-trip-header">
+				<div class="header-icon-box"><i class="fa-solid fa-route"></i></div>
+				<div class="header-text-box">
+					<h1>Chuyến đi của tôi</h1>
+					<p>Xem lại hành trình và quản lý các yêu cầu thuê xe của bạn</p>
+				</div>
+			</div>
+
+			<div class="premium-trip-filter shadow-sm">
+				<div class="filter-label-group">
+					<i class="fa-solid fa-filter"></i>
+					<label>SÁP XẾP VÀ TRẠNG THÁI</label>
+				</div>
+				<select onchange="fiterBill()" id="filter-bill" class="premium-select-trip">
+					<option value="5">Tất cả chuyến đi</option>
+					<option value="0">Chờ duyệt</option>
+					<option value="1">Đã duyệt</option>
+					<option value="2">Đã thanh toán</option>
+					<option value="3">Đã hủy</option>
+				</select>
+			</div>
+
+			<div class="premium-empty-trip shadow-sm" th:if="${#lists.isEmpty(listBooking)}">
+				<div class="empty-icon-trip"><i class="fa-solid fa-ghost"></i></div>
+				<h3>Bạn chưa có chuyến đi nào!</h3>
+				<p>Hàng ngàn chiếc xe tuyệt vời đang chờ bạn khám phá.</p>
+				<a th:href="@{/}" class="premium-trip-action-btn">TÌM XE NGAY</a>
+			</div>
+
+			<div class="premium-trip-grid">
+				<div class="premium-trip-card" th:each="b, index: ${listBooking}">
+					<div class="trip-card-image">
+						<img th:src="'/uploads/'+${b.getCar().getAvatarCar()}" alt="">
+						<div class="premium-trip-status-badge"
+							th:classappend="${b.statusBill == 0} ? 'p-pending' : (${b.statusBill == 1} ? 'p-approved' : (${b.statusBill == 2} ? 'p-paid' : 'p-canceled'))">
+							<span th:if="${b.statusBill == 0}"><i class="fa-solid fa-clock"></i> Chờ duyệt</span>
+							<span th:if="${b.statusBill == 1}"><i class="fa-solid fa-check-double"></i> Đã duyệt</span>
+							<span th:if="${b.statusBill == 2}"><i class="fa-solid fa-circle-check"></i> Thành
+								công</span>
+							<span th:if="${b.statusBill == 3}"><i class="fa-solid fa-ban"></i> Đã hủy</span>
+						</div>
+					</div>
+
+					<div class="trip-card-body">
+						<div class="trip-body-main">
+							<div class="trip-car-info">
+								<div class="trip-id-premium" th:text="'MÃ ĐƠN: #' + ${b.idBooking}"></div>
+								<h3 th:text="${b.getCar().getNameCar()}">Tên xe</h3>
+								<div class="car-lp-premium"><i class="fa-solid fa-hashtag"></i> <span
+										th:text="${b.getCar().getLicensePlates()}"></span></div>
+							</div>
+
+							<div class="trip-details-grid">
+								<div class="detail-chunk">
+									<label>NGÀY NHẬN</label>
+									<span th:text="${b.dateStart}"></span>
+								</div>
+								<div class="detail-chunk border-left-l">
+									<label>NGÀY TRẢ</label>
+									<span th:text="${b.dateEnd}"></span>
+								</div>
+							</div>
+
+							<div class="trip-owner-premium">
+								<div class="owner-avatar-mini">
+									<i class="fa-solid fa-user-tie"></i>
+								</div>
+								<div class="owner-meta-box">
+									<span class="owner-label">CHỦ XE</span>
+									<span class="owner-name" th:text="${b.getCar().getUser().nameDisplay}"></span>
+								</div>
+								<a th:href="'tel:' + ${b.getCar().getUser().phone}" class="owner-call-btn">
+									<i class="fa-solid fa-phone"></i>
+								</a>
+							</div>
+						</div>
+
+						<div class="trip-card-actions">
+							<div class="trip-price-summary">
+								<label>TỔNG THANH TOÁN</label>
+								<span class="final-total"
+									th:text="${#numbers.formatDecimal(b.billTotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+							</div>
+
+							<div class="trip-action-buttons">
+								<th:block th:if="${b.statusBill == 0}">
+									<button class="btn-p-cancel" th:onclick="cancelBill([[${b.idBooking}]])">
+										<i class="fa-solid fa-xmark"></i> Hủy đơn
+									</button>
+								</th:block>
+								<th:block th:if="${b.statusBill == 1}">
+									<button class="btn-p-pay"
+										th:onclick="paymentBill([[${b.idBooking}]],[[${b.billTotal}]])">
+										TIẾP TỤC THANH TOÁN <i class="fa-solid fa-arrow-right ml-2"></i>
+									</button>
+								</th:block>
+								<th:block th:if="${b.statusBill == 2}">
+									<button class="btn-p-done" disabled>
+										<i class="fa-solid fa-circle-check"></i> HOÀN TẤT
+									</button>
+								</th:block>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<style>
+		:root {
+			--primary-emerald: #10b981;
+			--deep-slate: #0f172a;
+			--soft-slate: #1e293b;
+			--trip-bg: #f8fafc;
+			--pending-bg: #fff7ed;
+			--pending-text: #c2410c;
+			--approved-bg: #ecfdf5;
+			--approved-text: #047857;
+			--paid-bg: #f0f9ff;
+			--paid-text: #0369a1;
+			--cancel-bg: #fef2f2;
+			--cancel-text: #b91c1c;
+		}
+
+		body {
+			background: var(--trip-bg);
+			font-family: 'Inter', sans-serif !important;
+			color: var(--deep-slate);
+		}
+
+		.trip-page-premium {
+			padding: 60px 0 100px;
+		}
+
+		.container-custom {
+			max-width: 1000px;
+		}
+
+		.premium-trip-header {
+			display: flex;
+			align-items: center;
+			gap: 24px;
+			margin-bottom: 50px;
+		}
+
+		.header-icon-box {
+			width: 65px;
+			height: 65px;
+			background: white;
+			border-radius: 18px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: var(--primary-emerald);
+			font-size: 1.8rem;
+			box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+		}
+
+		.header-text-box h1 {
+			font-weight: 900;
+			font-size: 2.2rem;
+			color: var(--deep-slate);
+			margin: 0;
+			letter-spacing: -0.5px;
+		}
+
+		.header-text-box p {
+			color: #64748b;
+			margin: 4px 0 0;
+			font-weight: 500;
+		}
+
+		.premium-trip-filter {
+			background: white;
+			border-radius: 20px;
+			padding: 20px 30px;
+			margin-bottom: 35px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border: 1px solid #f1f5f9;
+		}
+
+		.filter-label-group {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.filter-label-group i {
+			color: var(--primary-emerald);
+			font-size: 1.2rem;
+		}
+
+		.filter-label-group label {
+			font-weight: 800;
+			font-size: 0.75rem;
+			color: #64748b;
+			margin: 0;
+			letter-spacing: 1px;
+		}
+
+		.premium-select-trip {
+			border: none;
+			background: #f8fafc;
+			padding: 10px 20px;
+			border-radius: 12px;
+			font-weight: 700;
+			font-size: 0.9rem;
+			color: var(--soft-slate);
+			cursor: pointer;
+			outline: none;
+			transition: all 0.2s;
+		}
+
+		.premium-select-trip:hover {
+			background: #f1f5f9;
+		}
+
+		.premium-trip-grid {
+			display: flex;
+			flex-direction: column;
+			gap: 25px;
+		}
+
+		.premium-trip-card {
+			background: white;
+			border-radius: 24px;
+			overflow: hidden;
+			display: flex;
+			border: 1px solid #f1f5f9;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		.premium-trip-card:hover {
+			transform: translateY(-4px);
+			box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+			border-color: #e2e8f0;
+		}
+
+		.trip-card-image {
+			width: 300px;
+			height: 260px;
+			position: relative;
+			flex-shrink: 0;
+		}
+
+		.trip-card-image img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.premium-trip-status-badge {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			padding: 8px 16px;
+			border-radius: 12px;
+			font-size: 11px;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.p-pending {
+			background: var(--pending-bg);
+			color: var(--pending-text);
+		}
+
+		.p-approved {
+			background: var(--approved-bg);
+			color: var(--approved-text);
+		}
+
+		.p-paid {
+			background: var(--paid-bg);
+			color: var(--paid-text);
+		}
+
+		.p-canceled {
+			background: var(--cancel-bg);
+			color: var(--cancel-text);
+		}
+
+		.trip-card-body {
+			flex: 1;
+			display: flex;
+		}
+
+		.trip-body-main {
+			flex: 1;
+			padding: 30px;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.trip-id-premium {
+			font-size: 11px;
+			font-weight: 800;
+			color: #94a3b8;
+			margin-bottom: 6px;
+		}
+
+		.trip-car-info h3 {
+			font-weight: 900;
+			color: var(--deep-slate);
+			font-size: 1.4rem;
+			margin-bottom: 12px;
+		}
+
+		.car-lp-premium {
+			font-size: 13px;
+			font-weight: 700;
+			color: var(--primary-emerald);
+			background: #f0fdf4;
+			padding: 6px 12px;
+			border-radius: 8px;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.trip-details-grid {
+			display: flex;
+			gap: 40px;
+			margin: 25px 0;
+			background: #f8fafc;
+			padding: 15px 20px;
+			border-radius: 16px;
+		}
+
+		.detail-chunk {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		.detail-chunk label {
+			font-size: 10px;
+			font-weight: 800;
+			color: #94a3b8;
+			text-transform: uppercase;
+			margin: 0;
+		}
+
+		.detail-chunk span {
+			font-weight: 700;
+			font-size: 0.95rem;
+			color: var(--soft-slate);
+		}
+
+		.border-left-l {
+			border-left: 2px solid #e2e8f0;
+			padding-left: 40px;
+		}
+
+		.trip-owner-premium {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			margin-top: auto;
+		}
+
+		.owner-avatar-mini {
+			width: 42px;
+			height: 42px;
+			background: #f1f5f9;
+			border-radius: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #64748b;
+			font-size: 1.2rem;
+		}
+
+		.owner-meta-box {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.owner-label {
+			font-size: 10px;
+			font-weight: 800;
+			color: #94a3b8;
+		}
+
+		.owner-name {
+			font-weight: 800;
+			font-size: 0.9rem;
+			color: var(--soft-slate);
+		}
+
+		.owner-call-btn {
+			width: 38px;
+			height: 38px;
+			border-radius: 10px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: var(--primary-emerald);
+			border: 1.5px solid #d1fae5;
+			text-decoration: none;
+			transition: all 0.2s;
+			margin-left: 10px;
+		}
+
+		.owner-call-btn:hover {
+			background: var(--primary-emerald);
+			color: white;
+			border-color: var(--primary-emerald);
+		}
+
+		.trip-card-actions {
+			width: 240px;
+			padding: 30px;
+			background: #fafafa;
+			border-left: 1px solid #f1f5f9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.trip-price-summary {
+			text-align: center;
+			margin-bottom: 25px;
+		}
+
+		.trip-price-summary label {
+			font-size: 10px;
+			font-weight: 800;
+			color: #94a3b8;
+			display: block;
+			margin-bottom: 8px;
+		}
+
+		.final-total {
+			font-size: 1.6rem;
+			font-weight: 900;
+			color: #1a472a;
+		}
+
+		.trip-action-buttons button {
+			width: 100%;
+			border-radius: 14px;
+			padding: 14px;
+			font-weight: 800;
+			font-size: 0.85rem;
+			border: none;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+		.btn-p-pay {
+			background: var(--primary-emerald);
+			color: white;
+			box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+		}
+
+		.btn-p-pay:hover {
+			background: #059669;
+			transform: translateY(-2px);
+		}
+
+		.btn-p-cancel {
+			background: white;
+			border: 1.5px solid #fee2e2 !important;
+			color: #ef4444;
+		}
+
+		.btn-p-cancel:hover {
+			background: #fef2f2;
+			border-color: #fecaca;
+		}
+
+		.btn-p-done {
+			background: #f1f5f9;
+			color: #94a3b8;
+			font-size: 0.75rem;
+			letter-spacing: 1px;
+		}
+
+		.premium-empty-trip {
+			background: white;
+			border-radius: 30px;
+			padding: 80px 40px;
+			text-align: center;
+			border: 2px dashed #e2e8f0;
+		}
+
+		.empty-icon-trip {
+			font-size: 4rem;
+			color: #cbd5e0;
+			margin-bottom: 25px;
+		}
+
+		.premium-empty-trip h3 {
+			font-weight: 900;
+			color: var(--deep-slate);
+			margin-bottom: 15px;
+		}
+
+		.premium-trip-action-btn {
+			background: var(--primary-emerald);
+			color: white;
+			padding: 15px 40px;
+			border-radius: 15px;
+			font-weight: 800;
+			text-decoration: none;
+			display: inline-block;
+			transition: all 0.2s;
+		}
+
+		.premium-trip-action-btn:hover {
+			background: #059669;
+			transform: scale(1.05);
+		}
+
+		@media (max-width: 991px) {
+			.premium-trip-card {
+				flex-direction: column;
+			}
+
+			.trip-card-image {
+				width: 100%;
+				height: 200px;
+			}
+
+			.trip-card-body {
+				flex-direction: column;
+			}
+
+			.trip-card-actions {
+				width: 100%;
+				border-left: none;
+				border-top: 1px solid #f1f5f9;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.trip-price-summary {
+				text-align: left;
+				margin-bottom: 0;
+			}
+
+			.trip-action-buttons {
+				width: 220px;
+			}
+
+			.border-left-l {
+				padding-left: 20px;
+			}
+		}
+	</style>
+</body>
+
+<footer th:replace="~{pages/layout/footer :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+<script>
+	function paymentBill(id, totalBill) { window.location.href = "/payment-bill/" + id + "/?amount=" + totalBill; }
+	function cancelBill(id) { window.location.href = "/cancel-bill-trip/" + id; }
+	function fiterBill() { var status = document.getElementById("filter-bill"); window.location.href = "/filter-bill/" + status.value; }
+</script>
+
+</html>

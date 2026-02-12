@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<title>Web thuê xe - Trang chủ</title>
+<link rel="icon" th:href="@{/images/icon-logo.png}" type="images/x-icon">
+
+<head th:replace="~{pages/layout/header-css-js :: header-css-js}">
+	<!-- th:replace="~{pages/layout/header-css-js :: header-css-js}" -->
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+
+</head>
+
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<script>
+	function closepPoupupInsurances() {
+		document.getElementById("contentInsurances").classList
+			.remove("open-contentInsurances");
+	}
+
+	function openInsurances() {
+		document.getElementById("contentInsurances").classList
+			.add("open-contentInsurances");
+	}
+</script>
+
+<body>
+
+	<nav th:replace="~{pages/layout/header :: header}"></nav>
+	<div class="col-md-12 search-wrapper-premium" style="padding: 0px;">
+		<div th:replace="~{pages/layout/search-car ::search-car}"></div>
+	</div>
+	<div class="container" style="padding: 0px;">
+		<div class="row">
+
+			<div style="position: relative;">
+				<div class="insurance-partner">
+					<p style="text-decoration: underline;">Đối tác bảo hiểm</p>
+					<div class="partner-logo hasCursor">
+						<div class="partner-logo__image" th:each="l :${listInsurances}">
+							<img class="img-fluid" th:src="'/uploads/'+${l.imageInsurance} " onclick="openInsurances()"
+								alt="" srcset="">
+						</div>
+						<div id="contentInsurances" class="contentInsurances">
+							<i class="icon-remove fa-solid fa-xmark" onclick="closepPoupupInsurances()"></i>
+							<div th:utext="${contentInsurances}"
+								style="margin-top: 50px; padding: 10px 20px; text-align: justify;"></div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<style>
+				/* Modern Homepage Styles */
+				body {
+					background: linear-gradient(135deg, #f8faf8 0%, #e8f0e8 100%);
+				}
+
+				.img-fluid:hover {
+					cursor: pointer;
+				}
+
+				.contentInsurances {
+					position: fixed;
+					width: 90%;
+					max-width: 800px;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					background: white;
+					border-radius: 20px;
+					visibility: hidden;
+					opacity: 0;
+					box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+					z-index: 9999;
+					transition: all 0.3s ease;
+				}
+
+				.open-contentInsurances {
+					visibility: visible;
+					opacity: 1;
+				}
+
+				.icon-remove {
+					position: absolute;
+					font-size: 28px;
+					font-weight: 800;
+					top: 15px;
+					right: 20px;
+					color: #666;
+					transition: all 0.3s ease;
+				}
+
+				.icon-remove:hover {
+					cursor: pointer;
+					color: #e74c3c;
+					transform: rotate(90deg);
+				}
+
+				/* Section Titles */
+				.title-content {
+					font-size: 1.8rem !important;
+					font-weight: 700 !important;
+					color: #1a472a !important;
+					text-align: center;
+					margin: 50px 0 30px !important;
+					position: relative;
+					padding-bottom: 15px;
+				}
+
+				.title-content::after {
+					content: '';
+					position: absolute;
+					bottom: 0;
+					left: 50%;
+					transform: translateX(-50%);
+					width: 80px;
+					height: 4px;
+					background: linear-gradient(90deg, #1a472a, #2d5a3d, #1e7a39);
+					border-radius: 2px;
+				}
+
+				.search-wrapper-premium {
+					margin-bottom: 150px;
+				}
+
+				/* Insurance Partners */
+				.insurance-partner {
+					background: white;
+					padding: 40px;
+					border-radius: 24px;
+					margin: 20px 0 40px;
+					border: 1px solid #f1f5f9;
+					box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+				}
+
+				.insurance-partner p {
+					color: #64748b !important;
+					font-size: 0.85rem;
+					font-weight: 800;
+					text-align: center;
+					text-transform: uppercase;
+					letter-spacing: 1.5px;
+					margin-bottom: 25px;
+					text-decoration: none !important;
+				}
+
+				.partner-logo {
+					display: flex;
+					justify-content: center;
+					gap: 20px;
+					flex-wrap: wrap;
+				}
+
+				.partner-logo__image {
+					background: white;
+					padding: 15px 25px;
+					border-radius: 12px;
+					transition: all 0.3s ease;
+				}
+
+				.partner-logo__image:hover {
+					transform: translateY(-5px);
+					box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+				}
+
+				.partner-logo__image img {
+					height: 40px;
+					width: auto;
+				}
+
+				/* Help/Steps Section */
+				.help-use {
+					background: linear-gradient(135deg, #f0fff0 0%, #e8f5e8 100%);
+					padding: 50px 30px !important;
+					border-radius: 20px;
+					margin-top: 40px !important;
+					width: 100%;
+				}
+
+				.help-use h3 {
+					color: #1a472a;
+					font-weight: 700;
+					text-align: center;
+					margin-bottom: 30px;
+					font-size: 1.5rem;
+				}
+
+				.a-help {
+					display: flex !important;
+					justify-content: space-between !important;
+					align-items: stretch;
+					gap: 20px;
+					text-decoration: none;
+				}
+
+				.fix-img {
+					background: white;
+					padding: 25px 20px;
+					border-radius: 15px;
+					text-align: center;
+					box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+					transition: all 0.3s ease;
+					flex: 1;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+				}
+
+				.fix-img:hover {
+					transform: translateY(-10px);
+					box-shadow: 0 15px 40px rgba(26, 71, 42, 0.15);
+				}
+
+				.fix-img img {
+					width: 70px;
+					height: 70px;
+					margin-bottom: 15px;
+				}
+
+				.fix-img p {
+					color: #1a472a;
+					font-weight: 600;
+					margin: 0;
+					font-size: 0.9rem;
+				}
+
+				/* Carousel Cards */
+				.card {
+					border: none !important;
+					border-radius: 15px !important;
+					overflow: hidden;
+					box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+					transition: all 0.3s ease;
+					background: white;
+				}
+
+				.card:hover {
+					transform: translateY(-5px);
+					box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+				}
+
+				.card-body,
+				.card-body-car {
+					padding: 0 !important;
+					position: relative;
+					overflow: hidden;
+				}
+
+				.card-body a,
+				.card-body-car a {
+					text-decoration: none;
+					color: inherit;
+					display: block;
+				}
+
+				.card-body img,
+				.card-body-car img {
+					width: 100%;
+					height: 180px;
+					object-fit: cover;
+					transition: transform 0.3s ease;
+				}
+
+				.card:hover img {
+					transform: scale(1.08);
+				}
+
+				/* Location Cards */
+				.text {
+					padding: 15px;
+					background: white;
+				}
+
+				.name-car,
+				.name-car-no-driver {
+					color: #1a472a !important;
+					font-weight: 700 !important;
+					font-size: 1rem !important;
+					margin: 0 0 5px !important;
+				}
+
+				.sum-car,
+				.sum-car-no-driver {
+					color: #666 !important;
+					font-size: 0.85rem !important;
+					margin: 0 !important;
+				}
+
+				/* Car Cards - Featured Cars */
+				.carousel-inner-no-driver,
+				.carousel-inner-driver {
+					display: flex;
+					gap: 20px;
+					padding: 10px 5px;
+				}
+
+				.carousel-item-no-driver,
+				.carousel-item-driver {
+					flex: 0 0 280px;
+					min-width: 280px;
+				}
+
+				.carousel-item-no-driver .card,
+				.carousel-item-driver .card {
+					height: 100%;
+				}
+
+				.price {
+					position: absolute;
+					top: 15px;
+					right: 15px;
+					background: linear-gradient(135deg, #1a472a, #2d5a3d);
+					color: white;
+					padding: 8px 16px;
+					border-radius: 25px;
+					z-index: 10;
+					box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+				}
+
+				.price h6 {
+					margin: 0;
+					font-weight: 700;
+					font-size: 0.95rem;
+				}
+
+				.info-car {
+					padding: 15px 15px 20px;
+					background: white;
+				}
+
+				.info-car h6 {
+					color: #1a472a;
+					font-weight: 700;
+					margin-bottom: 10px;
+					font-size: 1rem;
+				}
+
+				.info-car p {
+					color: #666;
+					font-size: 0.85rem;
+					margin: 5px 0;
+					display: flex;
+					align-items: center;
+					gap: 5px;
+				}
+
+				.sum-delivery {
+					color: #2d5a3d !important;
+					font-weight: 600 !important;
+					background: linear-gradient(135deg, rgba(26, 71, 42, 0.1), rgba(45, 90, 61, 0.1));
+					padding: 5px 12px;
+					border-radius: 15px;
+					display: inline-block !important;
+					font-size: 0.8rem !important;
+				}
+
+				/* Carousel Controls */
+				.carousel-control-prev,
+				.carousel-control-next {
+					width: 50px;
+					height: 50px;
+					background: linear-gradient(135deg, #1a472a, #2d5a3d) !important;
+					border-radius: 50%;
+					top: 50%;
+					transform: translateY(-50%);
+					opacity: 1 !important;
+					box-shadow: 0 5px 20px rgba(26, 71, 42, 0.3);
+					transition: all 0.3s ease;
+				}
+
+				.carousel-control-prev:hover,
+				.carousel-control-next:hover {
+					transform: translateY(-50%) scale(1.1);
+				}
+
+				.carousel-control-prev {
+					left: -25px;
+				}
+
+				.carousel-control-next {
+					right: -25px;
+				}
+
+				/* Features Section */
+				.features__sect {
+					margin: 40px 0;
+				}
+
+				.carousel-item-tt .card {
+					border-radius: 20px !important;
+				}
+
+				.carousel-item-tt .card img {
+					height: 250px;
+					border-radius: 20px;
+				}
+
+				/* Responsive */
+				@media (max-width: 768px) {
+					.title-content {
+						font-size: 1.4rem !important;
+					}
+
+					.a-help {
+						flex-direction: column;
+						align-items: center;
+					}
+
+					.fix-img {
+						width: 100%;
+						max-width: 250px;
+					}
+
+					.carousel-control-prev,
+					.carousel-control-next {
+						display: none;
+					}
+				}
+			</style>
+			<div class="features__sect">
+				<h4 class="title-content">Tính năng nổi bật</h4>
+
+				<div id="carouselTinhNang" class="carousel " data-bs-ride="carousel">
+					<div class="carousel-inner carousel-inner-tt">
+						<div class="carousel-item carousel-item-tt active">
+							<div class="card">
+								<img th:src="@{/images/features_1.d60ace8e.jpg}" class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img th:src="@{/images/features_2.63b45674.jpg}" class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img th:src="@{/images/features_3.d9b52125.jpg}" class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img th:src="@{/images/features_4.173d9abf.jpg}" class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img th:src="@{/images/features_5.c524494b.jpg}" class="card-img-top" alt="...">
+							</div>
+						</div>
+						<div class="carousel-item carousel-item-tt">
+							<div class="card">
+								<img th:src="@{/images/features_6.2eb8bccb.jpg}" class="card-img-top" alt="...">
+							</div>
+						</div>
+					</div>
+					<button class="carousel-control-prev" id="carousel-control-prev-tt" type="button"
+						data-bs-target="#carouselTinhNang" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" id="carousel-control-next-tt" type="button"
+						data-bs-target="#carouselTinhNang" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
+			</div>
+			<div class="col-md-12 help-use" style="position: static; margin-top: 150px; padding-bottom: 20px;">
+
+				<h3>Hướng dẫn thuê xe</h3>
+				<a th:href="@{/help}" class="d-md-flex a-help">
+					<div class="fix-img">
+						<div>
+							<img th:src="@{/images/step-1.c204d3e1.svg}" alt="" srcset="">
+							<p>Đặt xe</p>
+						</div>
+
+					</div>
+					<div class="fix-img">
+						<div>
+							<img th:src="@{/images/step-2.0bcadc00.svg}" alt="" srcset="">
+							<p>Nhận xe</p>
+						</div>
+
+					</div>
+					<div class="fix-img">
+						<div>
+							<img th:src="@{/images/step-3.5ee48572.svg}" alt="" srcset="">
+							<p>Trải nghiệm chuyến đi</p>
+						</div>
+
+					</div>
+					<div class="fix-img">
+						<div>
+							<img th:src="@{/images/step-4.518ab6a3.svg}" alt="" srcset="">
+							<p>Kết thúc giao dịch</p>
+						</div>
+
+					</div>
+				</a>
+			</div>
+
+			<h4 class="title-content">ĐỊA ĐIỂM NỔI BẬT - XE CÓ TÀI XẾ</h4>
+			<div id="carouselAddressDriver" class="carousel" data-bs-ride="carousel">
+				<div class="carousel-inner carousel-inner-address-driver">
+					<div class="carousel-item-address-driver" th:each="p : ${provinces}">
+						<div class="card">
+							<div class="card-body">
+
+								<a th:href="@{'/'+${p.idProvince}+'/'+${p.nameProvince}+'/'+'has-driver'} ">
+									<img th:src="@{'/uploads/' +${p.imgProvince}}" alt="...">
+									<div class="text">
+										<h4 class="name-car" th:text="${p.nameProvince}"></h4>
+										<p class="sum-car"></p>
+									</div>
+								</a>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<button class="carousel-control-prev" id="carousel-control-prev-address-driver" type="button"
+					data-bs-target="#carouselAddressDriver" data-bs-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Previous</span>
+				</button>
+				<button class="carousel-control-next" id="carousel-control-next-address-driver" type="button"
+					data-bs-target="#carouselAddressDriver" data-bs-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Next</span>
+				</button>
+			</div>
+		</div>
+
+		<h4 class="title-content">ĐỊA ĐIỂM NỔI BẬT - XE TỰ LÁI</h4>
+		<div id="carouselAddressNotCarDriver" class="carousel" data-bs-ride="carousel">
+			<div class="carousel-inner carousel-inner-address-no-driver">
+				<div class="carousel-item-address-no-driver" th:each="p : ${provinces}">
+					<div class="card">
+						<div class="card-body">
+
+							<a th:href="@{'/'+${p.idProvince}+'/'+${p.nameProvince}+'/'+'no-driver'} ">
+								<img th:src="@{'/uploads/' +${p.imgProvince}}" alt="...">
+								<div class="text">
+									<h4 class="name-car-no-driver" th:text="${p.nameProvince}"></h4>
+									<p class="sum-car-no-driver"></p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="carousel-control-prev" id="carousel-control-prev-address-no-driver" type="button"
+				data-bs-target="#carouselAddressNotCarDriver" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" id="carousel-control-next-address-no-driver" type="button"
+				data-bs-target="#carouselAddressNotCarDriver" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+
+		<h4 class="title-content">XE NỔI BẬT - XE TỰ LÁI</h4>
+		<div id="carouselCarNotDriver" class="carousel" data-bs-ride="carousel">
+			<div class="carousel-inner carousel-inner-no-driver">
+				<div class="carousel-item-no-driver" th:each="c : ${carNoDriver}">
+					<div class="card">
+						<div class="card-body-car">
+							<a th:href="@{'/car-detail/'+${c.idCar}+'/'+${c.nameCar}}"> <img
+									th:src="@{'/uploads/' +${c.avatarCar}}" alt="...">
+								<div class="price">
+									<h6 th:text="${c.price}-${c.price}*${c.promotionalPrice}/100 +' K'"></h6>
+								</div>
+								<div class="info-car">
+									<h6 th:text="${c.nameCar}"></h6>
+									<input type="hidden" th:value="${c.idCar}" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p th:text="${c.addressCar}"></p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="carousel-control-prev" id="carousel-control-prev-no-driver" type="button"
+				data-bs-target="#carouselCarNotDriver" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" id="carousel-control-next-no-driver" type="button"
+				data-bs-target="#carouselCarNotDriver" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+
+		<h4 class="title-content">XE NỔI BẬT - XE CÓ TÀI XẾ</h4>
+		<div id="carouselCarDriver" class="carousel" data-bs-ride="carousel">
+			<div class="carousel-inner carousel-inner-driver">
+				<div class="carousel-item-driver" th:each="c : ${carHasDriver}">
+					<div class="card">
+						<div class="card-body-car">
+							<a th:href="@{'/car-detail/'+${c.idCar}+'/'+${c.nameCar}}"> <img
+									th:src="@{'/uploads/' +${c.avatarCar}}" alt="...">
+								<div class="price">
+									<h6 th:text="${c.price}-${c.price}*${c.promotionalPrice}/100 +' K'"></h6>
+								</div>
+								<div class="info-car">
+									<h6 th:text="${c.nameCar}"></h6>
+									<input type="hidden" th:value="${c.idCar}" class="id-car">
+									<p class="sum-delivery">SỐ chuyến</p>
+									<p th:text="${c.addressCar}"></p>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="carousel-control-prev" id="carousel-control-prev-driver" type="button"
+				data-bs-target="#carouselCarDriver" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" id="carousel-control-next-driver" type="button"
+				data-bs-target="#carouselCarDriver" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Floating AI Chat Widget -->
+	<link rel="stylesheet" th:href="@{/css/chat-widget.css}">
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+	<script th:src="@{/js/chat-widget.js}" defer></script>
+
+	<!-- Widget markup -->
+	<div id="chat-widget" class="chat-widget-closed">
+		<button id="chat-toggle" class="chat-toggle" title="Chat với AI Assistant">
+			<i class="fa-solid fa-comments"></i>
+		</button>
+		<div class="chat-panel" id="chat-panel" aria-hidden="true">
+			<div class="cw-header">
+				<div class="cw-header-info">
+					<div class="ai-avatar"><i class="fa-solid fa-robot"></i></div>
+					<div class="cw-header-text">
+						<div class="cw-header-title">MIOTO AI Assistant</div>
+						<div class="cw-header-status"><span class="online-dot"></span> Online 24/7</div>
+					</div>
+				</div>
+				<button id="chat-close" class="cw-close" title="Đóng"><i class="fa-solid fa-xmark"></i></button>
+			</div>
+			<div class="cw-quick-actions">
+				<button class="cw-quick-btn" onclick="cwQuickSend('Tìm xe 4 chỗ')"><i class="fa-solid fa-car"></i> Xe 4
+					chỗ</button>
+				<button class="cw-quick-btn" onclick="cwQuickSend('Giá thuê xe')"><i class="fa-solid fa-tag"></i> Giá
+					thuê</button>
+				<button class="cw-quick-btn" onclick="cwQuickSend('Khuyến mãi')"><i class="fa-solid fa-gift"></i> Khuyến
+					mãi</button>
+				<button class="cw-quick-btn" onclick="cwQuickSend('Hỗ trợ')"><i class="fa-solid fa-headset"></i> Hỗ
+					trợ</button>
+			</div>
+			<div class="cw-body" id="cw-messages">
+				<div class="cw-welcome">
+					<div class="cw-welcome-icon"><i class="fa-solid fa-car-side"></i></div>
+					<h4>Chào mừng đến MIOTO! 👋</h4>
+					<p>Tôi có thể giúp bạn tìm xe, tra giá, và giải đáp thắc mắc.</p>
+				</div>
+				<div class="message ai">
+					<div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+					<div>
+						<div class="content">Xin chào! Tôi là AI Assistant của MIOTO. Tôi có thể giúp bạn tìm xe phù
+							hợp, tra cứu giá thuê, hoặc giải đáp mọi thắc mắc. Hãy hỏi tôi bất cứ điều gì!</div>
+						<div class="msg-time" id="cw-welcome-time"></div>
+					</div>
+				</div>
+			</div>
+			<div id="cw-typing" class="cw-typing" style="display:none">
+				<div class="typing-dots"><span></span><span></span><span></span></div>
+				<span class="cw-typing-text">AI đang trả lời...</span>
+			</div>
+			<div class="cw-footer">
+				<div class="cw-input-wrapper">
+					<input id="cw-msg" placeholder="Nhập tin nhắn của bạn..."
+						onkeydown="if(event.key==='Enter') cwSend()" />
+				</div>
+				<button class="cw-send-btn" onclick="cwSend()"><i class="fa-solid fa-paper-plane"></i></button>
+			</div>
+		</div>
+	</div>
+	<script>
+		// Set welcome time
+		document.addEventListener('DOMContentLoaded', function () {
+			const welcomeTime = document.getElementById('cw-welcome-time');
+			if (welcomeTime) {
+				welcomeTime.textContent = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+			}
+		});
+
+		// Quick send function
+		function cwQuickSend(msg) {
+			document.getElementById('cw-msg').value = msg;
+			cwSend();
+		}
+	</script>
+
+</body>
+<footer th:replace="~{pages/layout/footer :: footer}"></footer>
+
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/lib/bower_components/sweetalert2/dist/sweetalert2.js}"></script>
+<th:block th:if="${mes_login}">
+	<script>
+		alert("Cần đăng nhập để dùng chức năng này");
+	</script>
+</th:block>
+
+<th:block th:if="${mes_registerCar}">
+	<script>
+		alert("Đăng ký xe thành công, chờ được phê duyệt");
+	</script>
+</th:block>
+
+</html>

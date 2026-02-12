@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div th:fragment="search-car" class="search-car-premium">
+        <div class="search-hero-overlay">
+            <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
+                <h2 class="search-title-main">MIOTO - ĐỒNG HÀNH CÙNG CHUYẾN ĐI</h2>
+
+                <form action="/filter" method="get" id="form-search-car"
+                    class="premium-search-form col-lg-8 col-md-10 shadow-lg">
+                    <div class="form-header-premium">
+                        <h4><i class="fa fa-search-plus mr-2"></i> Tìm kiếm xe ngay</h4>
+                    </div>
+
+                    <div class="premium-form-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12 mb-4">
+                                <label for="inputAddress"><i class="fa fa-map-marker-alt"></i> Nhập nơi muốn thuê
+                                    xe</label>
+                                <div class="input-with-icon">
+                                    <input type="text" class="form-control-premium" id="inputEmail4" name="address"
+                                        placeholder="Nhập tỉnh hoặc quận, địa chỉ...">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12 mb-4">
+                                <div class="date-selection-grid">
+                                    <div class="date-box">
+                                        <label for="inputDateStart"><i class="fa fa-calendar-alt"></i> Ngày nhận
+                                            xe</label>
+                                        <input type="datetime-local" class="form-control-premium" id="inputDateStart"
+                                            name="dateStart" value="2023-03-13T18:22">
+                                    </div>
+                                    <div class="date-box">
+                                        <label for="inputDateEnd"><i class="fa fa-calendar-check"></i> Ngày trả
+                                            xe</label>
+                                        <input type="datetime-local" class="form-control-premium" id="inputDateEnd"
+                                            name="dateEnd" value="2023-03-14T18:22">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <div class="driver-options-premium">
+                                    <div class="premium-radio">
+                                        <input type="radio" id="nodriver" value="false" checked="checked" name="driver">
+                                        <label for="nodriver"><span></span> Tự lái</label>
+                                    </div>
+                                    <div class="premium-radio ml-4">
+                                        <input type="radio" id="driver" value="true" name="driver">
+                                        <label for="driver"><span></span> Có Tài xế</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-footer-premium text-center">
+                        <button type="submit" class="btn-search-premium">
+                            TÌM KIẾM XE NGAY <i class="fa fa-chevron-right ml-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <style>
+            .search-car-premium {
+                background-image: url('/images/bg-main.1e128ccf.jpg');
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+                height: 650px;
+                position: relative;
+                color: white;
+            }
+
+            .search-hero-overlay {
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(26, 71, 42, 0.6) 100%);
+                height: 100%;
+                width: 100%;
+            }
+
+            .search-title-main {
+                font-weight: 900;
+                letter-spacing: 2px;
+                text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                margin-bottom: 40px;
+                font-size: 2.5rem;
+                text-align: center;
+            }
+
+            .premium-search-form {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-radius: 24px;
+                overflow: hidden;
+                color: #1a202c;
+                padding: 0;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .form-header-premium {
+                background: #1a472a;
+                color: white;
+                padding: 20px;
+                text-align: center;
+            }
+
+            .form-header-premium h4 {
+                margin: 0;
+                font-weight: 700;
+                font-size: 1.25rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .premium-form-body {
+                padding: 40px;
+            }
+
+            .form-group label {
+                font-weight: 700;
+                font-size: 0.85rem;
+                color: #4a5568;
+                margin-bottom: 10px;
+                display: block;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .form-group label i {
+                margin-right: 8px;
+                color: #10b981;
+            }
+
+            .form-control-premium {
+                width: 100%;
+                border: 2px solid #edf2f7;
+                border-radius: 12px;
+                padding: 12px 16px;
+                font-size: 0.95rem;
+                font-weight: 500;
+                transition: all 0.3s;
+                background: #f8fafc;
+            }
+
+            .form-control-premium:focus {
+                outline: none;
+                border-color: #10b981;
+                background: white;
+                box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            }
+
+            .date-selection-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+
+            .driver-options-premium {
+                display: flex;
+                align-items: center;
+            }
+
+            /* Custom Radio Styling */
+            .premium-radio {
+                position: relative;
+                cursor: pointer;
+            }
+
+            .premium-radio input {
+                display: none;
+            }
+
+            .premium-radio label {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                font-weight: 600 !important;
+                color: #2d3748 !important;
+                text-transform: none !important;
+                font-size: 1rem !important;
+            }
+
+            .premium-radio label span {
+                width: 20px;
+                height: 20px;
+                border: 2px solid #cbd5e0;
+                border-radius: 50%;
+                margin-right: 10px;
+                display: inline-block;
+                position: relative;
+                transition: all 0.2s;
+            }
+
+            .premium-radio input:checked+label span {
+                border-color: #10b981;
+                background: white;
+            }
+
+            .premium-radio input:checked+label span::after {
+                content: '';
+                width: 10px;
+                height: 10px;
+                background: #10b981;
+                border-radius: 50%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .form-footer-premium {
+                padding: 0 40px 40px;
+            }
+
+            .btn-search-premium {
+                width: 100%;
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: white;
+                border: none;
+                border-radius: 14px;
+                padding: 16px;
+                font-weight: 800;
+                font-size: 1.1rem;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            }
+
+            .btn-search-premium:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+                background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            }
+
+            @media (max-width: 768px) {
+                .search-car-premium {
+                    height: 750px;
+                }
+
+                .search-title-main {
+                    font-size: 1.8rem;
+                }
+
+                .date-selection-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .premium-form-body {
+                    padding: 25px;
+                }
+            }
+        </style>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<meta http-equiv="refresh" content="0;URL='/'">
+
+<!-- Floating AI Chat Widget -->
+<link rel="stylesheet" href="/css/chat-widget.css">
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script src="/js/chat-widget.js" defer></script>
+
+<!-- Widget markup -->
+<div id="chat-widget" class="chat-widget-closed">
+  <button id="chat-toggle" class="chat-toggle">💬</button>
+  <div class="chat-panel" id="chat-panel" aria-hidden="true">
+    <div class="cw-header">AI Assistant <button id="chat-close" class="cw-close">✕</button></div>
+    <div class="cw-body" id="cw-messages"></div>
+    <div class="cw-footer">
+      <input id="cw-username" placeholder="Your name" />
+      <input id="cw-msg" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter') cwSend()" />
+      <label><input type="checkbox" id="cw-askai" checked /> Ask AI</label>
+      <button id="cw-send" onclick="cwSend()">Send</button>
+    </div>
+    <div id="cw-typing" class="cw-typing" style="display:none">AI is typing…</div>
+  </div>
+</div> 

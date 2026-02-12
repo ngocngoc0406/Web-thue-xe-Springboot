@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{admin/layout/css :: css}">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Admin - Tổng quan hệ thống</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body class="bg-light">
+	<aside th:replace="~{admin/layout/nav-left :: nav-left}"></aside>
+
+	<div id="right-panel" class="right-panel">
+		<header th:replace="~{admin/layout/header :: header}"></header>
+
+		<div class="content pt-4">
+			<div class="container-fluid">
+				<!-- Dashboard Welcome -->
+				<div class="row mb-4">
+					<div class="col-md-12">
+						<div class="welcome-heading">
+							<h2 class="premium-title">Tổng quan hệ thống</h2>
+							<p class="premium-subtitle">Chào mừng quay trở lại. Đây là thông số hoạt động của cửa hàng
+								ngày hôm nay.</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Statistics Widgets -->
+				<div class="row mb-4">
+					<!-- Total Orders -->
+					<div class="col-lg-3 col-md-6 mb-4">
+						<div class="card premium-stat-card border-0 shadow-sm overflow-hidden">
+							<div class="card-body p-4">
+								<div class="d-flex align-items-center justify-content-between">
+									<div>
+										<p class="stat-label mb-1 text-muted">Tổng đơn hàng</p>
+										<h3 class="stat-value font-weight-bold mb-0" th:text="${countBill}">0</h3>
+									</div>
+									<div class="stat-icon-wrapper bg-soft-warning">
+										<i class="fa fa-shopping-cart text-warning"></i>
+									</div>
+								</div>
+								<div class="stat-progress mt-3">
+									<div class="progress" style="height: 4px;">
+										<div class="progress-bar bg-warning" role="progressbar" style="width: 65%">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Total Users -->
+					<div class="col-lg-3 col-md-6 mb-4">
+						<div class="card premium-stat-card border-0 shadow-sm overflow-hidden">
+							<div class="card-body p-4">
+								<div class="d-flex align-items-center justify-content-between">
+									<div>
+										<p class="stat-label mb-1 text-muted">Người dùng</p>
+										<h3 class="stat-value font-weight-bold mb-0" th:text="${countUser}">0</h3>
+									</div>
+									<div class="stat-icon-wrapper bg-soft-primary">
+										<i class="fa fa-users text-primary"></i>
+									</div>
+								</div>
+								<div class="stat-progress mt-3">
+									<div class="progress" style="height: 4px;">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 45%">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Total Cars -->
+					<div class="col-lg-3 col-md-6 mb-4">
+						<div class="card premium-stat-card border-0 shadow-sm overflow-hidden">
+							<div class="card-body p-4">
+								<div class="d-flex align-items-center justify-content-between">
+									<div>
+										<p class="stat-label mb-1 text-muted">Phương tiện</p>
+										<h3 class="stat-value font-weight-bold mb-0" th:text="${countCar}">0</h3>
+									</div>
+									<div class="stat-icon-wrapper bg-soft-success">
+										<i class="fa fa-car text-success"></i>
+									</div>
+								</div>
+								<div class="stat-progress mt-3">
+									<div class="progress" style="height: 4px;">
+										<div class="progress-bar bg-success" role="progressbar" style="width: 80%">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Total Blogs -->
+					<div class="col-lg-3 col-md-6 mb-4">
+						<div class="card premium-stat-card border-0 shadow-sm overflow-hidden">
+							<div class="card-body p-4">
+								<div class="d-flex align-items-center justify-content-between">
+									<div>
+										<p class="stat-label mb-1 text-muted">Bài viết</p>
+										<h3 class="stat-value font-weight-bold mb-0" th:text="${countBlog}">0</h3>
+									</div>
+									<div class="stat-icon-wrapper bg-soft-info">
+										<i class="fa fa-newspaper-o text-info"></i>
+									</div>
+								</div>
+								<div class="stat-progress mt-3">
+									<div class="progress" style="height: 4px;">
+										<div class="progress-bar bg-info" role="progressbar" style="width: 30%"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Revenue Chart -->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card premium-card border-0 shadow-sm">
+							<div class="card-header border-0 bg-white p-4">
+								<div class="d-flex align-items-center justify-content-between">
+									<h5 class="font-weight-bold text-dark mb-0">Thống kê doanh thu</h5>
+									<div class="chart-actions">
+										<span class="badge badge-soft-success p-2">Dữ liệu thời gian thực</span>
+									</div>
+								</div>
+							</div>
+							<div class="card-body p-4">
+								<div class="chart-container" style="position: relative; height:350px;">
+									<canvas id="myChart"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<form>
+					<input type="hidden" th:value="${valueDate}" id="valueNgay">
+					<input type="hidden" th:value="${totalMoney}" id="valueTongTien">
+				</form>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var valueNgay = JSON.parse($('#valueNgay').val());
+			var valueTongTien = JSON.parse($('#valueTongTien').val());
+
+			var ctx = document.getElementById('myChart').getContext('2d');
+
+			// Premium Gradient for Area
+			var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+			gradient.addColorStop(0, 'rgba(45, 90, 61, 0.4)');
+			gradient.addColorStop(1, 'rgba(45, 90, 61, 0.05)');
+
+			var myBarChart = new Chart(ctx, {
+				type: 'line', // Changed to line for a more professional feel
+				data: {
+					labels: valueNgay,
+					datasets: [{
+						label: "Doanh thu (VNĐ)",
+						backgroundColor: gradient,
+						borderColor: "#2d5a3d",
+						borderWidth: 3,
+						pointBackgroundColor: "#fff",
+						pointBorderColor: "#2d5a3d",
+						pointBorderWidth: 2,
+						pointRadius: 4,
+						pointHoverRadius: 6,
+						fill: true,
+						tension: 0.4, // Smooth curve
+						data: valueTongTien
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					legend: { display: false },
+					scales: {
+						yAxes: [{
+							gridLines: { color: "#f3f4f6", drawBorder: false },
+							ticks: {
+								beginAtZero: true,
+								fontColor: "#9ca3af",
+								padding: 10,
+								callback: function (value) { return value.toLocaleString() + ' đ'; }
+							}
+						}],
+						xAxes: [{
+							gridLines: { display: false },
+							ticks: { fontColor: "#9ca3af", padding: 10 }
+						}]
+					},
+					tooltips: {
+						backgroundColor: '#1f2937',
+						titleFontColor: '#fff',
+						bodyFontColor: '#fff',
+						xPadding: 15,
+						yPadding: 15,
+						displayColors: false,
+						callbacks: {
+							label: function (tooltipItem) {
+								return 'Doanh thu: ' + tooltipItem.yLabel.toLocaleString() + ' VNĐ';
+							}
+						}
+					}
+				}
+			});
+		}); 
+	</script>
+
+	<style>
+		:root {
+			--premium-green: hsl(145, 45%, 35%);
+			--premium-bg: #f8fafb;
+		}
+
+		body {
+			background-color: var(--premium-bg) !important;
+			font-family: 'Inter', sans-serif !important;
+		}
+
+		.premium-title {
+			font-weight: 800;
+			color: #1a202c;
+			letter-spacing: -0.5px;
+		}
+
+		.premium-subtitle {
+			color: #718096;
+			font-size: 0.95rem;
+		}
+
+		/* Stat Cards */
+		.premium-stat-card {
+			border-radius: 16px;
+			transition: transform 0.3s ease;
+		}
+
+		.premium-stat-card:hover {
+			transform: translateY(-5px);
+		}
+
+		.stat-label {
+			font-size: 0.85rem;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+
+		.stat-value {
+			font-size: 1.5rem;
+			color: #1a202c;
+		}
+
+		.stat-icon-wrapper {
+			width: 48px;
+			height: 48px;
+			border-radius: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 20px;
+		}
+
+		.bg-soft-warning {
+			background: #fffbeb;
+		}
+
+		.bg-soft-primary {
+			background: #eff6ff;
+		}
+
+		.bg-soft-success {
+			background: #f0fdf4;
+		}
+
+		.bg-soft-info {
+			background: #f0f9ff;
+		}
+
+		/* Chart Card */
+		.premium-card {
+			border-radius: 20px;
+		}
+
+		.badge-soft-success {
+			background-color: #f0fdf4;
+			color: #166534;
+			font-weight: 700;
+			font-size: 0.75rem;
+			border: 1px solid #bbf7d0;
+		}
+
+		/* Typography spacing */
+		.font-weight-bold {
+			font-weight: 700 !important;
+		}
+	</style>
+	<footer th:replace="~{admin/layout/footer :: footer}"></footer>
+</body>
+
+</html>

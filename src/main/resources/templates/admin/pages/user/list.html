@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{admin/layout/css :: css}">
+	<meta charset="utf-8">
+	<title>Admin - Quản lý người dùng</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body class="bg-light">
+	<aside th:replace="~{admin/layout/nav-left :: nav-left}"></aside>
+
+	<div id="right-panel" class="right-panel">
+		<header th:replace="~{admin/layout/header :: header}"></header>
+
+		<div class="content pb-0">
+			<div class="container-fluid">
+				<!-- Page Header Area -->
+				<div class="page-header-premium mb-4">
+					<div class="row align-items-center">
+						<div class="col-sm-6">
+							<h2 class="premium-title">Quản lý người dùng</h2>
+							<p class="premium-subtitle">Danh sách tất cả tài khoản trong hệ thống</p>
+						</div>
+						<div class="col-sm-6 text-right">
+							<a th:href="@{/admin/user/add}" class="btn-premium-add">
+								<i class="fa fa-plus"></i> Thêm người dùng mới
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- Main Data Card -->
+				<div class="card premium-card">
+					<div class="card-header-premium">
+						<div class="row align-items-center">
+							<div class="col-md-4">
+								<h5 class="mb-0">Dữ liệu người dùng</h5>
+							</div>
+							<div class="col-md-8">
+								<form method="get" action="list" class="premium-search-form">
+									<div class="search-input-group">
+										<i class="fa fa-search search-icon"></i>
+										<input type="text" placeholder="Tìm theo tên hoặc username..."
+											class="form-control-premium" id="input_seacrh" name="search">
+										<button type="submit" class="btn-premium-search">Tìm kiếm</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+					<div class="card-body-premium p-0">
+						<div class="table-responsive">
+							<table class="table premium-table mb-0">
+								<thead>
+									<tr>
+										<th class="text-center" style="width: 50px;">#</th>
+										<th>Thông tin người dùng</th>
+										<th>Liên hệ</th>
+										<th>Giấy phép lái xe</th>
+										<th class="text-right">Thao tác</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="u, index : ${listUser}">
+										<td class="text-center font-weight-bold" th:text="${index.count}"></td>
+										<td>
+											<div class="user-info-cell">
+												<div class="user-avatar-wrapper">
+													<img th:src="@{${'/uploads/'+u.image}}" class="user-avatar-circle"
+														alt="Avatar">
+												</div>
+												<div class="user-details">
+													<span class="user-name" th:text="${u.nameDisplay}"></span>
+													<span class="user-username" th:text="'@' + ${u.username}"></span>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div class="contact-info-cell">
+												<div class="mb-1">
+													<i class="fa fa-phone-square text-muted mr-1"></i>
+													<span th:text="${u.phone ?: 'Chưa cập nhật'}"></span>
+												</div>
+												<div>
+													<i class="fa fa-envelope text-muted mr-1"></i>
+													<span th:text="${u.email ?: 'Chưa cập nhật'}"
+														class="text-lowercase small"></span>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div class="license-info-cell">
+												<div class="d-flex align-items-center">
+													<div class="license-img-preview mr-2"
+														th:if="${u.ImgDrivingLicense}">
+														<img th:src="@{${'/uploads/'+u.ImgDrivingLicense}}" alt="GPLX">
+													</div>
+													<div>
+														<span class="d-block font-weight-bold"
+															th:text="${u.drivingLicense ?: '---'}"></span>
+														<span class="badge badge-premium-outline"
+															th:if="${u.drivingLicense}">Hợp lệ</span>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="text-right">
+											<div class="premium-actions">
+												<a th:href="@{'/admin/user/resetPass/'+${u.idUser}}"
+													class="btn-action-premium reset" title="Khôi phục mật khẩu">
+													<i class="fa fa-key"></i>
+												</a>
+												<button class="btn-action-premium delete"
+													th:onclick="Delete([[${u.idUser}]])" title="Xóa người dùng">
+													<i class="fa fa-trash-o"></i>
+												</button>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+
+	<!-- Scripts -->
+	<script th:src="@{/lib/bower_components/sweetalert2/dist/sweetalert2.js}"></script>
+	<th:block th:if="${messResetPass=='Success'}">
+		<script>swal('Thông báo', 'Khôi phục mật khẩu thành công!', 'success');</script>
+	</th:block>
+
+	<script>
+		function Delete(id) {
+			swal({
+				title: "Xác nhận xóa?",
+				text: "Dữ liệu người dùng này sẽ không thể phục hồi!",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#d33',
+				cancelButtonColor: '#3085d6',
+				confirmButtonText: 'Đồng ý xóa',
+				cancelButtonText: 'Hủy bỏ'
+			}).then((result) => {
+				if (result.value) {
+					window.location.href = "/admin/user/delete/" + id;
+				}
+			});
+		}
+	</script>
+
+	<style>
+		/* Premium Core Styles */
+		:root {
+			--premium-green: hsl(145, 45%, 35%);
+			--premium-green-light: hsl(145, 45%, 45%);
+			--premium-green-dark: hsl(145, 45%, 25%);
+			--premium-bg: #f8fafb;
+			--premium-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+			--premium-border: #edf2f7;
+		}
+
+		body {
+			background-color: var(--premium-bg) !important;
+			font-family: 'Inter', sans-serif !important;
+		}
+
+		#right-panel {
+			background-color: var(--premium-bg);
+		}
+
+		/* Page Header */
+		.premium-title {
+			font-weight: 800;
+			color: #1a202c;
+			margin-bottom: 5px;
+			letter-spacing: -0.5px;
+		}
+
+		.premium-subtitle {
+			color: #718096;
+			font-size: 0.95rem;
+		}
+
+		.btn-premium-add {
+			background: linear-gradient(135deg, var(--premium-green), var(--premium-green-light));
+			color: white !important;
+			border: none;
+			padding: 12px 24px;
+			border-radius: 10px;
+			font-weight: 600;
+			text-decoration: none !important;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 15px rgba(45, 90, 61, 0.2);
+			display: inline-flex;
+			align-items: center;
+		}
+
+		.btn-premium-add i {
+			margin-right: 8px;
+		}
+
+		.btn-premium-add:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(45, 90, 61, 0.3);
+			filter: brightness(1.1);
+		}
+
+		/* Card Container */
+		.premium-card {
+			border: none !important;
+			border-radius: 16px !important;
+			box-shadow: var(--premium-shadow) !important;
+			background: white;
+			overflow: hidden;
+		}
+
+		.card-header-premium {
+			padding: 25px;
+			border-bottom: 1px solid var(--premium-border);
+		}
+
+		.card-header-premium h5 {
+			color: #2d3748;
+			font-weight: 700;
+			letter-spacing: -0.2px;
+		}
+
+		/* Search Form Custom */
+		.premium-search-form {
+			width: 100%;
+		}
+
+		.search-input-group {
+			position: relative;
+			display: flex;
+			align-items: center;
+			background: #f7fafc;
+			border-radius: 12px;
+			padding: 4px;
+			transition: all 0.2s ease;
+			border: 1px solid #e2e8f0;
+		}
+
+		.search-input-group:focus-within {
+			background: white;
+			border-color: var(--premium-green);
+			box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.1);
+		}
+
+		.search-icon {
+			position: absolute;
+			left: 15px;
+			color: #a0aec0;
+			font-size: 14px;
+		}
+
+		.form-control-premium {
+			background: transparent !important;
+			border: none !important;
+			padding: 10px 10px 10px 40px !important;
+			box-shadow: none !important;
+			font-size: 0.9rem !important;
+			width: 100%;
+		}
+
+		.btn-premium-search {
+			background: var(--premium-green);
+			color: white;
+			border: none;
+			border-radius: 10px;
+			padding: 8px 20px;
+			font-weight: 600;
+			font-size: 0.85rem;
+			transition: all 0.2s;
+		}
+
+		.btn-premium-search:hover {
+			background: var(--premium-green-dark);
+		}
+
+		/* Table Design */
+		.premium-table thead th {
+			background: #f8fafc;
+			color: #4a5568 !important;
+			font-weight: 700 !important;
+			text-transform: uppercase;
+			font-size: 0.75rem !important;
+			letter-spacing: 0.05em;
+			padding: 15px 25px !important;
+			border-bottom: 2px solid var(--premium-border) !important;
+			border-top: none !important;
+		}
+
+		.premium-table tbody td {
+			padding: 20px 25px !important;
+			vertical-align: middle !important;
+			border-bottom: 1px solid var(--premium-border) !important;
+			color: #2d3748;
+		}
+
+		/* User Cell */
+		.user-info-cell {
+			display: flex;
+			align-items: center;
+		}
+
+		.user-avatar-wrapper {
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			overflow: hidden;
+			margin-right: 15px;
+			border: 2px solid #fff;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.user-avatar-circle {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.user-details {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.user-name {
+			font-weight: 700;
+			color: #1a202c;
+			font-size: 0.95rem;
+		}
+
+		.user-username {
+			color: #718096;
+			font-size: 0.8rem;
+		}
+
+		/* License Cell */
+		.license-img-preview {
+			width: 50px;
+			height: 35px;
+			border-radius: 4px;
+			overflow: hidden;
+			background: #edf2f7;
+			border: 1px solid #e2e8f0;
+		}
+
+		.license-img-preview img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.badge-premium-outline {
+			border: 1px solid var(--premium-green);
+			color: var(--premium-green);
+			background: transparent;
+			font-size: 0.7rem;
+			padding: 2px 8px;
+			border-radius: 4px;
+		}
+
+		/* Actions Hub */
+		.premium-actions {
+			display: flex;
+			gap: 8px;
+			justify-content: flex-end;
+		}
+
+		.btn-action-premium {
+			width: 36px;
+			height: 36px;
+			border-radius: 10px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: #f7fafc;
+			color: #4a5568;
+			border: 1px solid #e2e8f0;
+			transition: all 0.2s ease;
+			cursor: pointer;
+			text-decoration: none !important;
+		}
+
+		.btn-action-premium:hover {
+			transform: scale(1.1);
+		}
+
+		.btn-action-premium.reset:hover {
+			background: #ebf8ff;
+			color: #3182ce;
+			border-color: #bee3f8;
+		}
+
+		.btn-action-premium.delete:hover {
+			background: #fff5f5;
+			color: #e53e3e;
+			border-color: #fed7d7;
+		}
+
+		/* Responsive Fixes */
+		@media (max-width: 768px) {
+			.page-header-premium {
+				text-align: center;
+			}
+
+			.btn-premium-add {
+				width: 100%;
+				justify-content: center;
+				margin-top: 15px;
+			}
+
+			.card-header-premium {
+				text-align: center;
+			}
+
+			.premium-search-form {
+				margin-top: 20px;
+			}
+		}
+	</style>
+	<footer th:replace="~{admin/layout/footer :: footer}"></footer>
+</body>
+
+</html>

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{pages/layout/header-css-js :: header-css-js}">
+	<meta charset="utf-8">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg" th:fragment="header" style="background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1e7a39 100%) !important; 
+				padding: 10px 0 !important; 
+				box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+				position: sticky !important;
+				top: 0 !important;
+				z-index: 1050 !important;">
+		<div class="container-fluid" style="padding: 0 30px;">
+			<!-- Logo -->
+			<a class="navbar-brand" href="/" style="margin-left: 0 !important;">
+				<img th:src="@{/images/logo-premium.png}" alt="MIOTO" style="height: 45px; width: auto;">
+			</a>
+
+			<!-- Mobile Toggle -->
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation"
+				style="border: 2px solid rgba(255,255,255,0.3) !important; padding: 8px !important;">
+				<span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+			</button>
+
+			<!-- Nav Links -->
+			<div class="collapse navbar-collapse" id="navbarSupportedContent"
+				style="margin-left: 0 !important; background: transparent !important;">
+				<ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+					<li class="nav-item" style="margin: 0 5px;">
+						<a class="nav-link" th:href="@{/}"
+							style="color: white !important; opacity: 1 !important; font-weight: 500 !important; padding: 10px 15px !important; border-radius: 8px !important; transition: all 0.3s !important;">
+							<i class="fa-solid fa-home" style="margin-right: 5px; color: #90EE90;"></i> Trang chủ
+						</a>
+					</li>
+					<li class="nav-item" style="margin: 0 5px;">
+						<a class="nav-link" th:href="@{/register-car}"
+							style="color: white !important; opacity: 1 !important; font-weight: 500 !important; padding: 10px 15px !important; border-radius: 8px !important;">
+							<i class="fa-solid fa-car" style="margin-right: 5px; color: #90EE90;"></i> Trở thành chủ xe
+						</a>
+					</li>
+					<li class="nav-item" style="margin: 0 5px;">
+						<a class="nav-link" th:href="@{/blog}"
+							style="color: white !important; opacity: 1 !important; font-weight: 500 !important; padding: 10px 15px !important; border-radius: 8px !important;">
+							<i class="fa-solid fa-newspaper" style="margin-right: 5px; color: #90EE90;"></i> Blogs
+						</a>
+					</li>
+					<li class="nav-item" style="margin: 0 5px;">
+						<a class="nav-link" th:href="@{/chat}"
+							style="color: white !important; opacity: 1 !important; font-weight: 500 !important; padding: 10px 15px !important; border-radius: 8px !important;">
+							<i class="fa-solid fa-comments" style="margin-right: 5px; color: #90EE90;"></i> Chat
+						</a>
+					</li>
+					<li class="nav-item" style="margin: 0 5px;">
+						<a class="nav-link" th:href="@{/lien-he}"
+							style="color: white !important; opacity: 1 !important; font-weight: 500 !important; padding: 10px 15px !important; border-radius: 8px !important;">
+							<i class="fa-solid fa-phone" style="margin-right: 5px; color: #90EE90;"></i> Liên hệ
+						</a>
+					</li>
+				</ul>
+
+				<!-- Auth Section -->
+				<ul class="navbar-nav">
+					<th:block th:unless="${session.sesionUser}">
+						<li class="nav-item" style="margin: 0 5px;">
+							<a class="nav-link" th:href="@{/login}"
+								style="color: #90EE90 !important; opacity: 1 !important; font-weight: 600 !important; padding: 8px 20px !important; border: 2px solid #90EE90 !important; border-radius: 25px !important;">
+								<i class="fa-solid fa-sign-in-alt" style="margin-right: 5px;"></i> Đăng nhập
+							</a>
+						</li>
+						<li class="nav-item" style="margin: 0 5px;">
+							<a class="nav-link" th:href="@{/sign-up}"
+								style="color: #1a472a !important; opacity: 1 !important; font-weight: 600 !important; padding: 8px 20px !important; background: linear-gradient(135deg, #90EE90, #32CD32) !important; border-radius: 25px !important;">
+								<i class="fa-solid fa-user-plus" style="margin-right: 5px;"></i> Đăng kí
+							</a>
+						</li>
+					</th:block>
+
+					<th:block th:if="${session.sesionUser}">
+						<!-- Notification Bell -->
+						<li class="nav-item" style="position: relative; margin: 0 10px;">
+							<a class="nav-link notification" onclick="openNotification()"
+								style="color: white !important; opacity: 1 !important; font-size: 20px !important; padding: 10px !important; cursor: pointer;">
+								<i class="fa-solid fa-bell"></i>
+								<div class="icon-noti" th:each="n : ${listDetailNotification}"
+									th:if="${n.statusRead !=1}"
+									style="width: 10px; height: 10px; background: #ff4444; border-radius: 50%; position: absolute; top: 5px; right: 5px;">
+								</div>
+							</a>
+							<div class="content-noti" id="content-noti"
+								style="visibility: hidden; position: absolute; right: 0; top: 100%; width: 350px; background: white; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 1060; max-height: 400px; overflow: auto;">
+								<div
+									style="background: linear-gradient(135deg, #1a472a, #2d5a3d); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+									<h6 style="margin: 0; font-weight: 600;">Thông báo</h6>
+									<button onclick="readingAllNotification()"
+										style="background: transparent; border: none; color: #90EE90; font-size: 12px; cursor: pointer;">
+										<i class="fa-solid fa-check-double"></i> Đọc tất cả
+									</button>
+								</div>
+								<div class="title-noti" th:each="n : ${listDetailNotification}">
+									<th:block th:unless="${n.statusRead ==1}">
+										<a th:href="@{${n.url}}" onclick="readingNoti()"
+											style="display: flex; padding: 12px; background: rgba(50,205,50,0.05); border-bottom: 1px solid #eee; text-decoration: none;">
+											<img alt="" th:src="@{'/uploads/'+ ${n.getNotification().image}}"
+												style="width: 45px; height: 45px; border-radius: 50%; margin-right: 10px; object-fit: cover;">
+											<div>
+												<input type="hidden" class="id_noti"
+													th:value="${n.getNotification().idNoti}">
+												<p th:text="${n.getNotification().titleNoti}"
+													style="margin: 0 0 5px; font-weight: 600; color: #1a472a; font-size: 14px;">
+												</p>
+												<p th:text="${n.getNotification().contentNoti}"
+													style="margin: 0 0 5px; color: #666; font-size: 13px;"></p>
+												<span style="color: #2d5a3d; font-size: 11px;"
+													th:text="${'Thời gian: '+ n.getNotification().createDate}"></span>
+											</div>
+										</a>
+									</th:block>
+									<th:block th:if="${n.statusRead ==1}">
+										<a th:href="@{${n.url}}" onclick="readingNoti()"
+											style="display: flex; padding: 12px; background: #f5f5f5; border-bottom: 1px solid #eee; text-decoration: none;">
+											<img alt="" th:src="@{'/uploads/'+ ${n.getNotification().image}}"
+												style="width: 45px; height: 45px; border-radius: 50%; margin-right: 10px; object-fit: cover;">
+											<div>
+												<input type="hidden" class="id_noti"
+													th:value="${n.getNotification().idNoti}">
+												<p th:text="${n.getNotification().titleNoti}"
+													style="margin: 0 0 5px; font-weight: 600; color: #1a472a; font-size: 14px;">
+												</p>
+												<p th:text="${n.getNotification().contentNoti}"
+													style="margin: 0 0 5px; color: #666; font-size: 13px;"></p>
+												<span style="color: #2d5a3d; font-size: 11px;"
+													th:text="${'Thời gian: '+ n.getNotification().createDate}"></span>
+											</div>
+										</a>
+									</th:block>
+								</div>
+							</div>
+						</li>
+
+						<!-- User Dropdown -->
+						<li class="nav-item dropdown" style="margin: 0 5px;">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+								data-bs-toggle="dropdown" aria-expanded="false"
+								style="color: white !important; opacity: 1 !important; font-weight: 500 !important; padding: 8px 15px !important; background: rgba(255,255,255,0.1) !important; border-radius: 25px !important; display: flex !important; align-items: center !important; gap: 8px !important;">
+								<div
+									style="width: 30px; height: 30px; background: linear-gradient(135deg, #90EE90, #32CD32); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+									<i class="fa-solid fa-user" style="font-size: 14px; color: #1a472a;"></i>
+								</div>
+								<span th:text="${session.sesionUser.nameDisplay}"
+									style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink"
+								style="background: white !important; border: none !important; border-radius: 12px !important; box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important; padding: 10px 0 !important; margin-top: 10px !important;">
+								<li
+									style="padding: 10px 20px; background: linear-gradient(135deg, rgba(50,205,50,0.1), rgba(144,238,144,0.1)); margin-bottom: 5px;">
+									<span style="color: #666; font-size: 12px;">Xin chào,</span>
+									<strong th:text="${session.sesionUser.nameDisplay}"
+										style="display: block; color: #1a472a; font-size: 14px;"></strong>
+								</li>
+								<li>
+									<hr class="dropdown-divider" style="margin: 5px 0 !important;">
+								</li>
+								<li>
+									<a class="dropdown-item" th:href="@{/edit-profile}"
+										style="padding: 10px 20px !important; font-size: 14px !important; color: #333 !important; display: flex !important; align-items: center !important; gap: 10px !important; opacity: 1 !important;">
+										<i class="fa-solid fa-user-circle" style="color: #2d5a3d; width: 18px;"></i> Tài
+										Khoản
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="#"
+										style="padding: 10px 20px !important; font-size: 14px !important; color: #333 !important; display: flex !important; align-items: center !important; gap: 10px !important; opacity: 1 !important;">
+										<i class="fa-solid fa-heart" style="color: #2d5a3d; width: 18px;"></i> Xe yêu
+										thích
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item" th:href="@{/my-car}"
+										style="padding: 10px 20px !important; font-size: 14px !important; color: #333 !important; display: flex !important; align-items: center !important; gap: 10px !important; opacity: 1 !important;">
+										<i class="fa-solid fa-car-side" style="color: #2d5a3d; width: 18px;"></i> Xe của
+										tôi
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item" th:href="@{/my-trip}"
+										style="padding: 10px 20px !important; font-size: 14px !important; color: #333 !important; display: flex !important; align-items: center !important; gap: 10px !important; opacity: 1 !important;">
+										<i class="fa-solid fa-route" style="color: #2d5a3d; width: 18px;"></i> Chuyến đi
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="#"
+										style="padding: 10px 20px !important; font-size: 14px !important; color: #333 !important; display: flex !important; align-items: center !important; gap: 10px !important; opacity: 1 !important;">
+										<i class="fa-solid fa-key" style="color: #2d5a3d; width: 18px;"></i> Đổi mật
+										khẩu
+									</a>
+								</li>
+								<li>
+									<hr class="dropdown-divider" style="margin: 5px 0 !important;">
+								</li>
+								<li>
+									<a class="dropdown-item" th:href="@{/logout}"
+										style="padding: 10px 20px !important; font-size: 14px !important; color: #ff4757 !important; display: flex !important; align-items: center !important; gap: 10px !important; opacity: 1 !important;">
+										<i class="fa-solid fa-sign-out-alt" style="color: #ff4757; width: 18px;"></i>
+										Đăng xuất
+									</a>
+								</li>
+							</ul>
+						</li>
+					</th:block>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</body>
+
+<script>
+	var click = 1;
+	function openNotification() {
+		click = click + 1;
+		if (click % 2 == 0) {
+			document.getElementById("content-noti").style.visibility = "visible";
+		} else {
+			document.getElementById("content-noti").style.visibility = "hidden";
+		}
+	}
+</script>
+
+</html>

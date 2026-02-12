@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<aside th:fragment="nav-left" id="left-panel" class="left-panel premium-slate-sidebar">
+	<nav class="navbar navbar-expand-sm navbar-default premium-nav-custom">
+		<div id="main-menu" class="main-menu collapse navbar-collapse">
+			<ul class="nav navbar-nav premium-menu-list">
+				<!-- Branding Header -->
+				<li class="sidebar-brand-box d-none d-md-block" style="text-align: center; padding: 40px 20px 20px;">
+					<a th:href="@{/admin}" style="text-decoration: none;">
+						<img th:src="@{/images/logo-premium.png}" alt="MIOTO Admin" style="height: 40px; width: auto;">
+						<div
+							style="color: #475569; font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; margin-top: 10px;">
+							ADMIN PANEL</div>
+					</a>
+				</li>
+
+				<!-- Global Section -->
+				<li class="section-label">Hệ thống</li>
+				<li class="menu-item-final">
+					<a th:href="@{/admin}" class="menu-btn-final">
+						<div class="btn-icon"><i class="fa fa-dashboard"></i></div>
+						<span class="btn-text">Bảng điều khiển</span>
+					</a>
+				</li>
+
+				<th:block th:switch="${session.sessionRole}">
+					<!-- Case 1: Full Admin -->
+					<th:block th:case="1">
+						<li class="section-label">Quản lý chung</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/role}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-lock"></i></div>
+								<span class="btn-text">Quyền & Bảo mật</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/user}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-user-circle"></i></div>
+								<span class="btn-text">Người dùng hệ thống</span>
+							</a>
+						</li>
+
+						<li class="section-label">Kinh doanh & Vận hành</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/car}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-car"></i></div>
+								<span class="btn-text">Quản lý kho xe</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/brand-car}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-bookmark"></i></div>
+								<span class="btn-text">Danh mục hãng xe</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/booking}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-shopping-basket"></i></div>
+								<span class="btn-text">Đơn hàng thuê xe</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/blog}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-edit"></i></div>
+								<span class="btn-text">Tin tức & Blog</span>
+							</a>
+						</li>
+
+						<li class="section-label">Địa phương</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/provinces}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-map"></i></div>
+								<span class="btn-text">Tỉnh / Thành phố</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/district}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-map-marker"></i></div>
+								<span class="btn-text">Quận / Huyện</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/ward}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-location"></i></div>
+								<span class="btn-text">Xã / Phường</span>
+							</a>
+						</li>
+
+						<li class="section-label">Tài chính & Pháp lý</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/insurance}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-umbrella"></i></div>
+								<span class="btn-text">Dịch vụ bảo hiểm</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/contract}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-file-text-o"></i></div>
+								<span class="btn-text">Hợp đồng điện tử</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/request-withdraw}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-bank"></i></div>
+								<span class="btn-text">Yêu cầu rút tiền</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/payment}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-exchange"></i></div>
+								<span class="btn-text">Lịch sử thanh toán</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/event}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-bullhorn"></i></div>
+								<span class="btn-text">Sự kiện & Ưu đãi</span>
+							</a>
+						</li>
+						<li class="menu-item-final">
+							<a th:href="@{/admin/analysist}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-line-chart"></i></div>
+								<span class="btn-text">Thống kê nâng cao</span>
+							</a>
+						</li>
+					</th:block>
+
+					<!-- Other Roles -->
+					<th:block th:case="*">
+						<li class="menu-item-final"><a th:href="@{/admin/booking}" class="menu-btn-final">
+								<div class="btn-icon"><i class="fa fa-shopping-cart"></i></div> <span
+									class="btn-text">Đơn hàng</span>
+							</a></li>
+					</th:block>
+				</th:block>
+			</ul>
+		</div>
+	</nav>
+
+	<style>
+		.premium-slate-sidebar {
+			background: #0f172a !important;
+			/* Midnight Navy/Slate */
+			width: 280px !important;
+			border-right: none !important;
+			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+		}
+
+		.premium-nav-custom {
+			padding: 0 !important;
+		}
+
+		.sidebar-brand-box {
+			padding: 30px 25px;
+			margin-bottom: 15px;
+		}
+
+		.brand-inner {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+		}
+
+		.brand-icon-gem {
+			width: 38px;
+			height: 38px;
+			background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+			border-radius: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-size: 1.2rem;
+			box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+		}
+
+		.brand-text {
+			color: #f8fafc;
+			font-weight: 800;
+			font-size: 1rem;
+			letter-spacing: 2px;
+		}
+
+		.premium-menu-list {
+			padding: 0 16px 50px !important;
+			list-style: none !important;
+		}
+
+		.section-label {
+			padding: 24px 15px 12px !important;
+			font-size: 0.65rem !important;
+			font-weight: 800 !important;
+			color: #475569 !important;
+			text-transform: uppercase;
+			letter-spacing: 0.15em;
+		}
+
+		.menu-item-final {
+			margin-bottom: 5px;
+		}
+
+		.menu-btn-final {
+			display: flex !important;
+			align-items: center !important;
+			padding: 12px 18px !important;
+			color: #94a3b8 !important;
+			font-size: 0.88rem !important;
+			font-weight: 600 !important;
+			border-radius: 14px !important;
+			transition: all 0.25s !important;
+			text-decoration: none !important;
+			background: transparent !important;
+		}
+
+		.menu-btn-final:hover {
+			color: #f1f5f9 !important;
+			background: rgba(255, 255, 255, 0.04) !important;
+			transform: translateX(4px);
+		}
+
+		/* Active state - Simulating since th:classappend caused issues */
+		.menu-btn-final:active,
+		.menu-btn-final:focus {
+			color: #ffffff !important;
+			background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+			box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25) !important;
+		}
+
+		.btn-icon {
+			width: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 14px;
+			font-size: 1.15rem;
+			transition: all 0.2s;
+		}
+
+		/* Toggle adjustments */
+		@media (max-width: 991px) {
+			.premium-slate-sidebar {
+				width: 0 !important;
+				overflow: hidden;
+			}
+
+			.open .premium-slate-sidebar {
+				width: 280px !important;
+			}
+		}
+	</style>
+</aside>
+
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<title>Web thuê xe - Bài viết</title>
+<link rel="icon" th:href="@{/images/icon-logo.png}" type="images/x-icon">
+
+<head th:replace="~{pages/layout/header-css-js :: header-css-js}">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body style="background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); min-height: 100vh;">
+	<nav th:replace="~{pages/layout/header :: header}"></nav>
+
+	<!-- Hero Section -->
+	<div class="blog-hero">
+		<div class="container">
+			<h1><i class="fa-solid fa-newspaper"></i> Blog MIOTO</h1>
+			<p>Khám phá những bài viết hữu ích về kinh nghiệm thuê xe, du lịch và mẹo hay</p>
+		</div>
+	</div>
+
+	<div class="container blog-container">
+		<!-- Blog Cards -->
+		<div class="blog-grid">
+			<div class="blog-card" th:each="b : ${blogs}">
+				<a th:href="@{'/blog/'+${b.idBlog}+'/'+${b.titleBlog}}" class="blog-card-link">
+					<div class="blog-card-image">
+						<img th:src="@{'uploads/'+ ${b.imageBlog}}" alt="">
+					</div>
+					<div class="blog-card-content">
+						<h3 class="blog-title" th:text="${b.titleBlog}"></h3>
+						<p class="blog-excerpt" th:text="${b.describeBlog}"></p>
+						<span class="read-more">Đọc thêm <i class="fa-solid fa-arrow-right"></i></span>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<style>
+		/* Hero Section */
+		.blog-hero {
+			background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1e7a39 100%);
+			padding: 60px 0;
+			text-align: center;
+			color: white;
+			margin-bottom: 40px;
+		}
+
+		.blog-hero h1 {
+			font-size: 2.5rem;
+			font-weight: 700;
+			margin: 0 0 15px;
+		}
+
+		.blog-hero h1 i {
+			margin-right: 15px;
+			color: #90EE90;
+		}
+
+		.blog-hero p {
+			margin: 0;
+			font-size: 1.1rem;
+			opacity: 0.9;
+		}
+
+		/* Container */
+		.blog-container {
+			padding-bottom: 60px;
+		}
+
+		/* Blog Grid */
+		.blog-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+			gap: 30px;
+		}
+
+		/* Blog Card */
+		.blog-card {
+			background: white;
+			border-radius: 20px;
+			overflow: hidden;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+			transition: all 0.3s ease;
+		}
+
+		.blog-card:hover {
+			transform: translateY(-10px);
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+		}
+
+		.blog-card-link {
+			display: block;
+			text-decoration: none;
+			color: inherit;
+		}
+
+		.blog-card-image {
+			width: 100%;
+			height: 220px;
+			overflow: hidden;
+		}
+
+		.blog-card-image img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform 0.3s ease;
+		}
+
+		.blog-card:hover .blog-card-image img {
+			transform: scale(1.1);
+		}
+
+		.blog-card-content {
+			padding: 25px;
+		}
+
+		.blog-title {
+			font-size: 1.2rem;
+			font-weight: 700;
+			color: #1a472a;
+			margin: 0 0 12px;
+			line-height: 1.4;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+		.blog-excerpt {
+			font-size: 14px;
+			color: #666;
+			line-height: 1.6;
+			margin: 0 0 15px;
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+		.read-more {
+			font-size: 14px;
+			font-weight: 600;
+			color: #2d5a3d;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			transition: all 0.3s ease;
+		}
+
+		.blog-card:hover .read-more {
+			gap: 12px;
+			color: #1a472a;
+		}
+
+		/* Responsive */
+		@media (max-width: 768px) {
+			.blog-hero h1 {
+				font-size: 1.8rem;
+			}
+
+			.blog-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</body>
+
+<footer th:replace="~{pages/layout/footer :: footer}"></footer>
+
+</html>
