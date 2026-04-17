@@ -1,546 +1,281 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<title>Web thuê xe - Đơn hàng</title>
-<link rel="icon" th:href="@{/images/icon-logo.png}" type="images/x-icon">
 <head th:replace="~{pages/layout/header-css-js :: header-css-js}">
-<!-- th:replace="~{pages/layout/header-css-js :: header-css-js}" -->
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ví của tôi - MIOTO</title>
 </head>
+<body style="background-color: #f8f9fa;">
+    <nav th:replace="~{pages/layout/header :: header}"></nav>
+    <div class="container-fluid" style="padding: 0;">
+        <div th:replace="~{pages/layout/menu-account :: menu-acc}"></div>
+        <div class="content-car">
+            <div class="content-walet" style="background: transparent; padding: 0;">
+                <div class="wallet-container">
+                    <div class="wallet-header">
+                        <a href="javascript:history.back()" class="btn-back">
+                            <i class="fa-solid fa-arrow-left"></i> Quay lại
+                        </a>
+                        <h2 class="wallet-title">Ví và Thu nhập</h2>
+                    </div>
 
-<body>
-	<nav th:replace="~{pages/layout/header :: header}"></nav>
-	<div class="container-fluid" style="padding: 0">
-		<div th:replace="~{pages/layout/menu-account :: menu-acc}"></div>
-		<div class="content-car">
-			<div class="title-page">
-				<h2>Thống kê doanh thu</h2>
-			</div>
-			<div class="content-walet">
-				<div class="form-anlysist">
-					<form action="/my-walet" method="get">
-						<div class="row">
-							<div class="col-md-4 col-sm-4">
-								<div class="form-group">
-									<label class="form-control-label">Ngày bắt đầu</label> <input
-										type="date" name="dateStart" class="form-control"> <small></small>
-								</div>
-							</div>
-							<div class="col-md-4 col-sm-4">
-								<div class="form-group">
-									<label class="form-control-label">Ngày kết thúc</label> <input
-										type="date" name="dateEnd" class="form-control"> <small></small>
-								</div>
-							</div>
-							<div class="col-md-2 col-sm-2">
-								<div class="form-group">
-									<button class="btn-analystic">Thống kê</button>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="withdraw">
-					<button onclick="openRequestPayment()">Gửi yêu cầu rút
-						tiền</button>
-					<button onclick="openHistory()">Lịch sử giao dịch</button>
-				</div>
-				<div id="popupHistory" class="col-md-4 popupHistory">
-					<button class="btn-exit" onclick="closePopupHistory()">
-						<i class="fa-solid fa-xmark"></i>
-					</button>
-					<h5 style="margin-top: 15px">Lịch sử giao dịch</h5>
-					<div class="content">
-						<table style="width: 100%">
-							<tr>
-								<th>STT</th>
-								<th style="display: none">Id Request</th>
-								<th>Ngân hàng</th>
-								<th>Số tài khoản</th>
-								<th>Tên tài khoản</th>
-								<th>Số tiền</th>
-								<th>Ngày yêu cầu</th>
-								<th>Trạng thái</th>
-							</tr>
-							<tr th:each="r, index : ${listRequestWithdraw}">
-								<td th:text="${index.index+1}"></td>
-								<td th:text="${r.idRequest}" style="display: none"></td>
-								<td th:text="${r.nameBank}"></td>
-								<td th:text="${r.accountNumber}"></td>
-								<td th:text="${r.nameAccount}"></td>
-								<td th:text="${r.moneyNumber}"></td>
-								<td th:text="${r.createDate}"></td>
-								<th:block th:if="${r.statusRequest==0}">
-									<td>Chờ duyệt</td>
-								</th:block>
-								<th:block th:if="${r.statusRequest==1}">
-									<td>Đã duyệt</td>
-								</th:block>
-								<th:block th:if="${r.statusRequest==3}">
-									<td>Không duyệt</td>
-								</th:block>
-							</tr>
+                    <div class="stats-grid">
+                        <div class="stat-card balance">
+                            <div class="icon-circle bg-green-soft"><i class="fa-solid fa-wallet"></i></div>
+                            <div class="info">
+                                <span class="label">Số dư hiện tại</span>
+                                <h3 class="value" th:text="${user.totalMoney != null ? #numbers.formatInteger(user.totalMoney, 0, 'POINT') : 0} + ' đ'">0 đ</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card trips">
+                            <div class="icon-circle bg-blue-soft"><i class="fa-solid fa-route"></i></div>
+                            <div class="info">
+                                <span class="label">Chuyến xe hoàn thành</span>
+                                <h3 class="value" th:text="${listBooking != null ? #lists.size(listBooking) : 0}">0</h3>
+                            </div>
+                        </div>
+                    </div>
 
-						</table>
-					</div>
-				</div>
-				<div id=popupWithdraw class="popup">
-					<form action="/withdraw" method="get"
-						th:object=${requestWithdrawal} id="form-withdraw">
-						<h4>Thông tin rút tiền</h4>
-						<h6>Chọn ngân hàng</h6>
-						<select th:field="*{nameBank}">
-							<option value="Vietcombank">Vietcombank</option>
-							<option value="Vietinbank">VietinBank</option>
-							<option value="MB Bank">MB Bank</option>
-							<option value="BIDV">BIDV</option>
-						</select> <small></small>
-						<h6>Số tài khoản</h6>
-						<div class="group-form-address">
-							<input type="text" th:field="*{accountNumber}"
-								placeholder="010101034040" /><small></small>
-						</div>
-						<h6>Chủ tài khoản</h6>
-						<div class="group-form-address">
-							<input type="text" th:field="*{nameAccount}"
-								placeholder="DANG VAN NAM" /><small></small>
-						</div>
+                    <div class="actions-row">
+                        <button class="btn-main primary" onclick="toggleWithdraw(true)">
+                            <i class="fa-solid fa-paper-plane"></i> Rút tiền ngay
+                        </button>
+                        <button class="btn-main secondary" onclick="toggleHistory(true)">
+                            <i class="fa-solid fa-history"></i> Lệnh rút gần đây
+                        </button>
+                    </div>
 
-						<h6>Số tiền</h6>
-						<div class="form-inline-address">
-							<input type="text" placeholder="300000" th:field="*{moneyNumber}" />
-							<small></small>
-						</div>
-						<div class="group-action">
-							<a class="btn-cancel" onclick="closePopupWithdraw()">Hủy bỏ</a>
-							<button class="btn-success" type="submit">Xác nhận</button>
-						</div>
-					</form>
-				</div>
-				 <div class="my-car">
-					<table class="table-car">
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th style="display: none">ID</th>
-								<th>Biển số xe</th>
-								<th>Tên xe</th>
-								<th>Ảnh xe</th>
-								<th>Giá xe</th>
-								<th>Người đặt</th>
-								<th>Số điện thoại</th>
-								<th>Địa chỉ</th>
-								<th>Ngày bắt đầu</th>
-								<th>Ngày kết thúc</th>
-								<th style="min-width: 150px">Tổng tiền</th>
-							</tr>
-						</thead>
-						<tbody>
+                    <div class="dashboard-grid">
+                        <div class="card-box">
+                            <div class="box-head">
+                                <h6>Thống kê doanh thu</h6>
+                                <form action="/my-walet" method="get" class="filter-mini">
+                                    <input type="date" name="dateStart">
+                                    <input type="date" name="dateEnd">
+                                    <button type="submit"><i class="fa-solid fa-filter"></i></button>
+                                </form>
+                            </div>
+                            <div class="chart-wrap" style="height: 250px;">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
 
-							<th:block th:if="${#lists.isEmpty(listBooking)}">
-								<tr>
-									<td style="text-align: center;">Không có dữ liệu</td>
-								</tr>
-							</th:block>
-							<th:block th:unless="${#lists.isEmpty(listBooking)}">
-								<tr th:each="b, index: ${listBooking}">
-									<td th:text="${index.count}"></td>
-									<td style="display: none" th:text="${b.idBooking}"></td>
-									<td style="min-width: 100px"
-										th:text="${b.getCar().getLicensePlates()}"></td>
-									<td th:text="${b.getCar().getNameCar()}"></td>
-									<td><img class="img-car" alt=""
-										th:src="'/uploads/'+${b.getCar().getAvatarCar()}" /></td>
-									<td style="min-width: 75px"
-										th:text="${b.getCar().price}-${b.getCar().price}*${b.getCar().promotionalPrice}/100 +' K'"></td>
-									<td th:text="${b.getUser().nameDisplay}"></td>
-									<td th:text="${b.getUser().phone}"></td>
-									<td th:text="${b.getUser().address}"></td>
-									<td th:text="${b.dateStart}"></td>
-									<td th:text="${b.dateEnd}"></td>
-									<td style="min-width: 150px" th:text="${b.billTotal}+ 'đ'"></td>
-								</tr>
-							</th:block>
-						</tbody>
-					</table>
-				</div>
-				<div class="col-md-12 " style="padding-bottom: 25px">
-					<div class="card" style="margin-top: 25px; margin-bottom: 10px">
+                        <div class="card-box">
+                            <div class="box-head">
+                                <h6>Lịch sử giao dịch</h6>
+                            </div>
+                            <div class="table-wrap">
+                                <table class="custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên xe</th>
+                                            <th>Ngày</th>
+                                            <th>Giá tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:if="${listBooking == null or #lists.isEmpty(listBooking)}">
+                                            <td colspan="3" style="text-align: center; color: #999; padding: 20px;">Không có dữ liệu</td>
+                                        </tr>
+                                        <tr th:each="b : ${listBooking}">
+                                            <td th:text="${b.getCar().getNameCar()}"></td>
+                                            <td th:text="${#dates.format(b.dateStart, 'dd/MM')}"></td>
+                                            <td><b style="color: #10b981;" th:text="${#numbers.formatInteger(b.billTotal, 0, 'POINT')} + ' đ'"></b></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-						<h4 style="text-align: center; margin-bottom: 20px">Thống kê
-							thu nhập</h4>
-						<div class="row">
-							<div class="col-md-1"></div>
-							<div class="col-md-10">
-								<canvas id="myChart"></canvas>
-							</div>
-							<div class="col-md-1"></div>
+    <!-- Modals -->
+    <div id="modalWithdraw" class="modal-fixed-overlay" style="display: none; opacity: 0;">
+        <div class="modal-centered-panel">
+            <div class="modal-top">
+                <h5>Rút tiền về ngân hàng</h5>
+                <button type="button" onclick="toggleWithdraw(false)">&times;</button>
+            </div>
+            <form action="/withdraw" method="get" th:object="${requestWithdrawal}" id="formWithdrawAction">
+                <div class="modal-mid">
+                    <div class="input-grp">
+                        <label>Ngân hàng nhận</label>
+                        <select th:field="*{nameBank}">
+                            <option value="Vietcombank">Vietcombank</option>
+                            <option value="Vietinbank">VietinBank</option>
+                            <option value="MB Bank">MB Bank</option>
+                        </select>
+                    </div>
+                    <div class="input-grp">
+                        <label>Số tài khoản</label>
+                        <input type="text" th:field="*{accountNumber}" required>
+                    </div>
+                    <div class="input-grp">
+                        <label>Tên chủ tài khoản</label>
+                        <input type="text" th:field="*{nameAccount}" required>
+                    </div>
+                    <div class="input-grp">
+                        <label>Số tiền muốn rút</label>
+                        <input type="number" th:field="*{moneyNumber}" id="withdrawAmount" required>
+                    </div>
+                </div>
+                <div class="modal-bot">
+                    <button type="button" class="btn-cancel" onclick="toggleWithdraw(false)">Hủy</button>
+                    <button type="submit" class="btn-submit">Xác nhận</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-						</div>
-					</div>
-				</div>
-				<input type="hidden" th:value="${valueDate}" id="valueNgay">
-				<input type="hidden" th:value="${totalMoney}" id="valueTongTien">
-			</div>
+    <div id="modalHistory" class="modal-fixed-overlay" style="display: none; opacity: 0;">
+        <div class="modal-centered-panel wide">
+            <div class="modal-top">
+                <h5>Lịch sử yêu cầu rút tiền</h5>
+                <button type="button" onclick="toggleHistory(false)">&times;</button>
+            </div>
+            <div class="modal-mid scrollable">
+                <table class="simple-table">
+                    <thead>
+                        <tr>
+                            <th>Ngày yêu cầu</th>
+                            <th>Ngân hàng</th>
+                            <th>Số tiền</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${listRequestWithdraw == null or #lists.isEmpty(listRequestWithdraw)}">
+                            <td colspan="4" style="text-align: center; padding: 20px;">Chưa có dữ liệu rút tiền</td>
+                        </tr>
+                        <tr th:each="r : ${listRequestWithdraw}">
+                            <td th:text="${r.createDate != null ? #dates.format(r.createDate, 'dd/MM/yy') : '--'}"></td>
+                            <td th:text="${r.nameBank}"></td>
+                            <td th:text="${r.moneyNumber != null ? #numbers.formatInteger(r.moneyNumber, 0, 'POINT') + ' đ' : '0 đ'}"></td>
+                            <td>
+                                <span th:if="${r.statusRequest==0}">Chờ duyệt</span>
+                                <span th:if="${r.statusRequest==1}" style="color: green;">Thành công</span>
+                                <span th:if="${r.statusRequest==3}" style="color: red;">Đã hủy</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-		</div>
+    <input type="hidden" id="jsDate" th:value="${valueDate ?: '[]'}">
+    <input type="hidden" id="jsTotal" th:value="${totalMoney ?: '[]'}">
+    <input type="hidden" id="jsBalance" th:value="${user.totalMoney ?: 0}">
 
-	</div>
+    <footer th:replace="~{pages/layout/footer :: footer}"></footer>
+
+    <style>
+        .wallet-container { padding: 30px; font-family: 'Inter', sans-serif; color: #1e293b; max-width: 1200px; margin: 0 auto; }
+        .wallet-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
+        .btn-back { display: flex; align-items: center; gap: 8px; background: white; padding: 8px 16px; border-radius: 10px; text-decoration: none !important; color: #64748b !important; font-weight: 500; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .wallet-title { margin: 0; font-weight: 800; font-size: 24px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 25px; border-radius: 16px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .icon-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .bg-green-soft { background: #d1fae5; color: #10b981; }
+        .bg-blue-soft { background: #eff6ff; color: #3b82f6; }
+        .info .label { font-size: 13px; color: #64748b; }
+        .info .value { margin: 4px 0 0; font-weight: 800; font-size: 24px; }
+        .actions-row { display: flex; gap: 12px; margin-bottom: 35px; }
+        .btn-main { border: none; padding: 12px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .btn-main.primary { background: #10b981; color: white; }
+        .btn-main.secondary { background: white; color: #1e293b; border: 1px solid #e2e8f0; }
+        .dashboard-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 25px; }
+        .card-box { background: white; padding: 24px; border-radius: 18px; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .box-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .box-head h6 { margin: 0; font-weight: 700; font-size: 16px; }
+        .filter-mini input { border: 1px solid #e2e8f0; border-radius: 8px; padding: 5px 10px; font-size: 12px; outline: none; }
+        .filter-mini button { background: #334155; color: white; border: none; padding: 5px 12px; border-radius: 8px; cursor: pointer; }
+        .custom-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .custom-table th { text-align: left; padding: 12px; color: #94a3b8; font-weight: 600; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #f1f5f9; }
+        .custom-table td { padding: 14px 12px; border-bottom: 1px solid #f8fafc; }
+        .modal-fixed-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); z-index: 99999; align-items: center; justify-content: center; transition: all 0.3s; pointer-events: none; }
+        .modal-fixed-overlay[style*="display: flex"] { pointer-events: auto; }
+        .modal-centered-panel { background: white; width: 95%; max-width: 450px; border-radius: 20px; padding: 30px; transform: scale(0.9); transition: all 0.3s; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .modal-centered-panel.wide { max-width: 750px; }
+        .modal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .modal-top h5 { margin: 0; font-weight: 800; }
+        .modal-top button { background: none; border: none; font-size: 32px; cursor: pointer; color: #94a3b8; line-height: 1; }
+        .input-grp { margin-bottom: 18px; }
+        .input-grp label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #475569; }
+        .input-grp input, .input-grp select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; outline: none; transition: border-color 0.2s; }
+        .input-grp input:focus { border-color: #10b981; }
+        .modal-bot { display: flex; gap: 12px; margin-top: 25px; }
+        .modal-bot button { flex: 1; padding: 14px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
+        .btn-cancel { background: #f1f5f9; color: #475569; }
+        .btn-submit { background: #10b981; color: white; }
+        .scrollable { max-height: 350px; overflow-y: auto; }
+        .simple-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+        .simple-table th { background: #f8fafc; padding: 10px; text-align: left; }
+        .simple-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; }
+        @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+    </style>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                var dStr = document.getElementById('jsDate').value;
+                var tStr = document.getElementById('jsTotal').value;
+                var labs = JSON.parse(dStr);
+                var vals = JSON.parse(tStr);
+                var ctx = document.getElementById('revenueChart');
+                if (ctx && Array.isArray(labs) && labs.length > 0) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labs,
+                            datasets: [{
+                                label: 'Thu nhập',
+                                data: vals,
+                                borderColor: '#10b981',
+                                backgroundColor: 'rgba(16,185,129,0.05)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            legend: { display: false },
+                            scales: {
+                                yAxes: [{ ticks: { beginAtZero: true, fontSize: 10 } }],
+                                xAxes: [{ ticks: { fontSize: 10 } }]
+                            }
+                        }
+                    });
+                }
+            } catch(err) {}
+
+            var f = document.getElementById('formWithdrawAction');
+            if (f) {
+                f.addEventListener('submit', function(e) {
+                    var amt = document.getElementById('withdrawAmount').value;
+                    var bal = document.getElementById('jsBalance').value;
+                    if (parseFloat(amt) > parseFloat(bal)) {
+                        alert("Số dư khả dụng không đủ!");
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+
+        function toggleWithdraw(open) {
+            var el = document.getElementById('modalWithdraw');
+            if (open) { el.style.display = 'flex'; setTimeout(() => { el.style.opacity = '1'; el.children[0].style.transform = 'scale(1)'; }, 10); }
+            else { el.style.opacity = '0'; el.children[0].style.transform = 'scale(0.9)'; setTimeout(() => { el.style.display = 'none'; }, 300); }
+        }
+        function toggleHistory(open) {
+            var el = document.getElementById('modalHistory');
+            if (open) { el.style.display = 'flex'; setTimeout(() => { el.style.opacity = '1'; el.children[0].style.transform = 'scale(1)'; }, 10); }
+            else { el.style.opacity = '0'; el.children[0].style.transform = 'scale(0.9)'; setTimeout(() => { el.style.display = 'none'; }, 300); }
+        }
+    </script>
 </body>
-<style>
-.withdraw {
-	position: relative;
-	margin-left: 20px;
-}
-
-.btn-exit {
-	position: absolute;
-	top: 0;
-	right: 0;
-	border: none;
-	font-size: 18px;
-}
-
-.btn-exit:hover {
-	background: red;
-}
-
-.withdraw button {
-	border: none;
-	border-radius: 9px;
-	background: #33bb33;
-	padding: 7px 15px;
-	color: white;
-	font-size: 18px;
-	font-weight: 600px;
-	margin-right: 20px;
-}
-
-.withdraw button:hover {
-	background: #267426;
-}
-
-.btn-analystic {
-	border: none;
-	background: #33bb33;
-	border-radius: 10px;
-	margin-top: 20px;
-	padding: 7px 10px;
-}
-
-.btn-analystic:hover {
-	background: #267426;
-}
-
-.form-anlysist {
-	margin: auto 100px;
-	padding: 30px;
-}
-
-.contract a {
-	text-decoration: none;
-	color: black;
-}
-
-.contract {
-	display: inline-block;
-	margin: 40px 20px 20px 20px;
-}
-
-.content-walet h4 {
-	align-items: center;
-	padding-top: 25px;
-}
-
-.content-walet {
-	background: #e8eaef;
-	margin: 0px auto;
-	padding: 0 15px;
-}
-
-.content {
-	position: absolute;
-	top: 60px;
-	left: 55px;
-	overflow-x: auto;
-}
-
-.content table {
-	border-collapse: collapse;
-	border-spacing: 0;
-	width: 100%;
-	border: 1px solid #ddd;
-}
-
-.content th, td {
-	text-align: left;
-	padding: 8px;
-}
-
-.content tr:nth-child(even) {
-	background-color: #f2f2f2
-}
-
-.popupHistory {
-	text-align: center;
-	width: 900px;
-	height: 400px;
-	overflow: auto;
-	background:#c8d7d7;
-	margin: 20px 10px;
-	padding: 5px 10px;
-	position: absolute;;
-	top: 0;
-	left: 50%;
-	transform: translate(-50%, -50%) scale(0.1);
-	visibility: hidden;
-	border-radius: 6px;
-	transition: transform 0.4s, top 0.4s;
-	width: 900px;
-}
-</style>
-
-<footer th:replace="~{pages/layout/footer :: footer}"></footer>
-
-<script th:src="@{/js/main.js}"></script>
-<script type="text/javascript">
-	$(document).ready(function($) {
-		var valueNgay = $('#valueNgay').val();
-		valueNgay = JSON.parse(valueNgay);
-		var valueTongTien = $('#valueTongTien').val();
-		valueTongTien = JSON.parse(valueTongTien);
-		console.log(valueTongTien)
-		var canvas = document.getElementById('myChart');
-		canvas.height = 110;
-		var data = {
-			labels : valueNgay,
-			datasets : [ {
-				label : "Tổng tiền",
-				backgroundColor : "rgba(255,99,132,0.2)",
-				borderColor : "rgba(255,99,132,1)",
-				borderWidth : 2,
-				hoverBackgroundColor : "rgba(255,99,132,0.4)",
-				hoverBorderColor : "rgba(255,99,132,1)",
-				data : valueTongTien
-			} ]
-		};
-		var option = {
-			scales : {
-				yAxes : [ {
-					stacked : true,
-					gridLines : {
-						display : true,
-						color : "rgba(255,99,132,0.2)"
-					}
-				} ],
-				xAxes : [ {
-					gridLines : {
-						display : false
-					}
-				} ]
-			}
-		};
-
-		var myBarChart = new Chart(canvas, {
-			type : 'bar',
-			data : data,
-			options : option
-		});
-	});
-</script>
-<style>
-.popup {
-	width: 600px;
-	background-image: linear-gradient(#747374, #9b9b9b);
-	margin: 20px 10px;
-	padding: 5px 10px;
-	position: absolute;;
-	top: 0;
-	left: 50%;
-	transform: translate(-50%, -50%) scale(0.1);
-	visibility: hidden;
-	border-radius: 6px;
-	transition: transform 0.4s, top 0.4s;
-}
-
-.open-popup {
-	visibility: visible;
-	top: 50%;
-	transform: translate(-50%, -50%) scale(1);
-}
-
-.popup input, select {
-	width: 90%;
-	margin: 5px 30px;
-	padding: 5px 10px;
-}
-
-.popup h4 {
-	text-align: center;
-}
-
-.popup h6, small {
-	margin-left: 30px
-}
-
-.popup  small {
-	margin-left: 30px;
-	color: red;
-	font-size: 14px;
-}
-
-.popup .group-action {
-	display: flex;
-	justify-content: space-around;
-	margin: 10px;
-	margin-bottom: 20px;
-}
-
-a.popup .group-action {
-	border: 0;
-	outline: none;
-	padding: 10px 25px;
-	border-radius: 7px;
-	margin-top: 10px;
-	font-weight: 700;
-	font-size: 19px;
-	text-decoration: none;
-	color: black;
-}
-
-.popup .group-action .btn-cancel {
-	border: 0;
-	outline: none;
-	padding: 10px 25px;
-	border-radius: 7px;
-	margin-top: 10px;
-	font-weight: 700;
-	font-size: 19px;
-	text-decoration: none;
-	color: black;
-}
-
-.popup .group-action a {
-	cursor: pointer;
-}
-
-.btn-sucs {
-	display: inherit;
-	text-align: center;
-	width: 100%;
-	padding: 10px 25px;
-	border-radius: 7px;
-	margin-top: 10px;
-	font-weight: 700;
-	font-size: 19px;
-	background-color: #41cd5f;
-	padding: 10px 25px;
-	cursor: pointer;
-}
-
-.popup .group-action .btn-cancel {
-	background-color: #d3474d;
-}
-
-.popup .group-action .btn-success {
-	border: 0;
-	outline: none;
-	padding: 10px 25px;
-	border-radius: 7px;
-	margin-top: 10px;
-	font-weight: 700;
-	font-size: 19px;
-	text-decoration: none;
-	color: black;
-	background-color: #41cd5f;
-}
-</style>
-<script th:inline="javascript">
-var  moneyAccount ="[(${sessionUser.getTotalMoney()})]";
-var form = document.getElementById('form-withdraw');
-
-var money = document.getElementById('moneyNumber');
-var accountNumber = document.getElementById('accountNumber');
-var nameAccount = document.getElementById('nameAccount');
-console.log(money,accountNumber,nameAccount)
-
-function showError(input, message) {
-    //  console.log(input.parentElement.querySelector('small'));
-        let parent = input.parentElement;
-        let small = parent.querySelector('small');
-        parent.classList.add('error');
-        small.innerText = message;
-    }
-
-  function showSuccess(input, message) {
-        let parent = input.parentElement;
-        let small = parent.querySelector('small');
-        parent.classList.remove('error');
-        small.innerText = '';
-    }
-    
-function checkEmptyError(listInput) {
-    let isEmptyError = false;
-    listInput.forEach(input => {
-        input.value = input.value.trim();
-        if (!input.value) {
-          
-            showError(input, 'Không được để trống');
-        } else {
-            showSuccess(input);
-            isEmptyError = true;
-        }
-    });
-    return isEmptyError;
-}
-
-function checkNumber(input){
-    var check= false;
-    if(/^[0-9]+$/.test(input.value)){
-        check= true;
-    	 showSuccess(input);
-        }else{
-        	showError(input, 'Chỉ được nhập số');
-        	check= false;
-        }
-    return check;
-    }
-
-function checkTotalMoney(moneywithdraw, moneyAccount){
-    var check= false;
-    if(Number(moneywithdraw.value) < Number(moneyAccount) ){
-        check= true;
-    	 showSuccess(moneywithdraw);
-        }else{
-        	showError(moneywithdraw, 'Số tiền lớn hơn số tiền có hiện tại');
-        	check= false;
-        }
-    return check;
-    }
- form.addEventListener('submit', function(e) {
-        e.preventDefault()	
-        var check= checkEmptyError([nameAccount,accountNumber,money]);
-        if(check && checkNumber(accountNumber) == true && checkNumber(money)== true
-        		&& checkTotalMoney(money, moneyAccount)==true ){
-			 form.submit();
-	        }
-    });
-	function openRequestPayment() {
-		var popup = document.getElementById('popupWithdraw');
-		popup.classList.add("open-popup");
-	}
-	function closePopupWithdraw() {
-		var popup = document.getElementById('popupWithdraw');
-		popup.classList.remove("open-popup");
-	}
-	function openHistory() {
-		var popup = document.getElementById('popupHistory');
-		popup.classList.add("open-popup");
-	}
-	function closePopupHistory(){
-		var popup = document.getElementById('popupHistory');
-		popup.classList.remove("open-popup");
-	}
-</script>
 </html>

@@ -1,266 +1,629 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="search-car" class="search-car-lux">
+    <!-- Floating Particles -->
+    <div class="hero-particles">
+        <div class="particle p1"></div>
+        <div class="particle p2"></div>
+        <div class="particle p3"></div>
+        <div class="particle p4"></div>
+        <div class="particle p5"></div>
+        <div class="particle p6"></div>
+        <div class="particle p7"></div>
+        <div class="particle p8"></div>
+    </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+    <!-- Decorative Glow Orbs -->
+    <div class="hero-glow-orb orb-1"></div>
+    <div class="hero-glow-orb orb-2"></div>
+    <div class="hero-glow-orb orb-3"></div>
 
-<body>
-    <div th:fragment="search-car" class="search-car-premium">
-        <div class="search-hero-overlay">
-            <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-                <h2 class="search-title-main">MIOTO - ĐỒNG HÀNH CÙNG CHUYẾN ĐI</h2>
+    <div class="search-hero-overlay">
+        <div class="container h-100 d-flex flex-column justify-content-center align-items-center py-5">
+            <div class="hero-text-center text-center mb-4">
+                <div class="luxury-badge">
+                    <i class="fa-solid fa-gem me-2"></i>Premium Car Rental
+                </div>
+                <h1 class="luxury-hero-title">
+                    <span class="hero-line hero-line-1">BẮT ĐẦU HÀNH TRÌNH</span>
+                    <span class="hero-line hero-line-2">TỰ DO CỦA BẠN</span>
+                </h1>
+                <p class="hero-subtitle">Khám phá Việt Nam theo cách của riêng bạn — Hàng ngàn xe chất lượng, giá tốt nhất</p>
 
-                <form action="/filter" method="get" id="form-search-car"
-                    class="premium-search-form col-lg-8 col-md-10 shadow-lg">
-                    <div class="form-header-premium">
-                        <h4><i class="fa fa-search-plus mr-2"></i> Tìm kiếm xe ngay</h4>
+                <!-- Hero Stats -->
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-number" data-count="5000">5,000+</div>
+                        <div class="hero-stat-label">Xe cho thuê</div>
                     </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-number" data-count="63">63</div>
+                        <div class="hero-stat-label">Tỉnh thành</div>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-number" data-count="50000">50,000+</div>
+                        <div class="hero-stat-label">Khách hàng</div>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="premium-form-body">
-                        <div class="form-row">
-                            <div class="form-group col-md-12 mb-4">
-                                <label for="inputAddress"><i class="fa fa-map-marker-alt"></i> Nhập nơi muốn thuê
-                                    xe</label>
-                                <div class="input-with-icon">
-                                    <input type="text" class="form-control-premium" id="inputEmail4" name="address"
-                                        placeholder="Nhập tỉnh hoặc quận, địa chỉ...">
+            <div class="luxury-search-card w-100 shadow-2xl">
+                <form action="/filter" method="get" id="form-search-car">
+                    <div class="row g-4 align-items-end">
+                        <!-- Location -->
+                        <div class="col-lg-4 col-md-12">
+                            <div class="luxury-input-group">
+                                <label><i class="fa-solid fa-location-dot"></i> Địa điểm</label>
+                                <div class="input-wrapper">
+                                    <input type="text" name="address" placeholder="Bạn muốn đi đâu?"
+                                        class="luxury-input">
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="form-group col-md-12 mb-4">
-                                <div class="date-selection-grid">
-                                    <div class="date-box">
-                                        <label for="inputDateStart"><i class="fa fa-calendar-alt"></i> Ngày nhận
-                                            xe</label>
-                                        <input type="datetime-local" class="form-control-premium" id="inputDateStart"
-                                            name="dateStart" value="2023-03-13T18:22">
-                                    </div>
-                                    <div class="date-box">
-                                        <label for="inputDateEnd"><i class="fa fa-calendar-check"></i> Ngày trả
-                                            xe</label>
-                                        <input type="datetime-local" class="form-control-premium" id="inputDateEnd"
-                                            name="dateEnd" value="2023-03-14T18:22">
+                        <!-- Date Range -->
+                        <div class="col-lg-5 col-md-12">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="luxury-input-group">
+                                        <label><i class="fa-solid fa-calendar-plus"></i> Nhận xe</label>
+                                        <input type="datetime-local" name="dateStart" class="luxury-input"
+                                            value="2023-03-13T18:22">
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <div class="driver-options-premium">
-                                    <div class="premium-radio">
-                                        <input type="radio" id="nodriver" value="false" checked="checked" name="driver">
-                                        <label for="nodriver"><span></span> Tự lái</label>
-                                    </div>
-                                    <div class="premium-radio ml-4">
-                                        <input type="radio" id="driver" value="true" name="driver">
-                                        <label for="driver"><span></span> Có Tài xế</label>
+                                <div class="col-6">
+                                    <div class="luxury-input-group">
+                                        <label><i class="fa-solid fa-calendar-check"></i> Trả xe</label>
+                                        <input type="datetime-local" name="dateEnd" class="luxury-input"
+                                            value="2023-03-14T18:22">
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Search Button -->
+                        <div class="col-lg-3 col-md-12">
+                            <button type="submit" class="luxury-btn-search">
+                                <span class="btn-text">TÌM XE NGAY</span>
+                                <i class="fa-solid fa-arrow-right ms-2 btn-icon"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="form-footer-premium text-center">
-                        <button type="submit" class="btn-search-premium">
-                            TÌM KIẾM XE NGAY <i class="fa fa-chevron-right ml-2"></i>
-                        </button>
+                    <!-- Driver Options -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="luxury-radio-group">
+                                <div class="lux-radio">
+                                    <input type="radio" id="nodriver" value="false" checked="checked" name="driver">
+                                    <label for="nodriver"><span></span> Tự lái</label>
+                                </div>
+                                <div class="lux-radio ps-4">
+                                    <input type="radio" id="driver" value="true" name="driver">
+                                    <label for="driver"><span></span> Có Tài xế</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
+    </div>
 
-        <style>
-            .search-car-premium {
-                background-image: url('/images/bg-main.1e128ccf.jpg');
-                background-position: center;
-                background-size: cover;
-                background-repeat: no-repeat;
-                height: 650px;
-                position: relative;
-                color: white;
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
+
+        .search-car-lux {
+            background-image: url('/images/bg-main.1e128ccf.jpg');
+            background-position: center;
+            background-size: cover;
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ── Floating Particles ── */
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle 8s ease-in-out infinite;
+        }
+        .p1 { width: 6px; height: 6px; background: rgba(16,185,129,0.5); top: 20%; left: 10%; animation-delay: 0s; }
+        .p2 { width: 4px; height: 4px; background: rgba(52,211,153,0.4); top: 30%; left: 80%; animation-delay: 1s; }
+        .p3 { width: 8px; height: 8px; background: rgba(16,185,129,0.3); top: 60%; left: 25%; animation-delay: 2s; }
+        .p4 { width: 5px; height: 5px; background: rgba(110,231,183,0.5); top: 70%; left: 70%; animation-delay: 3s; }
+        .p5 { width: 3px; height: 3px; background: rgba(255,255,255,0.4); top: 15%; left: 50%; animation-delay: 4s; }
+        .p6 { width: 7px; height: 7px; background: rgba(16,185,129,0.25); top: 80%; left: 40%; animation-delay: 1.5s; }
+        .p7 { width: 4px; height: 4px; background: rgba(255,255,255,0.3); top: 45%; left: 90%; animation-delay: 2.5s; }
+        .p8 { width: 6px; height: 6px; background: rgba(52,211,153,0.35); top: 50%; left: 5%; animation-delay: 3.5s; }
+
+        @keyframes floatParticle {
+            0%, 100% { opacity: 0; transform: translateY(0) translateX(0); }
+            25% { opacity: 1; }
+            50% { opacity: 0.7; transform: translateY(-60px) translateX(20px); }
+            75% { opacity: 0.3; }
+        }
+
+        /* ── Glow Orbs ── */
+        .hero-glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .orb-1 {
+            width: 400px; height: 400px;
+            background: rgba(16,185,129,0.12);
+            top: -100px; left: -100px;
+            animation: orbFloat 12s ease-in-out infinite;
+        }
+        .orb-2 {
+            width: 300px; height: 300px;
+            background: rgba(6,95,70,0.1);
+            bottom: -80px; right: -60px;
+            animation: orbFloat 10s ease-in-out infinite reverse;
+        }
+        .orb-3 {
+            width: 200px; height: 200px;
+            background: rgba(52,211,153,0.08);
+            top: 40%; left: 60%;
+            animation: orbFloat 14s ease-in-out infinite 2s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -20px) scale(1.1); }
+            66% { transform: translate(-20px, 15px) scale(0.95); }
+        }
+
+        /* ── Overlay ── */
+        .search-hero-overlay {
+            background: linear-gradient(
+                180deg,
+                rgba(6, 20, 15, 0.35) 0%,
+                rgba(6, 20, 15, 0.55) 40%,
+                rgba(6, 20, 15, 0.75) 100%
+            );
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── Badge ── */
+        .luxury-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 24px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #6ee7b7;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            margin-bottom: 20px;
+            backdrop-filter: blur(12px);
+            animation: fadeInDown 0.8s ease-out;
+            box-shadow: 0 0 30px rgba(16,185,129,0.1);
+        }
+
+        .luxury-badge i {
+            font-size: 0.7rem;
+            animation: gemPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes gemPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        /* ── Hero Title ── */
+        .luxury-hero-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 3.8rem;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-line {
+            display: block;
+            background: linear-gradient(135deg, #ffffff 0%, #d1fae5 40%, #6ee7b7 70%, #ffffff 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerText 6s ease-in-out infinite;
+            filter: drop-shadow(0 4px 20px rgba(16,185,129,0.3));
+        }
+
+        .hero-line-1 {
+            animation-delay: 0s;
+            opacity: 0;
+            animation: heroLineReveal 0.8s ease-out 0.3s forwards, shimmerText 6s ease-in-out 1.1s infinite;
+        }
+
+        .hero-line-2 {
+            font-size: 4.2rem;
+            opacity: 0;
+            animation: heroLineReveal 0.8s ease-out 0.6s forwards, shimmerText 6s ease-in-out 1.4s infinite;
+            background: linear-gradient(135deg, #6ee7b7 0%, #34d399 30%, #10b981 60%, #ffffff 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes heroLineReveal {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+                filter: blur(10px);
             }
-
-            .search-hero-overlay {
-                background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(26, 71, 42, 0.6) 100%);
-                height: 100%;
-                width: 100%;
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
             }
+        }
 
-            .search-title-main {
-                font-weight: 900;
-                letter-spacing: 2px;
-                text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-                margin-bottom: 40px;
-                font-size: 2.5rem;
-                text-align: center;
+        @keyframes shimmerText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ── Subtitle ── */
+        .hero-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: subtitleFade 1s ease-out 0.9s forwards;
+        }
+
+        @keyframes subtitleFade {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Hero Stats ── */
+        .hero-stats {
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 60px;
+            padding: 14px 36px;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: statsFadeIn 0.8s ease-out 1.2s forwards;
+        }
+
+        @keyframes statsFadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: 0 24px;
+        }
+
+        .hero-stat-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #6ee7b7;
+            line-height: 1.2;
+        }
+
+        .hero-stat-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.55);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .hero-stat-divider {
+            width: 1px;
+            height: 36px;
+            background: linear-gradient(180deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        /* ── Search Card ── */
+        .luxury-search-card {
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(20px);
+            padding: 30px 40px;
+            border-radius: 24px;
+            max-width: 1050px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255,255,255,0.1) inset,
+                0 -4px 20px rgba(16,185,129,0.05) inset;
+            opacity: 0;
+            animation: searchCardReveal 0.9s cubic-bezier(0.165, 0.84, 0.44, 1) 1.0s forwards;
+            position: relative;
+        }
+
+        .luxury-search-card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 20%;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #10b981, #34d399, transparent);
+            border-radius: 0 0 4px 4px;
+        }
+
+        @keyframes searchCardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.97);
             }
-
-            .premium-search-form {
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(10px);
-                border-radius: 24px;
-                overflow: hidden;
-                color: #1a202c;
-                padding: 0;
-                border: 1px solid rgba(255, 255, 255, 0.2);
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
+        }
 
-            .form-header-premium {
-                background: #1a472a;
-                color: white;
-                padding: 20px;
-                text-align: center;
+        .luxury-input-group label {
+            display: block;
+            font-weight: 800;
+            font-size: 0.72rem;
+            color: #475569;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .luxury-input-group label i {
+            color: #10b981;
+            margin-right: 6px;
+        }
+
+        .luxury-input {
+            width: 100%;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 13px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #0f172a;
+        }
+
+        .luxury-input:focus {
+            outline: none;
+            border-color: #10b981;
+            background: white;
+            box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.12), 0 4px 12px rgba(16,185,129,0.08);
+            transform: translateY(-2px);
+        }
+
+        .luxury-btn-search {
+            width: 100%;
+            height: 54px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .luxury-btn-search::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .luxury-btn-search:hover::before {
+            left: 100%;
+        }
+
+        .luxury-btn-search:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 18px 40px rgba(16, 185, 129, 0.35);
+        }
+
+        .luxury-btn-search:hover .btn-icon {
+            transform: translateX(4px);
+        }
+
+        .luxury-btn-search:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .btn-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .luxury-radio-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .lux-radio input {
+            display: none;
+        }
+
+        .lux-radio label {
+            cursor: pointer;
+            font-weight: 700;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .lux-radio input:checked+label {
+            color: #0f172a;
+        }
+
+        .lux-radio span {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .lux-radio input:checked+label span {
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
+        }
+
+        .lux-radio input:checked+label span::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes scaleIn {
+            from { transform: translate(-50%, -50%) scale(0); }
+            to { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 992px) {
+            .luxury-hero-title {
+                font-size: 3rem;
             }
-
-            .form-header-premium h4 {
-                margin: 0;
-                font-weight: 700;
-                font-size: 1.25rem;
-                text-transform: uppercase;
-                letter-spacing: 1px;
+            .hero-line-2 {
+                font-size: 3.4rem;
             }
-
-            .premium-form-body {
-                padding: 40px;
+            .luxury-search-card {
+                padding: 28px 30px;
+                border-radius: 22px;
             }
-
-            .form-group label {
-                font-weight: 700;
-                font-size: 0.85rem;
-                color: #4a5568;
-                margin-bottom: 10px;
-                display: block;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
+            .hero-stats {
+                padding: 12px 24px;
             }
-
-            .form-group label i {
-                margin-right: 8px;
-                color: #10b981;
+            .hero-stat {
+                padding: 0 16px;
             }
+        }
 
-            .form-control-premium {
-                width: 100%;
-                border: 2px solid #edf2f7;
-                border-radius: 12px;
-                padding: 12px 16px;
+        @media (max-width: 768px) {
+            .search-car-lux {
+                min-height: auto;
+            }
+            .luxury-hero-title {
+                font-size: 2.2rem;
+            }
+            .hero-line-2 {
+                font-size: 2.6rem;
+            }
+            .luxury-badge {
+                font-size: 0.7rem;
+                padding: 8px 18px;
+            }
+            .hero-subtitle {
                 font-size: 0.95rem;
-                font-weight: 500;
-                transition: all 0.3s;
-                background: #f8fafc;
+                padding: 0 20px;
             }
-
-            .form-control-premium:focus {
-                outline: none;
-                border-color: #10b981;
-                background: white;
-                box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            .hero-stats {
+                flex-direction: row;
+                padding: 12px 20px;
+                gap: 0;
             }
-
-            .date-selection-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
+            .hero-stat {
+                padding: 0 12px;
             }
-
-            .driver-options-premium {
-                display: flex;
-                align-items: center;
+            .hero-stat-number {
+                font-size: 1.2rem;
             }
-
-            /* Custom Radio Styling */
-            .premium-radio {
-                position: relative;
-                cursor: pointer;
+            .hero-stat-label {
+                font-size: 0.65rem;
             }
-
-            .premium-radio input {
+            .hero-stat-divider {
+                height: 28px;
+            }
+            .luxury-search-card {
+                padding: 22px 18px;
+                border-radius: 18px;
+            }
+            .hero-glow-orb {
                 display: none;
             }
+        }
 
-            .premium-radio label {
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-                font-weight: 600 !important;
-                color: #2d3748 !important;
-                text-transform: none !important;
-                font-size: 1rem !important;
+        @media (max-width: 480px) {
+            .luxury-hero-title {
+                font-size: 1.8rem;
             }
-
-            .premium-radio label span {
-                width: 20px;
-                height: 20px;
-                border: 2px solid #cbd5e0;
-                border-radius: 50%;
-                margin-right: 10px;
-                display: inline-block;
-                position: relative;
-                transition: all 0.2s;
+            .hero-line-2 {
+                font-size: 2.1rem;
             }
-
-            .premium-radio input:checked+label span {
-                border-color: #10b981;
-                background: white;
-            }
-
-            .premium-radio input:checked+label span::after {
-                content: '';
-                width: 10px;
-                height: 10px;
-                background: #10b981;
-                border-radius: 50%;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
-
-            .form-footer-premium {
-                padding: 0 40px 40px;
-            }
-
-            .btn-search-premium {
-                width: 100%;
-                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                color: white;
-                border: none;
-                border-radius: 14px;
-                padding: 16px;
-                font-weight: 800;
-                font-size: 1.1rem;
-                cursor: pointer;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-            }
-
-            .btn-search-premium:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
-                background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            }
-
-            @media (max-width: 768px) {
-                .search-car-premium {
-                    height: 750px;
-                }
-
-                .search-title-main {
-                    font-size: 1.8rem;
-                }
-
-                .date-selection-grid {
-                    grid-template-columns: 1fr;
-                }
-
-                .premium-form-body {
-                    padding: 25px;
-                }
-            }
-        </style>
-    </div>
-</body>
-
-</html>
+        }
+    </style>
+</div>

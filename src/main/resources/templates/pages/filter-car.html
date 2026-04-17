@@ -142,7 +142,9 @@
 						<div class="premium-car-card shadow-sm" th:each="c : ${listCar}">
 							<a th:href="@{'/car-detail/'+${c.idCar}+'/'+${c.nameCar}}" class="no-underline">
 								<div class="card-image-wrap">
-									<img th:src="@{'/uploads/' + ${c.avatarCar}}" alt="">
+									<img th:src="@{'/uploads/' + ${c.avatarCar}}" 
+										onerror="this.onerror=null;this.src='/images/car-placeholder.png';"
+										alt="">
 									<div class="premium-tag" th:if="${c.promotionalPrice > 0}">
 										<span th:text="${c.promotionalPrice} + '% GIẢM'"></span>
 									</div>
@@ -168,7 +170,7 @@
 
 									<div class="car-location-premium">
 										<i class="fa-solid fa-location-dot"></i>
-										<span th:text="${c.addressCar}">Địa điểm</span>
+										<span th:text="${c.displayAddress}">Địa điểm</span>
 									</div>
 
 									<div class="card-footer-premium">

@@ -101,7 +101,8 @@
 											<td th:text="${c.licensePlates}"></td>
 											<td th:text="${c.overviewCar}"></td>
 											<td style="min-width: 200px"><img alt=""
-													th:src="@{${'/uploads/'+c.avatarCar}}"></td>
+													th:src="@{${'/uploads/'+c.avatarCar}}"
+													onerror="this.onerror=null;this.src='/images/car-placeholder.png';"></td>
 											<td th:text="${c.addressCar}"></td>
 											<td th:text="${c.getUser().getUsername()}"></td>
 											<td th:text="${c.createDate}"></td>

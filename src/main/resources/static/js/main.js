@@ -295,7 +295,7 @@ $(document).ready(function() {
 
 	// Only run price calculations if elements exist
 	var priceBookingEl = document.getElementById("price-booking");
-	var priceBhEl = document.getElementById("pirce-bh");
+	var priceBhEl = document.getElementById("price-bh");
 	var priceDvEl = document.getElementById("price-dv");
 	var priceTotalEl = document.getElementById("price-total-per-day");
 	var totalBillEl = document.getElementById("total_bill");
@@ -314,7 +314,7 @@ $(document).ready(function() {
 		var sumfeed = (Number(arrpricebooking[0]) + Number(arrpricedv[0]) + Number(arrpricrbh[0]));
 		priceTotalEl.innerText = sumfeed + "K/Ngày";
 		totalBillEl.innerText = new Intl.NumberFormat().format(sumfeed * 1000) + "đ";
-		inputTotalBillEl.value = sumfeed * 1000;
+		inputTotalBillEl.value = Math.round(sumfeed * 1000);
 	}
 	
 	var start = document.getElementById("inputDateStart");
@@ -435,38 +435,51 @@ function getWard(id) {
 }
 
 $(document).ready(function() {
-	document.getElementById("content-noti").style.visibility="hidden"
+	var notiEl = document.getElementById("content-noti");
+	if (notiEl) {
+		notiEl.style.visibility="hidden";
+	}
 })
-var click= 1;
-function openNotification(){
-	click=click+1;
-	if(click%2==0){
-		document.getElementById("content-noti").style.visibility="visible"
-	}else{
-		document.getElementById("content-noti").style.visibility="hidden"
+function openNotification() {
+	const notiPanel = document.getElementById("content-noti");
+	if (!notiPanel) return;
+	if (notiPanel.style.visibility === "hidden" || !notiPanel.style.visibility) {
+		notiPanel.style.visibility = "visible";
+	} else {
+		notiPanel.style.visibility = "hidden";
 	}
 }
 
-function readingAllNotification(){
-	window.location.href ="/reading-notification";	
+function readingAllNotification() {
+	$.ajax({
+		url: "/reading-all-notifications",
+		type: "GET",
+		success: function(response) {
+			if (response === "OK") {
+				// Hide all unread highlights and dots
+				$(".title-noti a").css("background", "#f5f5f5");
+				$(".icon-noti").hide();
+			}
+		},
+		error: function(err) {
+			console.error("Error marking all as read:", err);
+		}
+	});
 }
 
-function readingNoti(){
-	var idNoti= document.querySelector(".id_noti")
-	
-	/*$.ajax({
-		url: "/reading-notification/",
-		data: {
-			id: id
-		},
+function readingNoti(idNoti) {
+	if (!idNoti) return;
+	$.ajax({
+		url: "/reading-notification/" + idNoti,
 		type: "GET",
-		responseType: "application/json"
-	}).done(function(ketqua) {
-		console.log(ketqua);
-		wards.length = 1;
-		for (let d of ketqua) {
-			wards.options[wards.options.length] = new Option(d.nameWard, d.idWard);
+		success: function(response) {
+			// Successfully marked as read
+			// We don't necessarily need to refresh the page here
+			// because the user is already being redirected by the <a> tag's href
+		},
+		error: function(err) {
+			console.error("Error marking notification as read:", err);
 		}
-	})*/
+	});
 }
 

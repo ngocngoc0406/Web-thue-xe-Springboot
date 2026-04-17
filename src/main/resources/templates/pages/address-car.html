@@ -30,7 +30,9 @@
                             <div class="premium-car-card-listing">
                                 <a th:href="@{'/car-detail/'+ ${c.idCar}+'/'+${c.nameCar}}" class="no-underline">
                                     <div class="card-img-wrap">
-                                        <img th:src="@{'/uploads/'+${c.avatarCar}}" alt="...">
+                                        <img th:src="@{'/uploads/'+${c.avatarCar}}" 
+                                            onerror="this.onerror=null;this.src='/images/car-placeholder.png';"
+                                            alt="...">
                                         <div class="premium-badge-float">
                                             <span th:text="'-'+ ${c.promotionalPrice} +'%'"></span>
                                         </div>
@@ -40,7 +42,7 @@
                                         <div class="car-meta-listing">
                                             <span class="trip-count"><i class="fa fa-route"></i> SỐ chuyến</span>
                                             <span class="car-loc"><i class="fa fa-location-dot"></i> <span
-                                                    th:text="${c.addressCar}"></span></span>
+                                                    th:text="${c.displayAddress}"></span></span>
                                         </div>
                                         <div class="card-listing-footer">
                                             <div class="price-box-premium">
@@ -66,7 +68,9 @@
                             <div class="premium-car-card-listing">
                                 <a th:href="@{'/car-detail/'+ ${c.idCar}+'/'+${c.nameCar}}" class="no-underline">
                                     <div class="card-img-wrap">
-                                        <img th:src="@{'/uploads/'+${c.avatarCar}}" alt="...">
+                                        <img th:src="@{'/uploads/'+${c.avatarCar}}" 
+                                            onerror="this.onerror=null;this.src='/images/car-placeholder.png';"
+                                            alt="...">
                                     </div>
                                     <div class="card-content-premium">
                                         <h5 class="car-name-listing" th:text="${c.nameCar}"> </h5>

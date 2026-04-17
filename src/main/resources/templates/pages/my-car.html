@@ -47,7 +47,8 @@
 							<td th:text="${c.licensePlates}"></td>
 							<td th:text="${c.nameCar}"></td>
 							<td><img class="img-car" alt=""
-								th:src="'/uploads/'+${c.avatarCar}" /></td>
+								th:src="'/uploads/'+${c.avatarCar}" 
+								onerror="this.onerror=null;this.src='/images/car-placeholder.png';" /></td>
 							<td th:text="${c.price}+ 'K'"></td>
 							<td th:text="${c.promotionalPrice} + '%'"></td>
 							<th:block th:switch="${c.status}">

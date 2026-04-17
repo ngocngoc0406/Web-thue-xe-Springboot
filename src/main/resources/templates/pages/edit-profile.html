@@ -34,10 +34,10 @@
 					<form action="/update-info-user" method="post" name="edit-infomation">
 						<h4>Thông tin</h4>
 						<h6>Tên hiển thị</h6>
-						<input type="text" placeholder="Tên hiển thỉ" name="name-display" id="namedisplay">
+						<input type="text" placeholder="Tên hiển thỉ" name="name-display" id="namedisplay" th:value="${user.nameDisplay}">
 						<small></small>
 						<h6>Ngày sinh</h6>
-						<input type="text" placeholder="Ngày sinh" name="dateOfBrith" id="dateOfBrith"> <small></small>
+						<input type="text" placeholder="Ngày sinh" name="dateOfBrith" id="dateOfBrith" th:value="${user.dateOfBrith}"> <small></small>
 						<h6>Giới tính</h6>
 						<div class="group-form-address">
 							<select id="sex" name="sex">
@@ -86,7 +86,7 @@
 							<form action="/updatePhone" id="" method="post" name="edit-phone">
 								<h4>Thông tin</h4>
 								<h6>Số điện thoại</h6>
-								<input type="text" placeholder="Số điện thoại" name="phone" id="phone"> <small></small>
+								<input type="text" placeholder="Số điện thoại" name="phone" id="phone" th:value="${user.phone}"> <small></small>
 								<div class="group-action">
 									<a class="btn-cancel" onclick="closePopupPhone()">Hủy bỏ</a>
 									<button class="btn-success" type="submit">Xác nhận</button>
@@ -104,7 +104,7 @@
 								name="edit-gplx">
 								<h4>Thông tin</h4>
 								<h6>Số giấy phép lái xe</h6>
-								<input type="text" placeholder="Số nằm mắt trước của GPLX" name="gplx" id="gplx">
+								<input type="text" placeholder="Số nằm mắt trước của GPLX" name="gplx" id="gplx" th:value="${user.drivingLicense}">
 								<small></small>
 								<h6>Tải ảnh</h6>
 								<input type="file" name="image-gplx" accept=".jpg, .png, .git" id="image-gplx">
@@ -124,7 +124,7 @@
 							<form action="/updateEmail" method="post" id="" name="edit-email">
 								<h4>Thông tin</h4>
 								<h6>Email</h6>
-								<input type="text" placeholder="Email" name="email" id="email"> <small></small>
+								<input type="text" placeholder="Email" name="email" id="email" th:value="${user.email}"> <small></small>
 								<div class="group-action">
 									<a class="btn-cancel" onclick="closePopupEmail()">Hủy bỏ</a>
 									<button class="btn-success" type="submit">Xác nhận</button>

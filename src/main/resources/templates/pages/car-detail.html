@@ -26,7 +26,9 @@
 				<div class="carousel-inner carousel-inner-ImgCar">
 					<div class="carousel-item-ImgCar" th:each="c: ${#strings.arraySplit(car.imageCar, ';')}">
 						<div class="premium-gallery-card">
-							<img th:src="@{'/uploads/'+${c}}" alt="Car Gallery Image">
+							<img th:src="@{'/uploads/'+${c}}" 
+								onerror="this.onerror=null;this.src='/images/car-placeholder.png';"
+								alt="Car Gallery Image">
 						</div>
 					</div>
 				</div>
@@ -216,7 +218,9 @@
 					<span class="group-label">Thông tin chủ xe</span>
 					<div class="premium-owner-profile">
 						<div class="owner-avatar-main">
-							<a href="#"> <img th:src="@{'/uploads/'+ ${user.image}}" alt="Owner Avatar"></a>
+							<a href="#"> <img th:src="@{'/uploads/'+ ${user.image}}" 
+								onerror="this.onerror=null;this.src='/images/avatar1.jpg';"
+								alt="Owner Avatar"></a>
 						</div>
 						<div class="owner-info-main">
 							<h6 class="owner-name-premium" th:text="${user.nameDisplay}"></h6>
@@ -338,7 +342,7 @@
 
 					<div class="review-form-section">
 						<h4><i class="fa-solid fa-pen-to-square"></i> Viết đánh giá của bạn</h4>
-						<form class="review-form" action="/submit-review" method="post">
+						<form class="review-form" id="reviewForm" action="/submit-review" method="post">
 							<input type="hidden" name="carId" th:value="${car.idCar}">
 							<div class="rating-input">
 								<span>Đánh giá:</span>
@@ -356,13 +360,31 @@
 								</div>
 							</div>
 							<div class="comment-input-wrapper">
-								<textarea name="comment" placeholder="Chia sẻ trải nghiệm của bạn về xe này..."
+								<textarea name="comment" id="reviewComment" placeholder="Chia sẻ trải nghiệm của bạn về xe này..."
 									rows="3"></textarea>
 								<button type="submit" class="btn-submit-review">
 									<i class="fa-solid fa-paper-plane"></i> Gửi đánh giá
 								</button>
 							</div>
 						</form>
+						<script>
+							document.getElementById('reviewForm').addEventListener('submit', function(e) {
+								var rating = document.querySelector('input[name="rating"]:checked');
+								var comment = document.getElementById('reviewComment').value.trim();
+								
+								if (!rating) {
+									e.preventDefault();
+									alert('Vui lòng chọn số sao đánh giá!');
+									return false;
+								}
+								if (!comment) {
+									e.preventDefault();
+									alert('Vui lòng nhập nội dung đánh giá!');
+									return false;
+								}
+								return true;
+							});
+						</script>
 					</div>
 				</div>
 			</div>
@@ -403,10 +425,10 @@
 
 						<div class="booking-price-breakdown">
 							<h5>Chi tiết bảng giá</h5>
-							<div class="price-row"><span>Đơn giá thuê</span> <span class="price-val"
+							<div class="price-row"><span>Đơn giá thuê</span> <span class="price-val" id="price-booking"
 									th:text="${car.price}-${car.price}*${car.promotionalPrice}/100 +' K'"></span></div>
-							<div class="price-row"><span>Phí dịch vụ</span> <span class="price-val">60 K</span></div>
-							<div class="price-row"><span>Phí bảo hiểm</span> <span class="price-val">60 K</span></div>
+							<div class="price-row"><span>Phí dịch vụ</span> <span class="price-val" id="price-dv">60 K</span></div>
+							<div class="price-row"><span>Phí bảo hiểm</span> <span class="price-val" id="price-bh">60 K</span></div>
 							<div class="price-row total-day"><span>Tổng phí/ngày</span> <span class="price-total-val"
 									id="price-total-per-day"></span></div>
 							<hr>
@@ -415,7 +437,7 @@
 								<div id="total_bill" class="total-big"></div>
 							</div>
 						</div>
-						<input type="hidden" id="input_total_bill" name="input_total_bill">
+						<input type="hidden" id="input_total_bill" name="input_total_bill" value="0">
 						<button type="button" onclick="openPopup()" class="btn-premium-booking" id="btn-booking">ĐẶT XE
 							NGAY</button>
 					</form>
@@ -433,11 +455,12 @@
 						th:value="${car.price}-${car.price}*${car.promotionalPrice}/100">
 					<input type="hidden" id="popup_dateStart" name="dateStart">
 					<input type="hidden" id="popup_dateEnd" name="dateEnd">
-					<input type="hidden" id="popup_total_bill" name="input_total_bill">
+					<input type="hidden" id="popup_total_bill" name="input_total_bill" value="0">
 
 					<div class="form-item-premium">
 						<label>Số điện thoại</label>
-						<input type="text" placeholder="Nhập số điện thoại" name="phone" id="phone" required>
+						<input type="text" placeholder="Nhập số điện thoại" name="phone" id="phone" 
+							th:value="${session.sesionUser != null ? session.sesionUser.phone : ''}" required>
 					</div>
 
 					<label>Địa chỉ nhận xe</label>
@@ -479,7 +502,9 @@
 							<div class="premium-car-card-listing">
 								<a th:href="@{'/car-detail/'+ ${c.idCar}+'/'+${c.nameCar}}" class="no-underline">
 									<div class="card-img-wrap-small">
-										<img th:src="@{'/uploads/'+${c.avatarCar}}" alt="...">
+										<img th:src="@{'/uploads/'+${c.avatarCar}}" 
+											onerror="this.onerror=null;this.src='/images/car-placeholder.png';"
+											alt="...">
 										<div class="premium-badge-float-s" th:if="${c.promotionalPrice > 0}">
 											<span th:text="'-'+ ${c.promotionalPrice} +'%'"></span>
 										</div>
@@ -1394,7 +1419,10 @@
 		}
 
 		.star-rating-input input {
-			display: none;
+			position: absolute;
+			opacity: 0;
+			width: 0;
+			height: 0;
 		}
 
 		.star-rating-input label {
@@ -2232,11 +2260,22 @@
 		}
 
 		grid.innerHTML = filteredRecs.slice(0, 6).map(rec => {
-			const displayPrice = rec.promotionalPrice > 0 ? rec.promotionalPrice : rec.price;
+			// promotionalPrice is discount percentage, NOT the final price
+			// Correct formula: price - price * promotionalPrice / 100
+			let displayPrice = rec.price;
+			let hasDiscount = false;
+			if (rec.promotionalPrice > 0 && rec.promotionalPrice < 100) {
+				displayPrice = rec.price - rec.price * rec.promotionalPrice / 100;
+				hasDiscount = true;
+			}
 			const formattedPrice = new Intl.NumberFormat('vi-VN').format(displayPrice);
+			const formattedOriginalPrice = new Intl.NumberFormat('vi-VN').format(rec.price);
 			const similarityPercent = Math.round(rec.score * 100);
 			const recTypeLabel = getRecommendationTypeLabel(rec.recommendationType);
 			const explanation = rec.explanation || 'Được AI gợi ý cho bạn';
+			const priceHtml = hasDiscount 
+				? `<span style="text-decoration:line-through;color:#999;font-size:0.8em;">${formattedOriginalPrice}K</span> ${formattedPrice}K/ngày`
+				: `${formattedPrice}K/ngày`;
 
 			return `
 				<div class="ai-car-card" onclick="goToCarDetail(${rec.carId}, '${escapeHtml(rec.carName)}')" title="${escapeHtml(explanation)}">
@@ -2247,7 +2286,7 @@
 						 onerror="this.src='/images/car-placeholder.png'">
 					<div class="card-body">
 						<h6 class="car-name">${escapeHtml(rec.carName)}</h6>
-						<div class="car-price">${formattedPrice}đ/ngày</div>
+						<div class="car-price">${priceHtml}</div>
 						<div class="car-meta">
 							<span><i class="fa-solid fa-chair"></i> ${rec.numberOfSeats} chỗ</span>
 							<span class="ai-similarity-score"><i class="fa-solid fa-chart-line"></i> ${similarityPercent}%</span>
@@ -2295,14 +2334,23 @@
 			return;
 		}
 
+		// Validate dates before opening popup
+		var dateStartInput = document.getElementById("inputDateStart");
+		var dateEndInput = document.getElementById("inputDateEnd");
+
+		if (!dateStartInput || !dateEndInput || !dateStartInput.value || !dateEndInput.value) {
+			alert("Vui lòng chọn ngày nhận và ngày trả xe trước khi đặt!");
+			return;
+		}
+
 		// Copy values from main form to popup form
 		var dateStart = document.getElementById("inputDateStart");
 		var dateEnd = document.getElementById("inputDateEnd");
 		var totalBill = document.getElementById("input_total_bill");
 
-		if (dateStart) document.getElementById("popup_dateStart").value = dateStart.value;
-		if (dateEnd) document.getElementById("popup_dateEnd").value = dateEnd.value;
-		if (totalBill) document.getElementById("popup_total_bill").value = totalBill.value;
+		if (dateStart && document.getElementById("popup_dateStart")) document.getElementById("popup_dateStart").value = dateStart.value;
+		if (dateEnd && document.getElementById("popup_dateEnd")) document.getElementById("popup_dateEnd").value = dateEnd.value;
+		if (totalBill && document.getElementById("popup_total_bill")) document.getElementById("popup_total_bill").value = totalBill.value;
 
 		// Show overlay and popup
 		var overlay = document.getElementById("popup-overlay");
