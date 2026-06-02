@@ -48,8 +48,8 @@
                             <div class="box-head">
                                 <h6>Thống kê doanh thu</h6>
                                 <form action="/my-walet" method="get" class="filter-mini">
-                                    <input type="date" name="dateStart">
-                                    <input type="date" name="dateEnd">
+                                    <input type="date" name="dateStart" th:value="${dateStart}">
+                                    <input type="date" name="dateEnd" th:value="${dateEnd}">
                                     <button type="submit"><i class="fa-solid fa-filter"></i></button>
                                 </form>
                             </div>

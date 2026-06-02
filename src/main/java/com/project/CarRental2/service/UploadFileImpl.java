@@ -12,38 +12,61 @@ import java.util.Random;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.annotation.PostConstruct;
+
 @Service
 public class UploadFileImpl implements UploadFile {
 	private final static int LENGTH_MAX = 7;
+	private Path uploadPath;
+
+	@PostConstruct
+	public void init() {
+		uploadPath = Paths.get("uploads").toAbsolutePath().normalize();
+		System.out.println("[UPLOAD] Upload directory: " + uploadPath.toString());
+		try {
+			if (Files.notExists(uploadPath)) {
+				Files.createDirectories(uploadPath);
+				System.out.println("[UPLOAD] Created upload directory: " + uploadPath.toString());
+			}
+		} catch (Exception e) {
+			System.err.println("[UPLOAD] ERROR creating upload directory: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	private String generateFileName() {
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		String d = formatter.format(date);
+
+		String alphanumericCharacters = "0123456789abcdefghijklmnopqrstuv";
+		StringBuffer randomString = new StringBuffer(LENGTH_MAX);
+		Random random = new Random();
+		for (int i = 0; i < LENGTH_MAX; i++) {
+			int randomIndex = random.nextInt(alphanumericCharacters.length());
+			char randomChar = alphanumericCharacters.charAt(randomIndex);
+			randomString.append(randomChar);
+		}
+
+		return d + randomString + ".jpg";
+	}
 
 	@Override
 	public String uploadSingleFile(MultipartFile file) {
 		String fileName = "";
-		Path path = Paths.get("uploads/");
 		try {
-			InputStream inputStream = file.getInputStream();
-			Date date = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMddhhmmss");
-			String d = formatter.format(date);
-
-			fileName = file.getOriginalFilename().replaceAll(file.getOriginalFilename().trim(), d);
-			System.err.println(fileName);
-			String alphanumericCharacters = "0123456789abcdefghijklmnopqrstuv";
-
-			StringBuffer randomString = new StringBuffer(LENGTH_MAX);
-			Random random = new Random();
-
-			for (int i = 0; i < LENGTH_MAX; i++) {
-				int randomIndex = random.nextInt(alphanumericCharacters.length());
-				char randomChar = alphanumericCharacters.charAt(randomIndex);
-				randomString.append(randomChar);
+			if (file == null || file.isEmpty()) {
+				System.err.println("[UPLOAD] File is null or empty");
+				return fileName;
 			}
-			fileName = fileName + randomString + ".jpg";
-			System.err.println(fileName);
-			Files.copy(inputStream, path.resolve(fileName),
+			InputStream inputStream = file.getInputStream();
+			fileName = generateFileName();
+			System.out.println("[UPLOAD] Saving single file: " + fileName + " to " + uploadPath.toString());
+			Files.copy(inputStream, uploadPath.resolve(fileName),
 					StandardCopyOption.REPLACE_EXISTING);
-
+			System.out.println("[UPLOAD] File saved successfully: " + uploadPath.resolve(fileName).toString());
 		} catch (Exception e) {
+			System.err.println("[UPLOAD] ERROR saving file: " + e.getMessage());
 			e.printStackTrace();
 		}
 		return fileName;
@@ -51,52 +74,33 @@ public class UploadFileImpl implements UploadFile {
 
 	@Override
 	public void removeFile(String nameFile) {
-		Path path = Paths.get("uploads/");
 		try {
-			Files.delete(path.resolve(nameFile));
+			if (nameFile != null && !nameFile.isEmpty()) {
+				Files.delete(uploadPath.resolve(nameFile));
+			}
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public String uploadMultiFile(MultipartFile[] files) {
-
-		String fileName = "";
 		String imgName = "";
 
 		for (MultipartFile f : files) {
-
-			Path path = Paths.get("uploads/");
-			if (Files.notExists(path)) {
-				try {
-					Files.createDirectories(path);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			if (f == null || f.isEmpty()) {
+				continue;
 			}
 			try {
 				InputStream inputStream = f.getInputStream();
-				Date date = new Date();
-				SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMddhhmmss");
-				String d = formatter.format(date);
-				fileName = f.getOriginalFilename().replaceAll(f.getOriginalFilename().trim(), d);
-				String alphanumericCharacters = "0123456789abcdefghijklmnopqrstuv";
-
-				StringBuffer randomString = new StringBuffer(LENGTH_MAX);
-				Random random = new Random();
-				for (int i = 0; i < LENGTH_MAX; i++) {
-					int randomIndex = random.nextInt(alphanumericCharacters.length());
-					char randomChar = alphanumericCharacters.charAt(randomIndex);
-					randomString.append(randomChar);
-				}
-				fileName = fileName + randomString + ".jpg";
-				System.err.println(fileName);
-				Files.copy(inputStream, path.resolve(fileName),
+				String fileName = generateFileName();
+				System.out.println("[UPLOAD] Saving multi file: " + fileName + " to " + uploadPath.toString());
+				Files.copy(inputStream, uploadPath.resolve(fileName),
 						StandardCopyOption.REPLACE_EXISTING);
+				System.out.println("[UPLOAD] File saved successfully: " + uploadPath.resolve(fileName).toString());
 				imgName = imgName + fileName + ";";
 			} catch (Exception e) {
+				System.err.println("[UPLOAD] ERROR saving multi file: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -109,19 +113,18 @@ public class UploadFileImpl implements UploadFile {
 	@Override
 	public String uploadFileDocument(MultipartFile file) {
 		String fileName = "";
-		Path path = Paths.get("uploads/");
 		try {
+			if (file == null || file.isEmpty()) {
+				return fileName;
+			}
 			InputStream inputStream = file.getInputStream();
-
 			fileName = file.getOriginalFilename().trim();
-			System.err.println(fileName);
-			Files.copy(inputStream, path.resolve(fileName),
+			System.out.println("[UPLOAD] Saving document: " + fileName);
+			Files.copy(inputStream, uploadPath.resolve(fileName),
 					StandardCopyOption.REPLACE_EXISTING);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return fileName;
 	}
-
 }

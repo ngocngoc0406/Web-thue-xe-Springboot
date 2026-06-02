@@ -32,3 +32,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Node ###
+node_modules/
+package-lock.json
+package.json
+
+### Logs ###
+error.log
+error.txt
+*.log
+
+### Uploads ###
+uploads/

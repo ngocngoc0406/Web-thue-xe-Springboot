@@ -33,14 +33,12 @@ public class AiRecommendationService {
             if (req.getMinPrice() != null || req.getMaxPrice() != null) {
                 int min = req.getMinPrice() != null ? req.getMinPrice() : 0;
                 int max = req.getMaxPrice() != null ? req.getMaxPrice() : Integer.MAX_VALUE;
-                if (c.getPromotionalPrice() > 0) {
-                    // use promotionalPrice if set
-                    if (c.getPromotionalPrice() >= min && c.getPromotionalPrice() <= max) {
-                        score += 2.0;
-                        reason.append("price ok; ");
-                    }
-                } else if (c.getPrice() >= min && c.getPrice() <= max) {
+                int finalPrice = c.getFinalPrice();
+                
+                if (finalPrice >= min && finalPrice <= max) {
                     score += 1.5;
+                    // bonus for promotional price if in range
+                    if (c.getPromotionalPrice() > 0) score += 0.5;
                     reason.append("price ok; ");
                 } else {
                     // penalize if out of range
@@ -50,11 +48,16 @@ public class AiRecommendationService {
 
             // seats
             if (req.getMinSeats() != null) {
-                if (c.getNumberOfSeats() >= req.getMinSeats()) {
-                    score += 1.0;
-                    reason.append("seats ok; ");
+                int seats = c.getNumberOfSeats();
+                int requested = req.getMinSeats();
+                if (seats == requested) {
+                    score += 2.5; // Perfect match
+                    reason.append("exact seats match; ");
+                } else if (seats > requested) {
+                    score += 0.5; // Compatible but larger
+                    reason.append("extra seats; ");
                 } else {
-                    score -= 0.2;
+                    score -= 5.0; // Penalty for too few seats
                 }
             }
 
@@ -85,7 +88,7 @@ public class AiRecommendationService {
 
             // normalize/bonus: prefer lower price when both in range
             if (req.getMinPrice() != null || req.getMaxPrice() != null) {
-                int priceVal = c.getPromotionalPrice() > 0 ? c.getPromotionalPrice() : c.getPrice();
+                int priceVal = c.getFinalPrice();
                 double priceBonus = 1.0 / (1 + priceVal / 1000.0); // small bonus for cheaper
                 score += priceBonus;
             }
@@ -105,7 +108,7 @@ public class AiRecommendationService {
     private RecommendationResult toResult(ScoredCar s) {
         Car c = s.car;
         return new RecommendationResult(c.getIdCar(), c.getNameCar(), c.getAvatarCar(),
-                c.getPromotionalPrice() > 0 ? c.getPromotionalPrice() : c.getPrice(), c.getNumberOfSeats(), s.score,
+                c.getFinalPrice(), c.getNumberOfSeats(), s.score,
                 s.reason);
     }
 

@@ -15,13 +15,9 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface RequestWithdrawalRepository extends JpaRepository<RequestWithdrawal, Integer> {
 
-	@Modifying
-	@Transactional
 	@Query(value = "select * from request_withdrawal order by create_date desc", nativeQuery = true)
 	List<RequestWithdrawal> getAllWithdrawal();
 	
-	@Modifying
-	@Transactional
 	@Query(value = "select * from request_withdrawal where id_user=:idUser order by create_date desc", nativeQuery = true)
 	List<RequestWithdrawal> getAllWithdrawalByIdUser(@Param("idUser") int idUser);
 	

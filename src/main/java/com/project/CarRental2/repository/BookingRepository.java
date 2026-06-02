@@ -64,14 +64,12 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
 	List<Booking> findBookingByStatusBill(int statusBill);
 
-	@Modifying
 	@Query(value = "select CONVERT(nvarchar(10),date_start,127)  as ngaydat, sum(bill_total) as tongtien from booking where "
 			+ "CONVERT(nvarchar(10),date_start,127)>=:dateStart and CONVERT(nvarchar(10),date_end,127)<=:dateEnd "
 			+ "and status_bill=:statusBill group by CONVERT(nvarchar(10),date_start,127)", nativeQuery = true)
 	String[] sumRevenueOnTime(@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd,
 			@Param("statusBill") int statusBill);
 	
-	@Modifying
 	@Query(value = "select CONVERT(nvarchar(10),date_start,127)  as ngaydat, sum(bill_total) as tongtien from booking b join"
 			+ " car c on c.id_car= b.id_car join users u on u.id_user=c.id_user where CONVERT(nvarchar(10),date_start,127)>=:dateStart"
 			+ " and CONVERT(nvarchar(10),date_end,127)<=:dateEnd and status_bill=:statusBill and c.id_user=:idUser"
@@ -79,13 +77,11 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 	String[] sumRevenueOnTimeByIdUser(@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd,
 			@Param("statusBill") int statusBill, @Param("idUser") int idUser);
 	
-	@Modifying
 	@Query(value=""+sql+" where CONVERT(nvarchar(10),date_start,127)>=:dateStart and CONVERT(nvarchar(10),date_end,127)<=:dateEnd"
 			+ " and status_bill=:statusBill and c.id_user=:idUser ", nativeQuery = true)
 	List<Booking> getAllBookingOnTimeByIdUserHaveCar(@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd,
 			@Param("statusBill") int statusBill, @Param("idUser") int idUser);
 
-	@Modifying
 	@Query(value = "select * from booking where CONVERT(nvarchar(10),date_start,127)>=:dateStart"
 			+ " and CONVERT(nvarchar(10),date_end,127)<=:dateEnd and status_bill=:statusBill ", nativeQuery = true)
 	List<Booking> getBookingOnTimeByStatusBill(@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd,

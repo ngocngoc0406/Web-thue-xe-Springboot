@@ -15,8 +15,6 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface DetailNotificationRepository  extends JpaRepository<DetailNotification, Integer>{
 
-	@Transactional
-	@Modifying
 	@Query(value = "select  dt.id_detail_noti, dt.url, dt.status_read, dt.id_user, dt.id_noti \r\n"
 			+ "from notification n join detail_notification dt on dt.id_noti= n.id_noti join users u on u.id_user= dt.id_user\r\n"
 			+ "where u.id_user=:idUser  order by n.create_date desc", nativeQuery = true)

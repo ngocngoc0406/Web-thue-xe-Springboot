@@ -110,7 +110,6 @@ public class AjaxController implements FiledName {
 	public List<Car> filterCar(@RequestParam(name = "address") String address,
 			@RequestParam(name = "dateStart") String dateStart, @RequestParam("dateEnd") String dateEnd,
 			HttpServletRequest request, @RequestParam(name = "driver") boolean driver) {
-		List<Car> listCarWithNewAddress = new ArrayList<Car>();
 
 		String[] arrdateStart = dateStart.split("T");
 		String[] arrdateEnd = dateEnd.split("T");
@@ -122,18 +121,28 @@ public class AjaxController implements FiledName {
 			listCar = carService.findCarOnTimeByDriverAndAddress(NO_DRIVERS, address, arrdateStart[0], arrdateEnd[0],
 					STATUS_APPROVED);
 		}
-		listCarWithNewAddress = HomePageController.setListNewAddress(listCar);
-		System.err.println(listCarWithNewAddress);
+		System.err.println(listCar);
 
-		return listCarWithNewAddress;
+		return listCar;
 	}
 
 	@GetMapping("/reading-notification/{idNoti}")
 	public String readNotification(HttpServletRequest request, @PathVariable(name = "idNoti") int idNoti) {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("sesionUser");
-		System.err.println(user);
-		detailNotificationService.updateStatusNotificationByIDNotiAndIDUser(READING, user.getIdUser(), idNoti);
-		return "redirect:/";
+		if (user != null) {
+			detailNotificationService.updateStatusNotificationByIDNotiAndIDUser(READING, user.getIdUser(), idNoti);
+		}
+		return "OK";
+	}
+
+	@GetMapping("/reading-all-notifications")
+	public String readAllNotifications(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("sesionUser");
+		if (user != null) {
+			detailNotificationService.updateStatusAllByIDUserNotification(READING, user.getIdUser());
+		}
+		return "OK";
 	}
 }

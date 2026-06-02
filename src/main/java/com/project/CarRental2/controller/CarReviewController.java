@@ -27,9 +27,9 @@ public class CarReviewController {
     private CarService carService;
 
     @PostMapping("/submit-review")
-    public String submitReview(@RequestParam("carId") int carId,
-            @RequestParam("rating") int rating,
-            @RequestParam("comment") String comment,
+    public String submitReview(@RequestParam(name = "carId", defaultValue = "0") int carId,
+            @RequestParam(name = "rating", defaultValue = "0") int rating,
+            @RequestParam(name = "comment", defaultValue = "") String comment,
             HttpServletRequest request,
             RedirectAttributes ra) {
 
@@ -44,6 +44,11 @@ public class CarReviewController {
         Car car = carService.getACarByIdCar(carId);
         if (car == null) {
             return "redirect:/";
+        }
+
+        if (rating < 1 || rating > 5 || comment.trim().isEmpty()) {
+            ra.addFlashAttribute("messege_error", "Vui lòng chọn số sao và nhập nội dung đánh giá");
+            return "redirect:/car-detail/" + carId + "/" + car.getNameCar();
         }
 
         CarReview review = new CarReview(car, user, rating, comment, new Date());

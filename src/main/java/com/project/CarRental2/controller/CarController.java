@@ -187,7 +187,7 @@ public class CarController implements FiledName {
 		return "redirect:/";
 	}
 
-	@GetMapping("/admin/car{search}")
+	@GetMapping("/admin/car")
 	public String getListCar(Model model, @RequestParam(name = "search", required = false) String nameCar,
 			HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -199,9 +199,9 @@ public class CarController implements FiledName {
 				 * biến = Biểu thức logic ? Câu lệnh khi biểu thức trả về true : Câu lệnh khi
 				 * biếu thức trả về false;
 				 */
-				List<Car> listCar = nameCar == null
+				List<Car> listCar = (nameCar == null || nameCar.trim().isEmpty())
 						? carService.getAllCarWithUserAndBrandOrderByNameCarAsc()
-						: carService.findCarByNameCarContaining(nameCar);
+						: carService.findCarByNameCarWithUserAndBrand(nameCar);
 
 				model.addAttribute("listcar", listCar);
 				System.err.println(nameCar);

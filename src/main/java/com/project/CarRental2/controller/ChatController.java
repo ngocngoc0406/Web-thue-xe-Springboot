@@ -1,7 +1,10 @@
 package com.project.CarRental2.controller;
 
 import java.time.Instant;
+import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,8 @@ import com.project.CarRental2.service.ChatParser;
 
 @Controller
 public class ChatController {
+
+    private static final Logger log = LoggerFactory.getLogger(ChatController.class);
 
     private final SimpMessagingTemplate messagingTemplate;
     private final AiChatService aiChatService;
@@ -36,79 +41,68 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void handle(ChatMessage message, org.springframework.messaging.simp.SimpMessageHeaderAccessor sha) {
+        String sessionId = sha.getSessionId();
+        
+        // Identify the user from the HTTP Session (passed via Handshake Interceptor)
+        Object userObj = sha.getSessionAttributes().get("sesionUser");
+        String identityKey = "guest";
+        if (userObj instanceof com.project.CarRental2.model.User) {
+            identityKey = "user_" + ((com.project.CarRental2.model.User) userObj).getIdUser();
+        }
+        
         message.setTimestamp(Instant.now().toString());
-        // log message receipt
-        System.out.println("[chat] received from " + message.getSender() + ": " + message.getContent() + " askAi="
-                + message.getAskAi() + " session=" + sha.getSessionId());
+        log.info("[WEBSOCKET] Received message from {} (ID: {}): type={} content='{}' (Session: {})",
+                message.getSender(), identityKey, message.getType(), message.getContent(), sessionId);
 
-        // broadcast user message to public topic
-        messagingTemplate.convertAndSend("/topic/messages", message);
+        // broadcast user message to public topic (optional, depending on requirements)
+        // messagingTemplate.convertAndSend("/topic/messages", message);
 
-        // if askAi flag set, call AI and send reply privately to the session that sent
-        // it
         if (Boolean.TRUE.equals(message.getAskAi())) {
-            String sessionId = sha.getSessionId();
-            System.out.println("[chat] asking AI for session=" + sessionId);
-            // notify only this user that AI is typing
+            log.info("[chat] asking AI for identityKey={}", identityKey);
             ChatMessage typing = new ChatMessage();
             typing.setSender("AI");
             typing.setType("TYPING");
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/replies", typing, createHeaders(sessionId));
 
-            new Thread(() -> {
-                // Check if message is car-related and use internal recommendation service
-                if (isCarRelatedQuery(message.getContent()) && !isInformationQuery(message.getContent())) {
-                    System.out.println("[chat] Processing car recommendation for session=" + sessionId);
-                    try {
-                        var req = chatParser.parse(message.getContent(), 5); // top 5 recommendations
-                        var results = aiRecommendationService.recommend(req);
+            final String finalIdentityKey = identityKey; // for lambda
+            CompletableFuture.runAsync(() -> {
+                try {
+                    if (isCarRelatedQuery(message.getContent()) && !isInformationQuery(message.getContent())) {
+                        log.info("[AI] Processing recommendation query for identityKey={}", finalIdentityKey);
+                        try {
+                            var req = chatParser.parse(message.getContent(), 5);
+                            var results = aiRecommendationService.recommend(req);
 
-                        if (results != null && !results.isEmpty()) {
-                            // Send recommendation results
-                            StringBuilder response = new StringBuilder(
-                                    "Dựa trên yêu cầu của bạn, tôi gợi ý các xe sau:\n\n");
-                            for (int i = 0; i < Math.min(results.size(), 3); i++) {
-                                RecommendationResult car = results.get(i);
-                                response.append(String.format("%d. %s\n", i + 1, car.getNameCar()))
-                                        .append(String.format("   Giá: %s VND/ngày\n", formatPrice(car.getPrice())))
-                                        .append(String.format("   Số chỗ: %d\n", car.getNumberOfSeats()))
-                                        .append(String.format("   Link: /car-detail/%d\n\n", car.getIdCar()));
+                            if (results != null && !results.isEmpty()) {
+                                ChatMessage aiMsg = new ChatMessage();
+                                aiMsg.setSender("AI");
+                                aiMsg.setContent("Dựa trên yêu cầu của bạn, tôi gợi ý cho bạn một số mẫu xe sau:");
+                                aiMsg.setType("CAR_LIST");
+                                aiMsg.setData(results); 
+                                aiMsg.setTimestamp(Instant.now().toString());
+                                messagingTemplate.convertAndSendToUser(sessionId, "/queue/replies", aiMsg,
+                                        createHeaders(sessionId));
+                                        
+                                // Update AI memory manually for recommendation hits
+                                aiChatService.updateHistory(finalIdentityKey, message.getContent(), aiMsg.getContent());
+                            } else {
+                                String reply = aiChatService.getReply(message.getContent(), finalIdentityKey, message.getMetadata());
+                                sendAiReply(sessionId, reply);
                             }
-
-                            if (results.size() > 3) {
-                                response.append("Xem thêm xe khác tại: /filter-car");
-                            }
-
-                            ChatMessage aiMsg = new ChatMessage();
-                            aiMsg.setSender("AI");
-                            aiMsg.setContent(response.toString());
-                            aiMsg.setType("CHAT");
-                            aiMsg.setTimestamp(Instant.now().toString());
-                            messagingTemplate.convertAndSendToUser(sessionId, "/queue/replies", aiMsg,
-                                    createHeaders(sessionId));
-                        } else {
-                            // FALLBACK: If no recommendation found, try general AI chat
-                            System.out.println(
-                                    "[chat] No recommendations found, falling back to LLM for session=" + sessionId);
-                            String reply = aiChatService.getReply(message.getContent());
+                        } catch (Exception e) {
+                            log.error("[chat] Recommendation error: {}", e.getMessage());
+                            String reply = aiChatService.getReply(message.getContent(), finalIdentityKey, message.getMetadata());
                             sendAiReply(sessionId, reply);
                         }
-                    } catch (Exception e) {
-                        System.err.println("[chat] Error processing car recommendation: " + e.getMessage());
-                        // Fallback to LLM on error
-                        String reply = aiChatService.getReply(message.getContent());
+                    } else {
+                        String reply = aiChatService.getReply(message.getContent(), finalIdentityKey, message.getMetadata());
                         sendAiReply(sessionId, reply);
                     }
-                } else {
-                    // Use external AI service for non-car queries or information queries
-                    String reply = aiChatService.getReply(message.getContent());
-                    System.out.println("[chat] AI reply for session=" + sessionId + " => "
-                            + (reply != null ? reply.substring(0, Math.min(20, reply.length())) + "..." : "null"));
-                    sendAiReply(sessionId, reply);
+                } catch (Exception e) {
+                    log.error("[chat] Unexpected error for identityKey {}: {}", finalIdentityKey, e.getMessage(), e);
+                    sendAiReply(sessionId, "Xin lỗi, đã có lỗi xảy ra. Hãy thử lại sau.");
                 }
-                // DEBUG: also publish to public topic so we can verify replies are produced
-                // messagingTemplate.convertAndSend("/topic/messages", aiMsg);
-            }).start();
+            });
         }
     }
 
@@ -125,7 +119,7 @@ public class ChatController {
             return false;
         }
         String lower = message.toLowerCase();
-        // Expand keywords for information-seeking queries
+        // Expand keywords for information-seeking queries (service procedures, policies, etc.)
         return lower.contains("thông tin") || lower.contains("đánh giá") ||
                 lower.contains("ưu điểm") || lower.contains("nhược điểm") ||
                 lower.contains("so sánh") || lower.contains("ý kiến") ||
@@ -133,7 +127,13 @@ public class ChatController {
                 lower.contains("info") || lower.contains("thông số") ||
                 lower.contains("kỹ thuật") || lower.contains("động cơ") ||
                 lower.contains("màu sắc") || lower.contains("nội thất") ||
-                lower.contains("ngoại thất") || lower.contains("tiêu thụ");
+                lower.contains("ngoại thất") || lower.contains("tiêu thụ") ||
+                lower.contains("hướng dẫn") || lower.contains("thủ tục") ||
+                lower.contains("quy trình") || lower.contains("giấy tờ") ||
+                lower.contains("bảo hiểm") || lower.contains("đặt cọc") ||
+                lower.contains("cọc") || lower.contains("thanh toán") ||
+                lower.contains("hủy") || lower.contains("bằng lái") ||
+                lower.contains("đăng ký");
     }
 
     private void sendAiReply(String sessionId, String reply) {

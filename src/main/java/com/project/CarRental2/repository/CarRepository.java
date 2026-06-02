@@ -28,20 +28,20 @@ public interface CarRepository  extends JpaRepository<Car, Integer>{
 	@Query(value = "update car set status=:status where id_car=:id_car", nativeQuery = true)
 	void changeStatusCar(@Param("status") int status, @Param("id_car") int id_car);
 	
-	@Query(value = " "+sql_query+" order by name_car asc ", nativeQuery  = true)
+	@Query(value = " "+sql_query+" order by c.name_car asc ", nativeQuery  = true)
 	List<Car> getAllCarWithUserAndBrandOrderByNameCarAsc();
 	
-	@Query(value = ""+sql_query+" where c.driver=:driver order by name_car asc  ", nativeQuery = true)
+	@Query(value = ""+sql_query+" where c.driver=:driver and c.status=1 order by c.name_car asc  ", nativeQuery = true)
 	List<Car> getAllCarByDriverOderByName(@Param("driver") boolean driver);
 	
-	@Query(value = ""+sql_query+" where c.driver=:driver and status=:status  order by name_car asc  ", nativeQuery = true)
+	@Query(value = ""+sql_query+" where c.driver=:driver and c.status=:status  order by c.name_car asc  ", nativeQuery = true)
 	List<Car> getAllCarByDriverAndStatusCarOderByName(@Param("driver") boolean driver, @Param("status") int status);
 	
-	@Query(value = ""+sql_query+" where  c.driver=:driver and c.address_car like %:address% order by name_car asc  ", nativeQuery = true)
+	@Query(value = ""+sql_query+" where  c.driver=:driver and c.address_car like %:address% and c.status=1 order by c.name_car asc  ", nativeQuery = true)
 	List<Car> getAllCarByDriverInAddressOderByName(@Param("driver") boolean driver, @Param("address") String address);
 	
-	@Query(value = ""+sql_query+" where  c.driver=:driver and c.address_car like %:address% and c.promotional_price >0 "
-			+ "order by name_car asc  ", nativeQuery = true)
+	@Query(value = ""+sql_query+" where  c.driver=:driver and c.address_car like %:address% and c.promotional_price >0 and c.status=1 "
+			+ "order by c.name_car asc  ", nativeQuery = true)
 	List<Car> getAllCarByDriverInAddressAndPromotionalPriceOderByName(@Param("driver") boolean driver, 
 			@Param("address") String address);
 	
@@ -49,9 +49,9 @@ public interface CarRepository  extends JpaRepository<Car, Integer>{
 	
 	List<Car> findCarByUserIdUserAndStatusOrderByNameCar(int id_user, int status);
 	
-	@Query(value = "select * from car where driver=:driver and address_car like %:address%  and id_car not in "
-			+ "(select id_car from booking  where  CONVERT(nvarchar(10),date_start,127)>=:dateStart "
-			+ "and CONVERT(nvarchar(10),date_end,127)<=:dateEnd) and status=:status order by name_car asc", nativeQuery = true)
+	@Query(value = "select c.* from car c where c.driver=:driver and c.address_car like %:address%  and c.id_car not in "
+			+ "(select b.id_car from booking b where CONVERT(nvarchar(10),b.date_start,127)>=:dateStart "
+			+ "and CONVERT(nvarchar(10),b.date_end,127)<=:dateEnd) and c.status=:status order by c.name_car asc", nativeQuery = true)
 	List<Car> findCarOnTimeByDriverAndAddress(@Param("driver") boolean driver, @Param("address") String address,
 			@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd, @Param("status") int status );
 	
@@ -70,5 +70,7 @@ public interface CarRepository  extends JpaRepository<Car, Integer>{
 	 @Query( value = "update car set promotional_price=:promotionalPrice where id_car=:idCar", nativeQuery = true)
 	 void resetPromotionalPriceCar(@Param("promotionalPrice") int promotionalPrice,@Param("idCar") int idCar ) ;
 	 
-	 List<Car> findCarByNameCarContaining(String nameCar);
+	
+	@Query(value = " "+sql_query+" where c.name_car like %:nameCar% order by name_car asc ", nativeQuery  = true)
+	List<Car> findCarByNameCarWithUserAndBrand(@Param("nameCar") String nameCar);
 }

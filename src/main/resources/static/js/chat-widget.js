@@ -1,11 +1,30 @@
 let cwStomp = null;
 const CW_STORAGE_KEY = 'mioto_chat_widget_history_' + (window.miotoUserId || 'guest');
 
-function cwConnect() {
+let cwConnecting = false;
+let cwQueue = [];
+
+function cwConnect(callback) {
+    if (cwStomp && cwStomp.connected) {
+        if (callback) callback();
+        return;
+    }
+    if (cwConnecting) {
+        if (callback) cwQueue.push(callback);
+        return;
+    }
+    cwConnecting = true;
+    if (callback) cwQueue.push(callback);
+
     const socket = new SockJS('/ws');
     cwStomp = Stomp.over(socket);
     cwStomp.debug = null;
     cwStomp.connect({}, (frame) => {
+        cwConnecting = false;
+        while (cwQueue.length > 0) {
+            const cb = cwQueue.shift();
+            try { cb(); } catch(e) { console.error(e); }
+        }
         cwStomp.subscribe('/user/queue/replies', (msg) => {
             const m = JSON.parse(msg.body);
             if (m.type === 'TYPING') {
@@ -16,8 +35,9 @@ function cwConnect() {
             appendCwMessage(m, true);
         });
     }, (err) => {
+        cwConnecting = false;
         console.error('cw connect err', err);
-        setTimeout(cwConnect, 5000);
+        setTimeout(() => cwConnect(), 5000);
     });
 }
 
@@ -189,17 +209,20 @@ function cwSend() {
     };
 
     appendCwMessage(payload, true);
-
-    if (cwStomp && cwStomp.connected) {
-        cwStomp.send('/app/chat', {}, JSON.stringify(payload));
-    } else {
-        cwConnect();
-        setTimeout(() => {
-            if (cwStomp && cwStomp.connected) cwStomp.send('/app/chat', {}, JSON.stringify(payload));
-        }, 1000);
-    }
     contentEl.value = '';
     contentEl.style.height = 'auto'; // Reset height
+
+    const sendFn = () => {
+        if (cwStomp && cwStomp.connected) {
+            cwStomp.send('/app/chat', {}, JSON.stringify(payload));
+        }
+    };
+
+    if (cwStomp && cwStomp.connected) {
+        sendFn();
+    } else {
+        cwConnect(sendFn);
+    }
 }
 
 function escapeHtml(str) {

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -139,5 +141,32 @@ public class Car {
 	@JsonIgnore
 	private User user;
 
+
+	@Transient
+	@JsonProperty("displayAddress")
+	public String getDisplayAddress() {
+		if (addressCar == null)
+			return "";
+		String[] adrr = addressCar.split(",");
+		if (adrr.length < 2)
+			return addressCar;
+		String newAddress = "";
+		for (int i = adrr.length - 2; i < adrr.length; i++) {
+			newAddress = newAddress + adrr[i].trim() + ", ";
+		}
+		if (newAddress.endsWith(", ")) {
+			newAddress = newAddress.substring(0, newAddress.length() - 2);
+		}
+		return newAddress;
+	}
+
+	@Transient
+	@JsonProperty("finalPrice")
+	public int getFinalPrice() {
+		if (promotionalPrice > 0) {
+			return price - (price * promotionalPrice / 100);
+		}
+		return price;
+	}
 
 }

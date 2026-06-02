@@ -496,29 +496,35 @@
 			<!-- Related Cars Section -->
 			<div class="col-12 mt-5 section-premium">
 				<h3 class="premium-section-title">Xe tương tự cho bạn</h3>
-				<div id="carouselCarDriver" class="carousel slide" data-bs-ride="carousel">
-					<div class="carousel-inner premium-carousel-inner">
-						<div class="carousel-item-premium" th:each="c: ${listCar}">
-							<div class="premium-car-card-listing">
-								<a th:href="@{'/car-detail/'+ ${c.idCar}+'/'+${c.nameCar}}" class="no-underline">
-									<div class="card-img-wrap-small">
-										<img th:src="@{'/uploads/'+${c.avatarCar}}" 
-											onerror="this.onerror=null;this.src='/images/car-placeholder.png';"
-											alt="...">
-										<div class="premium-badge-float-s" th:if="${c.promotionalPrice > 0}">
-											<span th:text="'-'+ ${c.promotionalPrice} +'%'"></span>
-										</div>
+				<div class="premium-carousel-inner">
+					<div class="carousel-item-premium" th:each="c: ${listCar}" th:if="${c.idCar != car.idCar}">
+						<div class="premium-car-card-listing">
+							<a th:href="@{'/car-detail/'+ ${c.idCar}+'/'+${c.nameCar}}" class="no-underline">
+								<div class="card-img-wrap-small">
+									<img th:src="@{'/uploads/'+${c.avatarCar}}" 
+										onerror="this.onerror=null;this.src='/images/car-placeholder.png';"
+										alt="...">
+									<div class="premium-badge-float-s" th:if="${c.promotionalPrice > 0}">
+										<span th:text="'-'+ ${c.promotionalPrice} +'%'"></span>
 									</div>
-									<div class="card-content-premium-s">
-										<h5 class="car-name-listing-s" th:text="${c.nameCar}"> </h5>
-										<div class="card-listing-footer-s">
+									<div class="car-quick-stats">
+										<span><i class="fa-solid fa-chair"></i> <th:block th:text="${c.numberOfSeats}"></th:block></span>
+										<span><i class="fa-solid fa-gear"></i> <th:block th:text="${c.manualTransmissionCar} ? 'Số sàn' : 'Số tự động'"></th:block></span>
+									</div>
+								</div>
+								<div class="card-content-premium-s">
+									<div class="car-brand-mini-s" th:text="${c.brandCar?.nameBrand}">BRAND</div>
+									<h5 class="car-name-listing-s" th:text="${c.nameCar}"> </h5>
+									<div class="card-listing-footer-s">
+										<div class="price-box-s">
 											<span class="final-price-s"
 												th:text="${#numbers.formatDecimal(c.price - (c.price * (c.promotionalPrice ?: 0) / 100), 0, 'COMMA', 0, 'POINT')} + ' K'"></span>
 											<span class="price-unit-s">/ngày</span>
 										</div>
+										<div class="old-price-s" th:if="${c.promotionalPrice > 0}" th:text="${c.price} + ' K'"></div>
 									</div>
-								</a>
-							</div>
+								</div>
+							</a>
 						</div>
 					</div>
 				</div>
@@ -1111,62 +1117,165 @@
 			box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 		}
 
+		/* Section Premium & Title */
+		.section-premium {
+			padding: 10px 0;
+		}
+
+		.premium-section-title {
+			font-weight: 900;
+			font-size: 1.6rem;
+			color: var(--deep-slate);
+			margin-bottom: 25px;
+			position: relative;
+			padding-left: 18px;
+		}
+
+		.premium-section-title::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 4px;
+			bottom: 4px;
+			width: 5px;
+			border-radius: 3px;
+			background: linear-gradient(135deg, var(--primary-emerald), #059669);
+		}
+
 		/* Listing Grid for Related */
 		.premium-carousel-inner {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-			gap: 20px;
+			grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+			gap: 25px;
+			padding: 10px 5px;
 		}
 
 		.premium-car-card-listing {
 			background: white;
-			border-radius: 20px;
+			border-radius: 24px;
 			overflow: hidden;
 			border: 1px solid #f1f5f9;
-			transition: all 0.3s;
+			transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+			position: relative;
 		}
 
 		.premium-car-card-listing:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+			transform: translateY(-8px);
+			box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+			border-color: var(--primary-emerald);
 		}
 
 		.card-img-wrap-small {
 			position: relative;
-			height: 160px;
+			height: 180px;
+			overflow: hidden;
 		}
 
 		.card-img-wrap-small img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
+			transition: transform 0.6s ease;
+		}
+
+		.premium-car-card-listing:hover .card-img-wrap-small img {
+			transform: scale(1.1);
+		}
+
+		.premium-badge-float-s {
+			position: absolute;
+			top: 15px;
+			left: 15px;
+			background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+			color: white;
+			padding: 6px 12px;
+			border-radius: 12px;
+			font-size: 11px;
+			font-weight: 800;
+			box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+			z-index: 2;
+		}
+
+		.car-quick-stats {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			padding: 15px;
+			background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+			display: flex;
+			gap: 12px;
+			color: white;
+			font-size: 11px;
+			font-weight: 600;
+			opacity: 0;
+			transform: translateY(10px);
+			transition: all 0.3s ease;
+		}
+
+		.premium-car-card-listing:hover .car-quick-stats {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		.car-quick-stats span i {
+			color: #34d399;
+			margin-right: 4px;
 		}
 
 		.card-content-premium-s {
-			padding: 15px;
+			padding: 20px;
+		}
+
+		.car-brand-mini-s {
+			font-size: 10px;
+			font-weight: 800;
+			color: var(--primary-emerald);
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			margin-bottom: 5px;
 		}
 
 		.car-name-listing-s {
 			font-weight: 800;
-			font-size: 1rem;
-			margin-bottom: 10px;
+			font-size: 1.1rem;
+			color: #1e293b;
+			margin-bottom: 15px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.card-listing-footer-s {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-end;
+			padding-top: 10px;
+		}
+
+		.price-box-s {
+			display: flex;
+			align-items: baseline;
+			gap: 4px;
 		}
 
 		.final-price-s {
 			font-weight: 900;
 			color: var(--price-color);
-			font-size: 1.1rem;
+			font-size: 1.25rem;
 		}
 
 		.price-unit-s {
-			font-size: 10px;
+			font-size: 11px;
 			color: #94a3b8;
 			font-weight: 700;
 		}
 
-		.no-underline {
-			text-decoration: none !important;
-			color: inherit !important;
+		.old-price-s {
+			font-size: 12px;
+			color: #cbd5e0;
+			text-decoration: line-through;
+			font-weight: 600;
 		}
 
 		@media (max-width: 991px) {
@@ -2205,18 +2314,7 @@
 	});
 
 	function loadAiRecommendations() {
-		const userId = getUserIdFromSession();
-
-		if (!userId) {
-			// User not logged in, show empty state
-			document.getElementById('ai-recommend-grid').style.display = 'none';
-			document.getElementById('ai-recommend-empty').style.display = 'block';
-			document.getElementById('ai-recommend-empty').innerHTML = `
-				<i class="fa-solid fa-user-lock"></i>
-				<p>Đăng nhập để xem gợi ý cá nhân hóa!</p>
-			`;
-			return;
-		}
+		const userId = getUserIdFromSession() || 0;
 
 		document.getElementById('ai-recommend-loading').style.display = 'flex';
 		document.getElementById('ai-recommend-grid').style.display = 'none';
@@ -2232,6 +2330,12 @@
 					document.getElementById('ai-recommend-grid').style.display = 'grid';
 				} else {
 					document.getElementById('ai-recommend-empty').style.display = 'block';
+					if (userId === 0) {
+						document.getElementById('ai-recommend-empty').innerHTML = `
+							<i class="fa-solid fa-user-lock"></i>
+							<p>Đăng nhập để nhận gợi ý xe cá nhân hóa tốt nhất!</p>
+						`;
+					}
 				}
 			})
 			.catch(error => {

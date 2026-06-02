@@ -105,9 +105,9 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	@Override
-	public List<Car> findCarByNameCarContaining(String nameCar) {
+	public List<Car> findCarByNameCarWithUserAndBrand(String nameCar) {
 		
-		return repository.findCarByNameCarContaining(nameCar);
+		return repository.findCarByNameCarWithUserAndBrand(nameCar);
 	}
 
 	@Override

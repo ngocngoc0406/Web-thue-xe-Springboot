@@ -4,8 +4,10 @@ public class ChatMessage {
     private String sender;
     private String content;
     private String timestamp;
-    private String type; // CHAT, JOIN, LEAVE
+    private String type; // CHAT, JOIN, LEAVE, CAR_LIST, TYPING
     private Boolean askAi; // if true, service should ask AI for a reply
+    private Object data; // for structured data like lists of cars
+    private java.util.Map<String, String> metadata; // for page context
 
     public ChatMessage() {
     }
@@ -48,5 +50,21 @@ public class ChatMessage {
 
     public void setAskAi(Boolean askAi) {
         this.askAi = askAi;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public java.util.Map<String, String> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(java.util.Map<String, String> metadata) {
+        this.metadata = metadata;
     }
 }

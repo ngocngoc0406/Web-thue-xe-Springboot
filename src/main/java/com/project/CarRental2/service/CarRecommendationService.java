@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,8 @@ import com.project.CarRental2.repository.CarViewHistoryRepository;
 @Service
 public class CarRecommendationService {
 
+    private static final Logger log = LoggerFactory.getLogger(CarRecommendationService.class);
+
     @Autowired
     private CarViewHistoryRepository viewHistoryRepo;
 
@@ -43,6 +48,22 @@ public class CarRecommendationService {
 
     private static final int MAX_RECOMMENDATIONS = 6;
     private static final int MIN_SIMILAR_USERS = 2;
+
+    // Cache: userId -> {recommendations, timestamp}
+    private static final ConcurrentHashMap<Integer, CachedRecommendations> recCache = new ConcurrentHashMap<>();
+    private static final long REC_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
+    private static class CachedRecommendations {
+        List<CarRecommendation> data;
+        long timestamp;
+        CachedRecommendations(List<CarRecommendation> data) {
+            this.data = data;
+            this.timestamp = System.currentTimeMillis();
+        }
+        boolean isExpired() {
+            return System.currentTimeMillis() - timestamp > REC_CACHE_TTL;
+        }
+    }
 
     /**
      * Ghi nhận user xem xe (tracking)
@@ -64,6 +85,13 @@ public class CarRecommendationService {
      * Lấy danh sách xe gợi ý cho user
      */
     public List<CarRecommendation> getRecommendations(int userId) {
+        // Check cache first
+        CachedRecommendations cached = recCache.get(userId);
+        if (cached != null && !cached.isExpired()) {
+            log.debug("[Recommendation] Cache hit for userId={}", userId);
+            return cached.data;
+        }
+
         // Bước 1: Lấy xe user đã xem
         List<Integer> viewedCarIds = viewHistoryRepo.findViewedCarIdsByUser(userId);
 
@@ -106,6 +134,22 @@ public class CarRecommendationService {
                 }
             }
         }
+
+        // Bước 6: Nếu vẫn chưa đủ 3 xe (ví dụ trong DB nhỏ nơi user đã xem hết các xe), cho phép nhận lại các xe đã xem làm gợi ý (sẽ được lọc bỏ xe hiện tại ở frontend)
+        if (recommendations.size() < 3) {
+            List<CarRecommendation> popular = getPopularCars(MAX_RECOMMENDATIONS);
+            for (CarRecommendation rec : popular) {
+                if (recommendations.size() >= MAX_RECOMMENDATIONS)
+                    break;
+                if (recommendations.stream().noneMatch(r -> r.getCarId() == rec.getCarId())) {
+                    recommendations.add(rec);
+                }
+            }
+        }
+
+        // Cache kết quả
+        recCache.put(userId, new CachedRecommendations(recommendations));
+        log.info("[Recommendation] Generated {} recommendations for userId={}", recommendations.size(), userId);
 
         return recommendations;
     }
@@ -182,7 +226,7 @@ public class CarRecommendationService {
                 }
             }
         } catch (Exception e) {
-            System.err.println("[Recommendation] Collaborative error: " + e.getMessage());
+            log.error("[Recommendation] Collaborative error: {}", e.getMessage());
         }
 
         return recommendations;
@@ -286,14 +330,26 @@ public class CarRecommendationService {
                 }
             }
         } catch (Exception e) {
-            // Fallback: lấy xe mới nhất
-            List<Car> cars = carRepository.getAllCarOrderByNameCarAsc();
-            for (Car car : cars) {
-                if (recommendations.size() >= limit)
-                    break;
-                if (car.getStatus() == 1) {
-                    recommendations.add(new CarRecommendation(car, 0.3, "default"));
+            log.error("[Recommendation] Popular cars error: {}", e.getMessage());
+        }
+
+        // Bổ sung xe hoạt động từ hệ thống nếu danh sách gợi ý chưa đủ limit (hoặc rỗng khi mới cài đặt)
+        if (recommendations.size() < limit) {
+            try {
+                List<Car> cars = carRepository.getAllCarOrderByNameCarAsc();
+                for (Car car : cars) {
+                    if (recommendations.size() >= limit)
+                        break;
+                    if (car.getStatus() == 1) {
+                        // Tránh thêm trùng xe đã có
+                        final int currentId = car.getIdCar();
+                        if (recommendations.stream().noneMatch(r -> r.getCarId() == currentId)) {
+                            recommendations.add(new CarRecommendation(car, 0.3, "default"));
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                log.error("[Recommendation] Fallback error loading default cars: {}", e.getMessage());
             }
         }
 
@@ -342,24 +398,24 @@ public class CarRecommendationService {
             switch (type) {
                 case "collaborative":
                     if (score > 0.7) {
-                        return "Rất nhiều người có sở thích giống bạn đã chọn xe này";
+                        return "🔥 Rất nhiều người có sở thích giống bạn đã chọn xe này";
                     } else if (score > 0.4) {
-                        return "Người dùng có sở thích tương tự bạn cũng thích xe này";
+                        return "👥 Người dùng có sở thích tương tự cũng thích xe này";
                     } else {
-                        return "Được đề xuất dựa trên sở thích của người dùng tương tự";
+                        return "🎯 Được gợi ý dựa trên sở thích của người dùng tương tự";
                     }
                 case "content-based":
                     if (score > 0.7) {
-                        return "Xe này rất giống với các xe bạn đã xem gần đây";
+                        return "✨ Xe này rất giống với các xe bạn đã xem gần đây";
                     } else if (score > 0.5) {
-                        return "Có tính năng tương tự các xe bạn quan tâm";
+                        return "🔍 Có tính năng tương tự các xe bạn quan tâm";
                     } else {
-                        return "Phù hợp với tiêu chí bạn thường tìm kiếm";
+                        return "💡 Phù hợp với tiêu chí bạn thường tìm kiếm";
                     }
                 case "popular":
-                    return "Xe phổ biến được nhiều người quan tâm";
+                    return "🌟 Xe phổ biến được nhiều người quan tâm";
                 default:
-                    return "Được AI gợi ý cho bạn";
+                    return "🤖 Được AI gợi ý cho bạn";
             }
         }
 

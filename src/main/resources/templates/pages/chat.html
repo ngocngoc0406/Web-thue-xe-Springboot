@@ -151,7 +151,7 @@
 
     <script th:inline="javascript">
         let stompClient = null;
-        const currentUserId = [[${session.sesionUser != null ? session.sesionUser.idUser : 'guest'}]];
+        const currentUserId = "[[${session.sesionUser != null ? session.sesionUser.idUser : 'guest'}]]";
         const CHAT_STORAGE_KEY = 'mioto_chat_v5_' + currentUserId; // Changed version to clear potentially mixed old history
 
         function updateStatus(status, text, colorClass) {

@@ -2,9 +2,11 @@ package com.project.CarRental2.api;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +31,67 @@ public class AiReviewSummaryController {
     @Autowired
     private CarRepository carRepository;
 
+    // Cache AI results with size limit: carId -> {result, timestamp}
+    private static final int MAX_CACHE_SIZE = 200;
+    private static final ConcurrentHashMap<Integer, CachedResult> aiCache = new ConcurrentHashMap<>();
+    private static final long CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+
+    private static class CachedResult {
+        Map<String, Object> data;
+        long timestamp;
+        CachedResult(Map<String, Object> data) {
+            this.data = data;
+            this.timestamp = System.currentTimeMillis();
+        }
+        boolean isExpired() {
+            return System.currentTimeMillis() - timestamp > CACHE_TTL;
+        }
+    }
+
+    /**
+     * Instant endpoint - returns local-generated results immediately (no AI API call)
+     */
+    @GetMapping("/review-summary-instant/{carId}")
+    public ResponseEntity<?> getInstantReviewSummary(@PathVariable("carId") int carId) {
+        try {
+            // Check cache first
+            CachedResult cached = aiCache.get(carId);
+            if (cached != null && !cached.isExpired()) {
+                Map<String, Object> result = new HashMap<>(cached.data);
+                result.put("source", "cached");
+                return ResponseEntity.ok(result);
+            }
+
+            Car car = carRepository.findById(carId).orElse(null);
+            if (car == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Generate local result instantly (no API call)
+            Map<String, Object> result = generateLocalResult(car);
+            result.put("source", "local");
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Lỗi: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error);
+        }
+    }
+
+    /**
+     * Full AI endpoint - calls AI API (with cache)
+     */
     @GetMapping("/review-summary/{carId}")
     public ResponseEntity<?> getReviewSummary(@PathVariable("carId") int carId) {
         try {
-            // Get car information
+            // Check cache first
+            CachedResult cached = aiCache.get(carId);
+            if (cached != null && !cached.isExpired()) {
+                Map<String, Object> result = new HashMap<>(cached.data);
+                result.put("source", "cached");
+                return ResponseEntity.ok(result);
+            }
+
             Car car = carRepository.findById(carId).orElse(null);
             if (car == null) {
                 return ResponseEntity.notFound().build();
@@ -42,16 +101,75 @@ public class AiReviewSummaryController {
             String prompt = buildAnalysisPrompt(car);
 
             // Get AI analysis
-            String aiResponse = aiChatService.getReply(prompt);
+            String aiResponse = aiChatService.getReply(prompt, "REVIEW_SUMMARY_" + carId, new HashMap<>());
 
             // Parse response into structured format
             Map<String, Object> result = parseAiResponse(aiResponse, car);
+            result.put("source", "ai");
+
+            // Cache the result (with size limit)
+            evictOldestIfNeeded();
+            aiCache.put(carId, new CachedResult(result));
 
             return ResponseEntity.ok(result);
         } catch (Exception e) {
+            // On AI failure, return local result instead of error
+            try {
+                Car car = carRepository.findById(carId).orElse(null);
+                if (car != null) {
+                    Map<String, Object> result = generateLocalResult(car);
+                    result.put("source", "local-fallback");
+                    return ResponseEntity.ok(result);
+                }
+            } catch (Exception ignored) {}
             Map<String, String> error = new HashMap<>();
             error.put("error", "Không thể tạo phân tích AI: " + e.getMessage());
             return ResponseEntity.internalServerError().body(error);
+        }
+    }
+
+    /**
+     * Clear all cached AI review results (admin use)
+     */
+    @DeleteMapping("/review-summary/clear-cache")
+    public ResponseEntity<?> clearCache() {
+        int size = aiCache.size();
+        aiCache.clear();
+        Map<String, Object> result = new HashMap<>();
+        result.put("cleared", size);
+        result.put("message", "Đã xoá " + size + " entries từ cache");
+        return ResponseEntity.ok(result);
+    }
+
+    private Map<String, Object> generateLocalResult(Car car) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("carName", car.getNameCar());
+        result.put("carId", car.getIdCar());
+        result.put("overview", generateUniqueOverview(car));
+        result.put("strengths", generateUniqueStrengths(car));
+        result.put("notes", generateUniqueNotes(car));
+        result.put("suitableFor", generateUniqueSuitableFor(car));
+        result.put("rating", calculateRating(car, ""));
+        return result;
+    }
+
+    /**
+     * Evict oldest cache entries when cache exceeds MAX_CACHE_SIZE
+     */
+    private void evictOldestIfNeeded() {
+        if (aiCache.size() >= MAX_CACHE_SIZE) {
+            // Find and remove the oldest entry
+            Integer oldestKey = null;
+            long oldestTime = Long.MAX_VALUE;
+            for (Map.Entry<Integer, CachedResult> entry : aiCache.entrySet()) {
+                if (entry.getValue().timestamp < oldestTime) {
+                    oldestTime = entry.getValue().timestamp;
+                    oldestKey = entry.getKey();
+                }
+            }
+            if (oldestKey != null) {
+                aiCache.remove(oldestKey);
+            }
         }
     }
 
@@ -297,11 +415,11 @@ public class AiReviewSummaryController {
 
     private String formatPrice(int price) {
         if (price >= 1000000) {
-            return String.format("%,.0f", price / 1000.0) + "k";
+            return String.format("%,.0fK", price / 1000.0).replace(',', '.');
         } else if (price >= 1000) {
-            return String.format("%dk", price / 1000);
+            return String.format("%dK", price / 1000);
         }
-        return String.format("%,d", price);
+        return String.format("%,d", price).replace(',', '.');
     }
 
     private String extractSection(String text, String startLabel, String[] endLabels) {

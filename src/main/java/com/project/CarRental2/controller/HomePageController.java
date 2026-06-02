@@ -5,8 +5,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -124,29 +128,18 @@ public class HomePageController implements FiledName {
 		model.addAttribute("listDetailNotification", listDetailNotification);
 		model.addAttribute("provinces", provinceService.getAllProvinceOrderByName());
 		List<Car> listCarHasDiver = carService.getAllCarByDriverAndStatusCarOderByName(HAS_DRIVERS, STATUS_APPROVED);
-		List<Car> listCarHasDriverNewAddress = HomePageController.setListNewAddress(listCarHasDiver);
 		List<Car> listCarNoDiver = carService.getAllCarByDriverAndStatusCarOderByName(NO_DRIVERS, STATUS_APPROVED);
-		List<Car> listCarNoDriverNewAddress = HomePageController.setListNewAddress(listCarNoDiver);
 		List<Insurance> listInsurances = insuranceService.getAllInsurance();
-		model.addAttribute("contentInsurances", listInsurances.get(0).getContentInsurance());
+		if (listInsurances != null && !listInsurances.isEmpty()) {
+			model.addAttribute("contentInsurances", listInsurances.get(0).getContentInsurance());
+		}
 		model.addAttribute("listInsurances", listInsurances);
-		model.addAttribute("carHasDriver", listCarHasDriverNewAddress);
-		model.addAttribute("carNoDriver", listCarNoDriverNewAddress);
+		model.addAttribute("carHasDriver", listCarHasDiver);
+		model.addAttribute("carNoDriver", listCarNoDiver);
+		model.addAttribute("listBlogs", blogService.getAllBlog());
 		return "index";
 	}
 
-	public static List<Car> setListNewAddress(List<Car> listCar) {
-		for (Car car : listCar) {
-			String[] adrr = car.getAddressCar().split(",");
-			String newAddress = "";
-			for (int i = adrr.length - 2; i < adrr.length; i++) {
-				newAddress = newAddress + adrr[i] + ",";
-			}
-			newAddress = newAddress.substring(0, newAddress.length() - 1);
-			car.setAddressCar(newAddress);
-		}
-		return listCar;
-	}
 
 	@GetMapping("/car-address")
 	public String carAddress() {
@@ -174,20 +167,24 @@ public class HomePageController implements FiledName {
 
 		List<Car> listCar_promotional_price = carService
 				.getAllCarByDriverInAddressAndPromotionalPriceOderByName(HAS_DRIVERS, address);
-		model.addAttribute("carPromotinalPrice", HomePageController.setListNewAddress(listCar_promotional_price));
+		model.addAttribute("carPromotinalPrice", listCar_promotional_price);
 		model.addAttribute("address", address.toUpperCase());
 		List<Car> listCar = carService.getAllCarByDriverInAddressOrderByName(HAS_DRIVERS, address);
-		model.addAttribute("listCar", HomePageController.setListNewAddress(listCar));
+		model.addAttribute("listCar", listCar);
 		model.addAttribute("distric", districtService.getAllDistrictByIdProvince(id_address));
 		return "pages/address-car";
 	}
 
 	@PostMapping("/booking-car")
-	public String booking(Model model, @RequestParam(name = "dateStart") String dateStart,
-			@RequestParam(name = "dateEnd") String dateEnd, @RequestParam(name = "idCar") int id_car,
-			@RequestParam(name = "input_total_bill") int totalBill, @RequestParam(name = "phone") String phone,
-			@RequestParam(name = "province") String provinceId, @RequestParam(name = "district") String districtId,
-			@RequestParam(name = "ward") String wardId, @RequestParam(name = "address-detail") String addressDetail,
+	public String booking(Model model, @RequestParam(name = "dateStart", defaultValue = "") String dateStart,
+			@RequestParam(name = "dateEnd", defaultValue = "") String dateEnd,
+			@RequestParam(name = "idCar", defaultValue = "0") int id_car,
+			@RequestParam(name = "input_total_bill", defaultValue = "0") int totalBill,
+			@RequestParam(name = "phone", defaultValue = "") String phone,
+			@RequestParam(name = "province", defaultValue = "0") String provinceId,
+			@RequestParam(name = "district", defaultValue = "0") String districtId,
+			@RequestParam(name = "ward", defaultValue = "0") String wardId,
+			@RequestParam(name = "address-detail", defaultValue = "") String addressDetail,
 			HttpServletRequest request, RedirectAttributes ra) {
 		System.err.println("[BOOKING] Date Start: " + dateStart + ", Date End: " + dateEnd);
 		System.err.println("[BOOKING] Car ID: " + id_car + ", Total Bill: " + totalBill);
@@ -247,11 +244,21 @@ public class HomePageController implements FiledName {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		Date datestart = null;
 		Date dateend = null;
+		
+		if (dateStart == null || dateStart.isEmpty() || dateEnd == null || dateEnd.isEmpty()) {
+			ra.addFlashAttribute("messege_error", "Vui lòng chọn ngày nhận và ngày trả xe");
+			Car car = carService.getACarByIdCar(id_car);
+			return "redirect:/car-detail/" + id_car + "/" + (car != null ? car.getNameCar() : "detail");
+		}
+
 		try {
 			datestart = dateFormat.parse(dateStart);
 			dateend = dateFormat.parse(dateEnd);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			System.err.println("[BOOKING] Date parse error: " + e.getMessage());
+			ra.addFlashAttribute("messege_error", "Định dạng ngày không hợp lệ. Vui lòng thử lại.");
+			Car car = carService.getACarByIdCar(id_car);
+			return "redirect:/car-detail/" + id_car + "/" + (car != null ? car.getNameCar() : "detail");
 		}
 		booking.setDateStart(datestart);
 		booking.setDateEnd(dateend);
@@ -285,11 +292,11 @@ public class HomePageController implements FiledName {
 		List<Car> listCar_promotional_price = carService
 				.getAllCarByDriverInAddressAndPromotionalPriceOderByName(NO_DRIVERS, address);
 		System.err.println(listCar_promotional_price.toString());
-		model.addAttribute("carPromotinalPrice", HomePageController.setListNewAddress(listCar_promotional_price));
+		model.addAttribute("carPromotinalPrice", listCar_promotional_price);
 		model.addAttribute("address", address.toUpperCase());
 		List<Car> listCar = carService.getAllCarByDriverInAddressOrderByName(NO_DRIVERS, address);
 		System.err.println(listCar.toString());
-		model.addAttribute("listCar", HomePageController.setListNewAddress(listCar));
+		model.addAttribute("listCar", listCar);
 		model.addAttribute("distric", districtService.getAllDistrictByIdProvince(id_province));
 		return "pages/address-car";
 	}
@@ -307,7 +314,7 @@ public class HomePageController implements FiledName {
 		}
 		newAddress = newAddress.substring(0, newAddress.length() - 1);
 		model.addAttribute("address", newAddress);
-		model.addAttribute("listCar", HomePageController.setListNewAddress(carService.getAllCarOrderByNameCarAsc()));
+		model.addAttribute("listCar", carService.getAllCarOrderByNameCarAsc());
 		model.addAttribute("province", provinceService.getAllProvinceOrderByName());
 		model.addAttribute("booking", new Booking());
 
@@ -348,9 +355,8 @@ public class HomePageController implements FiledName {
 			listCar = carService.findCarOnTimeByDriverAndAddress(NO_DRIVERS, address, arrdateStart[0], arrdateEnd[0],
 					STATUS_APPROVED);
 		}
-		List<Car> listCarWithNewAddress = HomePageController.setListNewAddress(listCar);
-		System.err.println(listCarWithNewAddress);
-		model.addAttribute("listCar", listCarWithNewAddress);
+		System.err.println(listCar);
+		model.addAttribute("listCar", listCar);
 		model.addAttribute("car", new Car());
 		return "pages/filter-car";
 	}
@@ -364,7 +370,7 @@ public class HomePageController implements FiledName {
 
 	@PostMapping("/login")
 	public String checkLogin(@ModelAttribute("user") User user, HttpServletRequest request,
-			RedirectAttributes rAttributes) {
+			HttpServletResponse response, RedirectAttributes rAttributes) {
 		String url = "";
 		HttpSession sessionUser = request.getSession();
 		HttpSession sessionRole = request.getSession();
@@ -375,6 +381,8 @@ public class HomePageController implements FiledName {
 			if (user.getUsername().equals(user2.getUsername()) && user.getPassword().equals(user2.getPassword())) {
 				sessionUser.setAttribute("sesionUser", user2);
 				sessionRole.setAttribute("sessionRole", user2.getRole().getIdRole());
+				
+
 				System.out.println(sessionUser.getAttribute("sesionUser"));
 				if (user2.getRole().getIdRole() == ROLE_USER) {
 					return "redirect:/";
@@ -397,8 +405,15 @@ public class HomePageController implements FiledName {
 	}
 
 	@GetMapping("/logout")
-	public String logout(HttpSession session) {
+	public String logout(HttpSession session, HttpServletResponse response) {
 		session.invalidate();
+		
+		// Xóa cookie remember-me cũ (nếu còn tồn tại)
+		Cookie cookie = new Cookie("remember_me_user", "");
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		response.addCookie(cookie);
+		
 		return "redirect:/";
 	}
 
@@ -649,28 +664,47 @@ public class HomePageController implements FiledName {
 		model.addAttribute("listRequestWithdraw", listRequestWithdrawals);
 		model.addAttribute("requestWithdrawal", new RequestWithdrawal());
 
-		if (dateEnd != null && dateStart != null) {
-			model.addAttribute("listBooking", bookingService.getAllBookingOnTimeByIdUserHaveCar(dateStart, dateEnd,
-					STATUS_PAYMENT, user.getIdUser()));
-			String[] array = bookingService.sumRevenueOnTimeByIdUser(dateStart, dateEnd, STATUS_PAYMENT,
-					user.getIdUser());
-			String valueNgay = "";
-			valueNgay += "[";
-			String valueTongTien = "";
-			valueTongTien += "[";
-			for (int i = 0; i < array.length; i++) {
-				System.err.println(array[i]);
-				String[] arra = array[i].split(",");
-				valueNgay = valueNgay + "\"" + arra[0] + "\"" + ",";
-				valueTongTien = valueTongTien + arra[1] + ",";
-			}
-			valueNgay = valueNgay.substring(0, valueNgay.length() - 1);
-			valueTongTien = valueTongTien.substring(0, valueTongTien.length() - 1);
-			valueNgay = valueNgay + "]";
-			valueTongTien = valueTongTien + "]";
-			model.addAttribute("valueDate", valueNgay);
-			model.addAttribute("totalMoney", valueTongTien);
+		// Tự động thiết lập khoảng thời gian mặc định (30 ngày qua) nếu không truyền vào
+		if (dateStart == null || dateStart.trim().isEmpty() || dateEnd == null || dateEnd.trim().isEmpty()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			dateEnd = sdf.format(cal.getTime()); // Hôm nay
+			cal.add(Calendar.DAY_OF_YEAR, -30); // 30 ngày trước
+			dateStart = sdf.format(cal.getTime());
 		}
+
+		model.addAttribute("listBooking", bookingService.getAllBookingOnTimeByIdUserHaveCar(dateStart, dateEnd,
+				STATUS_PAYMENT, user.getIdUser()));
+
+		String[] array = bookingService.sumRevenueOnTimeByIdUser(dateStart, dateEnd, STATUS_PAYMENT,
+				user.getIdUser());
+		
+		// Xây dựng chuỗi JSON array an toàn cho biểu đồ
+		String valueNgay = "[";
+		String valueTongTien = "[";
+		if (array != null && array.length > 0) {
+			for (int i = 0; i < array.length; i++) {
+				if (array[i] != null && array[i].contains(",")) {
+					String[] arra = array[i].split(",");
+					valueNgay = valueNgay + "\"" + arra[0] + "\"" + ",";
+					valueTongTien = valueTongTien + arra[1] + ",";
+				}
+			}
+			if (valueNgay.endsWith(",")) {
+				valueNgay = valueNgay.substring(0, valueNgay.length() - 1);
+			}
+			if (valueTongTien.endsWith(",")) {
+				valueTongTien = valueTongTien.substring(0, valueTongTien.length() - 1);
+			}
+		}
+		valueNgay = valueNgay + "]";
+		valueTongTien = valueTongTien + "]";
+
+		model.addAttribute("valueDate", valueNgay);
+		model.addAttribute("totalMoney", valueTongTien);
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+
 		return "pages/my-walet";
 	}
 

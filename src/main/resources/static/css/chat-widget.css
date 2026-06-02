@@ -3,9 +3,11 @@
   position: fixed;
   right: 25px;
   bottom: 25px;
-  z-index: 9999;
+  z-index: 99999;
   font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  display: block !important;
+  visibility: visible !important;
 }
 
 /* Toggle Button */
@@ -25,6 +27,8 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+  opacity: 1;
+  transform: scale(1);
 }
 
 .chat-toggle:hover {
@@ -40,6 +44,13 @@
     transform: rotate(10deg);
 }
 
+/* Hide toggle button when chat panel is open */
+#chat-widget:not(.chat-widget-closed) .chat-toggle {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+}
+
 /* Chat Panel */
 .chat-panel {
   width: 400px;
@@ -51,12 +62,12 @@
   box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   overflow: hidden;
   transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   border: 1px solid rgba(255, 255, 255, 0.4);
   position: absolute;
-  bottom: 80px;
+  bottom: 0;
   right: 0;
   transform-origin: bottom right;
 }
@@ -406,11 +417,15 @@
 
 /* Responsive */
 @media (max-width: 480px) {
+  #chat-widget {
+    right: 16px;
+    bottom: 16px;
+  }
   .chat-panel {
     width: calc(100vw - 32px);
-    right: 16px;
-    left: 16px;
-    height: calc(100vh - 120px);
-    bottom: 80px;
+    right: 0;
+    left: auto;
+    height: calc(100vh - 80px);
+    bottom: 0;
   }
 }
